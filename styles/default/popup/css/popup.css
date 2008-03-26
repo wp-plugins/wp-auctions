@@ -1,0 +1,351 @@
+/* WP Auctions Default Style
+
+Style Name: Dawn
+
+Style URL: http://www.wpauctions.com/styles/dawn
+
+Style Author: Hyder Jaffari
+
+Author URL: http://www.weborithm.com
+
+Get more styles at http://www.wpauctions.com/styles
+
+Last Update: February 12th, 2008
+
+*/
+
+#wp-container-p {
+	margin: 0px;
+	padding: 0px;
+	font: 12px Tahoma, Verdana, Helvetica;
+	text-align:left;
+	position: static;
+	color:#FFFFFF;
+	background:#fff url(../images/mid_bg.gif) repeat-y center;
+	height: 500px;
+	width: 600px;
+	overflow: auto;
+}
+#wp-logo-p{
+	font-size: 17px;
+	padding: 2px 0 0 52px;
+	background: url(../images/top_bg.gif) no-repeat;
+	height: 23px;
+	width: 548px;
+}
+.wp-closew-p {
+	font-size: 10px;
+	float: right;
+	padding: 3px 7px 5px 5px;
+}
+.wp-closew-p a {
+	color: #FFFFFF;
+	text-decoration: none;
+	text-transform: capitalize;
+}
+.wp-closew-p a:hover {
+	color: #0099CC;
+	text-decoration: none;
+	text-transform: lowercase;
+}
+
+.wp-logotext-p {
+	float: left;
+}
+#wp-main-p {
+	background: url(../images/bottom_bg.gif) no-repeat bottom;
+	height: 475px;
+}
+#wp-topbox-p {
+	width: 592px;
+	margin: auto;
+}
+#wp-topbg-p {
+	background: url(../images/boxtop_bg.gif) no-repeat;
+	height: 8px;
+	width: 592px;
+}
+#wp-bottombg-p {
+	background: url(../images/boxbottom_bg.gif) no-repeat;
+	height: 8px;
+	width: 592px;
+}
+#wp-topboxmid-p {
+	background: url(../images/boxmid_bg.gif) repeat-y;
+	padding: 0 0 0 8px;
+	color: #010101;
+}
+#wp-tc-p {
+	float: right;
+	width: 392px;
+	margin: 0;
+	padding: 0;
+}
+#wp-tc-heading-p {
+	margin: 0;
+	padding: 0 15px 0 8px;
+	font-size: 17px;
+}
+#wp-tc-description-p {
+	height: 122px;
+	padding: 0 4px 0 4px;
+	font-size: 12px;
+	text-align: justify;
+	overflow: auto;
+	width: 372px;
+	margin: 4px 0 0 4px;
+}
+#wp-tc-description-p p {
+	padding: 0 0 10px 0;
+	margin: 0;
+}
+.forminput {
+	background: url(../images/input_bg.gif) repeat-x;
+	height: 24px;
+	width: 190px;
+	border-style: none;
+	margin: 2px;
+	font-size: 13px;
+	color: #FFFFFF;
+	padding: 4px 5px 0px;
+	text-transform: capitalize;
+}
+.forminputemail {
+	background: url(../images/input_bg.gif) repeat-x;
+	height: 24px;
+	width: 190px;
+	border-style: none;
+	margin: 2px;
+	font-size: 13px;
+	color: #FFFFFF;
+	padding: 4px 5px 0px;
+	text-transform: lowercase;
+}
+.forminputurl {
+	background: url(../images/input_bg.gif) repeat-x;
+	height: 24px;
+	width: 190px;
+	border-style: none;
+	margin: 2px;
+	font-size: 13px;
+	color: #FFFFFF;
+	padding: 4px 5px 0px;
+	text-transform: lowercase;
+}
+#wp-topimg-p{
+	height: 190px;
+	width: 190px;
+	border: 1px solid #000000;
+}
+#wp-refreshbar-p {
+	background: url(../images/refresh_bar.gif) repeat-x;
+	height: 40px;
+	width: 390px;
+	margin: 5px 0 0;
+}
+
+#wp-bottomtopbg-p {
+	background: url(../images/boxtop_bg.gif) no-repeat;
+	height: 8px;
+	width: 592px;
+	margin: 4px 0 0;
+}
+#wp-bottombox-p {
+	width: 592px;
+	margin: auto;
+}
+
+#wp-bottomboxmid-p {
+	background: url(../images/boxmid_bg.gif) repeat-y;
+	padding: 0 0 0 8px;
+	color: #010101;
+	height: 242px;
+}
+#wp-currentbid-p {
+	padding: 6px 0 0 0;
+	height: 28px;
+	float: left;
+	overflow: hidden;
+}
+#wp-refreshright-p {
+	padding: 2px 10px 0 5px;
+	height: 35px;
+	width: 35px;
+	float: right;
+}
+#wp-refreshcurrentbid-p {
+	font: bold 14px;
+	float: right;
+	padding: 12px 0 0 0;
+}
+#wp-refreshcurrentbid-p p {
+	padding: 0;
+	color: #FFF;
+	margin: 0;
+	letter-spacing: 1px;
+}
+.rightbid li{
+	float:left;
+	padding:0 5px;
+	list-style:none;
+}
+
+.rightbid a{
+	background:url(../images/bid_left.gif) no-repeat left top;
+	height:28px;
+	display:block;
+	float:left;
+	text-decoration:none;
+	color:#000000;
+	font-weight:bold;
+	padding-left: 7px;
+}
+
+.rightbid a:hover{
+	text-decoration: none;
+	cursor: default;
+}
+
+.rightbid a span{
+	background:url(../images/bid_right.gif) no-repeat right top;
+	display:block;
+	padding:6px 7px 0 0;
+	display:block;
+	height:28px;
+	float:left;
+}
+
+#wp-currentbid-p ul {
+	padding: 0;
+	margin: 0;
+}
+#wp-leftbottom-p {
+	float: left;
+	height: 240px;
+	font-size: 17px;
+	background: url(../images/midline.jpg) no-repeat right center;
+	width: 291px;
+}
+#wp-detailsform-p {
+	margin: 5px auto 10px;
+	width: 259px;
+	font-size: 13px;
+}
+#wp-detailsbid-p {
+	width: 259px;
+	margin: 5px auto 10px;
+	font-size: 12px;
+}
+.formbid {
+	background: url(../images/bid_amount.gif) repeat-x;
+	height: 22px;
+	width: 90px;
+	color: #000;
+	padding: 3px 0 3px 3px;
+	text-transform: uppercase;
+	font: bold 16px Tahoma, Verdana, Helvetica;
+	border-right: 2px solid #303030;
+	border-left: 2px solid #303030;
+	border-top-style: none;
+	border-bottom-style: none;
+}
+.currency {
+	text-transform: uppercase;
+	font: bold 16px Tahoma, Verdana, Helvetica;
+}
+#wp-bidnow-p {
+	background: url(../images/bidnow_bg.gif) no-repeat;
+	height: 29px;
+	width: 156px;
+	padding: 5px 0 0;
+	font-size: 18px;
+}
+#wp-bidnow-p a {
+	color: #000;
+	text-decoration: none;
+}
+#wp-bidnow-p a:hover {
+
+	color: #0099CC;
+	text-decoration: none;
+}
+.wp-req-p {
+	font-size: 10px;
+	margin: 0;
+	padding: 0;
+}
+#wp-rightbottom-p {
+	float: right;
+	width: 280px;
+	height: 240px;
+	font-size: 17px;
+	padding: 0;
+}
+#wp-detailsbidders-p {
+	font-size: 12px;
+	width: 265px;
+	margin: 5px auto 0px;
+	height: 100px;
+	overflow: auto;
+}
+#wp-otherauctions-p {
+	background: url(../images/other_bg.gif) no-repeat bottom;
+	height: 84px;
+	width: 264px;
+	margin: auto;
+	padding: 10px 0 0;
+}
+
+.wp-otherheading-p {
+	text-align: center;
+	padding: 5px 0 0;
+	font-size: 11px;
+}
+ol {
+	padding: 0;
+	margin: 0 0 0 15px;
+}
+ol li {
+	margin: 0px;
+	list-style: disc;
+	padding: 0 0 8px 0;
+}
+.wp-liststyle-p {
+	font-style: normal;
+}
+
+#wp-detailsbidders-p a {
+	color: #0099CC;
+	text-transform: capitalize;
+}
+#wp-othercontainer-p {
+	height: 50px;
+	width: 250px;
+	margin: 8px auto 0;
+	border: 1px solid #aaa;
+}
+#wp-othercontainer-p img {
+	height: 50px;
+	width: 50px;
+	margin: 0 5px;
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+}
+/* You CANNOT remove the below three ID's*/
+#wp-powered-p{
+	padding:2px;
+	text-align: right;
+	font-size: 10px;
+	width: 259px;
+	margin: auto;
+}
+#wp-powered-p a{
+	text-decoration: none;
+	color: #0066CC;
+	
+}
+#wp-powered-p a:hover, #wp-detailsbidders-p a:hover {
+	text-decoration: underline;
+	color: #5faaef;
+}
+/* End ID's*/
