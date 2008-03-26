@@ -41,7 +41,7 @@ The plugin uses the Prototype Javascript library. Some other libraries (particul
 
 = Can I add other photos to my auction? =
 
-Not with this version. However, v2.0 has this feature, as well as other great options. Read more about it here: http://www.wpauctions.com/
+Not with this version. However, v2.0 has this feature, as well as other great options. Read more about it here: http://www.wpauctions.com/download
 
 
 == Screenshots ==
