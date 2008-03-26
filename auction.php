@@ -7,7 +7,7 @@ $style = $options['style'];
 $currencysymbol = $options['currencysymbol'];
 $title = $options['title'];
 
-$filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp_auctions/styles/'.$style.'/popup/images/';
+$filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp-auctions/styles/'.$style.'/popup/images/';
 
 // Get auction to show
 
