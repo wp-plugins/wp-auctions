@@ -916,12 +916,12 @@ function docommon_wp_auctions() {
       } ?>
         </ul>
 
-        <div class="wp-rss"><a href="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss"><img src="<?=get_settings('siteurl') ?>/wp-content/plugins/wp_auctions/styles/<?=$style?>/frontend/images/feed-icon.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/></a> <a href="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss" title="Grab My Auctions RSS Feed" >Auctions RSS Feed</a></div>
+        <div class="wp-rss"><a href="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss"><img src="<?=get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/frontend/images/feed-icon.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/></a> <a href="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss" title="Grab My Auctions RSS Feed" >Auctions RSS Feed</a></div>
       </div>
     </div>
     <div id="wp-bidcontainer">
       <div id="wp-bidcontainerleft"> Current Bid: <?php echo $currencysymbol.number_format($current_price, 2, '.', ',') ?></div>
-      <div id="wp-bidcontainerright"><a href="<? echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>" class="lbOn" title="Bid Now"><img src="<?=get_settings('siteurl') ?>/wp-content/plugins/wp_auctions/styles/<?=$style?>/frontend/images/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
+      <div id="wp-bidcontainerright"><a href="<? echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>" class="lbOn" title="Bid Now"><img src="<?=get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/frontend/images/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
 
     </div>
     <!--You CANNOT remove the below attribution-->
