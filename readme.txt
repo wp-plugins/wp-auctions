@@ -6,11 +6,11 @@ Requires at least: 2.2
 Tested up to: 2.5
 Stable tag: /trunk/
 
-WP Auctions is a revolutionary plugin for WordPress which allows you to host auctions on your blog and to sell ANYTHING, completely fee free!
+WP Auctions is a revolutionary plugin for WordPress which allows you to host auctions on your blog and to sell ANYTHING, completely fee-free!
 
 == Description ==
 
-WP Auctions is a revolutionary plugin for WordPress which allows you to host auctions on your blog and to sell ANYTHING, completely fee free!
+WP Auctions is a revolutionary plugin for WordPress which allows you to host auctions on your blog and to sell ANYTHING, completely fee-free!
 
 You no longer need to worry about listing fees, seller fees, final value fees, gallery fees or any other type of fee for anything you want to sell online from this day on! Once you list your auctions, you can register your plugin with the WP Auctions Live page and generate some traffic for your website. Have a look at some existing auctions at http://www.wpauctions.com/live/
 
