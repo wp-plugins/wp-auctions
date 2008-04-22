@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0
+Version: 1.0.1
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -869,7 +869,7 @@ function docommon_wp_auctions() {
     <div id="wp-head"><?php echo $title ?></div>
 
     <div id="wp-body">
-      <div id="wp-image"><img src="<? echo $thumb_url ?>" width="125" height="125" /></div>
+      <div id="wp-image"><img src="<?php echo $thumb_url ?>" width="125" height="125" /></div>
       <div class="wp-heading">No auctions found</div>
       <div id="wp-desc">Sorry, we seem to have sold out of everything we had!</div>
     <div id="wp-other"></div>
@@ -900,9 +900,9 @@ function docommon_wp_auctions() {
     <div id="wp-head"><?php echo $title ?></div>
 
     <div id="wp-body">
-      <div id="wp-image"><a href="<? echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>"  class="lbOn" title="read more"><img src="<? echo $thumb_url ?>" width="125" height="125" /></a></div>
+      <div id="wp-image"><a href="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>"  class="lbOn" title="read more"><img src="<?php echo $thumb_url ?>" width="125" height="125" /></a></div>
       <div class="wp-heading"><?php _e($name) ?></div>
-      <div id="wp-desc"><?php _e($description) ?><span class="wp-more"> - <a href="<? echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>"  class="lbOn" title="read more">more...</a></span> </div>
+      <div id="wp-desc"><?php _e($description) ?><span class="wp-more"> - <a href="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>"  class="lbOn" title="read more">more...</a></span> </div>
       <div id="wp-date">Ending: <?php echo date('dS M Y',strtotime($end_date)) ?></div>
 
       <div id="wp-other">
@@ -921,7 +921,7 @@ function docommon_wp_auctions() {
     </div>
     <div id="wp-bidcontainer">
       <div id="wp-bidcontainerleft"> Current Bid: <?php echo $currencysymbol.number_format($current_price, 2, '.', ',') ?></div>
-      <div id="wp-bidcontainerright"><a href="<? echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>" class="lbOn" title="Bid Now"><img src="<?=get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/frontend/images/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
+      <div id="wp-bidcontainerright"><a href="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id ?>" class="lbOn" title="Bid Now"><img src="<?=get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/frontend/images/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
 
     </div>
     <!--You CANNOT remove the below attribution-->
@@ -1548,7 +1548,7 @@ function wp_auctions_manage() {
 					$intAlternate=1;
 				endif;
 			?>
-		<? } ?>
+		<?php } ?>
 	<?php else: ?>
 		<tr><td colspan="5">No auctions defined</td></tr>
 	<?php endif; ?>
@@ -1617,7 +1617,7 @@ function wp_auctions_manage() {
 					$intAlternate=1;
 				endif;
 			?>
-		<? } ?>
+		<?php } ?>
 	<?php else: ?>
 		<tr><td colspan="5">No auctions defined</td></tr>
 	<?php endif; ?>
