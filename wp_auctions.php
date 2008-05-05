@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0.1
+Version: 1.0.2
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -667,8 +667,6 @@ function wp_auctions_uninstall () {
    $wpdb->query("DROP TABLE {$table_name}");   
 }
 
-
-
 function wp_auctions_install () {
    global $wpdb;
    global $wpa_version;
@@ -940,7 +938,6 @@ check_auction_end($id);
 }     
 }
 
-
 function wp_auctions_options() {
 
    // Note: Options for this plugin include a "Title" setting which is only used by the widget
@@ -986,7 +983,6 @@ function wp_auctions_options() {
    $title = htmlspecialchars($options['title'], ENT_QUOTES);
    $notify = htmlspecialchars($options['notify'], ENT_QUOTES);
    $paypal = htmlspecialchars($options['paypal'], ENT_QUOTES);
-
 	
 ?>
 <div class="wrap"> 
@@ -1037,7 +1033,6 @@ function wp_auctions_options() {
 
 <?php
 }
-
 
 function wp_auctions_welcome() {
 
@@ -1116,7 +1111,6 @@ else {
 
 <?php   
 }
-
 
 function wp_auctions_style() {
 
@@ -1669,7 +1663,6 @@ function wp_auctions_header() {
    echo '<!-- wp_auction end -->' . "\n\n";
 
 }
-
 
 add_action('wp_head', 'wp_auctions_header');
 add_action('widgets_init', 'widget_wp_auctions_init');
