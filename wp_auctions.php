@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0.2
+Version: 1.0.3
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -353,15 +353,15 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 	     $strSQL = "SELECT winner FROM $table_name WHERE id=".$auction_id;
 	     $winner = $wpdb->get_var ($strSQL);          
 
-       if ($winner != "") $result="Sorry, this auction is now closed";
+       if ($winner != "") $result="Sorry, this auction is now closed.";
 
        // Let's also check that the bid is in the right range for the 
   		 $table_name = $wpdb->prefix . "wpa_auctions";
 			 $strSQL = "SELECT current_price,start_price FROM $table_name WHERE id=".$auction_id;
 			 $rows = $wpdb->get_row ($strSQL);
 
-       if ($rows->start_price > $max_bid) $result="Sorry, your bid must exceed the auction start price";
-       if ($rows->current_price > $max_bid) $result="Sorry, your bid must exceed the current bid price";
+       if ($rows->start_price > $max_bid) $result="Sorry, your bid must exceed the auction start price.";
+       if ($rows->current_price > $max_bid) $result="Sorry, your bid must exceed the current bid price.";
 
        if ($result=='') {
 		   // Step 1 - Retrieve current maximum bid on item

@@ -9,7 +9,7 @@ $title = $options['title'];
 
 $filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp-auctions/styles/'.$style.'/popup/images/';
 
-// Get auction to show
+// Get auction to show.
 
 $auction=intval($_GET['ID']);
 
