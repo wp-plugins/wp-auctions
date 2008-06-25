@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0.3
+Version: 1.0.4
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -20,13 +20,13 @@ if (!function_exists('get_option'))
 $wpa_version = "1.0 Free";
 
 // Consts
+define('BID_WIN', 'Congratulations, you are the highest bidder on this item.');
+define('BID_LOSE', "I'm sorry, but a preceeding bidder has outbid you.");
+
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
 define('PLUGIN_STYLE_PATH', 'wp-content/plugins/wp-auctions/styles/');
 define('PLUGIN_NAME', 'wp_auctions.php');
 define('PLUGIN_PATH', 'wp-auctions/wp_auctions.php');
-
-define('BID_WIN', 'Congratulations, you are the highest bidder on this item.');
-define('BID_LOSE', "I'm sorry, but a preceeding bidder has outbid you.");
 
 // Echo Dynamic Javascript (.js) - technique borrowed from ajax-comments (http://www.mikesmullin.com) 
 if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['js'])):
@@ -143,6 +143,7 @@ function ajax_auction_request() {
 	 return false;
 }
 
+// Checked this function
 function ajax_bids_request(auction_id) {
 
    currencysymbol = $F("currencysymbol");
