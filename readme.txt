@@ -3,7 +3,7 @@ Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: sidebar, auction, selling, ecommerce. widget. lightbox
 Requires at least: 2.2
-Tested up to: 2.5
+Tested up to: 2.7
 Stable tag: /trunk/
 
 WP Auctions is a revolutionary plugin for WordPress which allows you to host auctions on your blog and to sell ANYTHING, completely fee-free!

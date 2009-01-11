@@ -5,7 +5,7 @@ require_once('../../../wp-config.php');
 $options = get_option('wp_auctions');
 $style = $options['style'];
 $currencysymbol = $options['currencysymbol'];
-$title = $options['title'];
+$title = $options['title']; 
 
 $filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp-auctions/styles/'.$style.'/popup/images/';
 
