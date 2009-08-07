@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0.4
+Version: 1.0.5
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -11,6 +11,7 @@ Author URI: http://www.wpauctions.com/profile
   /* History:
   v0.1 Beta  - OwenC - 29/01/08 - Initial beta release
   v1.0 Free  - OwenC - 21/02/08 - Free public release  
+  v1.0.5 - Corrected screenshots and added some more help
 */
 
 // cater for stand-alone calls
