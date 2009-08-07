@@ -24,16 +24,13 @@ Please note: This version of the plugin uses the Prototype Javascript library, w
 
 2. Activate the plugin
 
-3a. Add this snippet to the sidebar on your theme: `<?php wp_auctions(); ?>`
-3b. Alternatively, the plugin is also widget-aware and will appear in your widget list.
+3. The plugin is also widget-aware and will appear in your widget list. Alternatively add this snippet to the sidebar on your theme: `<?php wp_auctions(); ?>` 
 
 4. Configure the plugin from the WP Auctions menu in your Administration Section. Specify the currency you want to sell in, your Paypal address and the email address where you'd like to be notified of any bids.
 
-5. Select your style. You can download more styles from http://www.wpauctions.com/styles/
+5. Add your auctions
 
-6. Add your auctions
-
-7. Sell, Sell, Sell
+6. Sell, Sell, Sell
 
 == Frequently Asked Questions ==
 
@@ -48,13 +45,14 @@ Not with this version. However, the Gold version has this feature, as well as ot
 = What other features are available in the Gold version? =
 
 The Gold version has tons of enhancements and improvements. Here are some of our favourite ones:
+# A choice of 5 different visual styles
 # Auctions for registered users only. 
 # Accept PayPal, wire transfers or checks. 
 # Sell items on "Buy It Now" basis
 # Upload multiple images for each auction
 # Place auctions in a post or page. 
 # Show ads if no auctions are available
-# Speicfy shipment surcharges and options
+# Specify shipment surcharges and options
 
 More information at: http://www.wpauctions.com/
 

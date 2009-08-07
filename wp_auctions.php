@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0.5
+Version: 1.0.6
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -12,6 +12,7 @@ Author URI: http://www.wpauctions.com/profile
   v0.1 Beta  - OwenC - 29/01/08 - Initial beta release
   v1.0 Free  - OwenC - 21/02/08 - Free public release  
   v1.0.5 - Corrected screenshots and added some more help
+  v1.0.6 - Corrected text on Style options
 */
 
 // cater for stand-alone calls
@@ -1053,7 +1054,7 @@ $rss = @fetch_rss( $rss_feed );
 <div id="zeitgeist">
 <h2><?php _e('About WP Auctions'); ?></h2>
 
-<div id="latestnews">
+<div style="float:right">
 <h3>Latest News</h3>
 <ul>
 <?php
@@ -1091,7 +1092,7 @@ else {
 
 <p>WP Auctions helps you to host and manage auctions on your own blog. You do not pay any fees to anyone for anything. Ain't it cool.</p>
 
-<p>You are using Version: <?php echo $wpa_version ?> on WordPress v<?php echo $wp_version ?>.</p>
+<p>You are using Version: <?php echo $wpa_version ?> on WordPress v<?php echo $wp_version ?>. <strong>You may want to consider upgrading to our Gold Version which has tons of other features you can read about <a href="http://www.wpauctions.com/download/">here</a></strong></p>
 
    <p>Choose an option from the menus above or select a shortcut below:</p>
    <ul>
@@ -1637,7 +1638,7 @@ function wp_auctions_adminmenu(){
    add_submenu_page (PLUGIN_PATH, 'Options', 'Options', 8 , 'wp-auctions-options', 'wp_auctions_options' );
    add_submenu_page (PLUGIN_PATH, 'Manage', 'Manage', 8 , 'wp-auctions-manage', 'wp_auctions_manage' );
    add_submenu_page (PLUGIN_PATH, 'Add', 'Add', 8 , 'wp-auctions-add', 'wp_auctions_add' );
-   add_submenu_page (PLUGIN_PATH, 'Style', 'Style', 8 , 'wp-auctions-style', 'wp_auctions_style' );
+   //add_submenu_page (PLUGIN_PATH, 'Style', 'Style', 8 , 'wp-auctions-style', 'wp_auctions_style' );
 
 }
 
