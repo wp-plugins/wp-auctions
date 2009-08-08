@@ -1,7 +1,7 @@
 === WP Auctions ===
 Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
-Tags: auction, selling, ecommerce, widget, lightbox, sidebar, commerce, AJAX
+Tags: auction, ecommerce, widget, lightbox, sidebar, commerce, AJAX
 Requires at least: 2.2
 Tested up to: 2.8
 Stable tag: /trunk/
