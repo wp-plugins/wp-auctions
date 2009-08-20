@@ -1,7 +1,7 @@
 === WP Auctions ===
 Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
-Tags: auction, ecommerce, widget, lightbox, sidebar, commerce, AJAX
+Tags: auction, selling, ecommerce, widget, lightbox, sidebar, commerce, AJAX
 Requires at least: 2.2
 Tested up to: 2.8
 Stable tag: /trunk/
@@ -53,6 +53,10 @@ The Gold version has tons of enhancements and improvements. Here are some of our
 # Place auctions in a post or page. 
 # Show ads if no auctions are available
 # Specify shipment surcharges and options
+
+= I love your plugin ... Now can I get a discount? =
+
+Sure! Use this coupon code WPAGOLD to get $15.00 off our purchase price - Go here http://www.wpauctions.com/download/coupon/ to this special limited time offer today.
 
 More information at: http://www.wpauctions.com/
 

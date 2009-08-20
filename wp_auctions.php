@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0.6
+Version: 1.0.7
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 
@@ -27,6 +27,7 @@ Author URI: http://www.wpauctions.com/profile
   v1.0 Free  - OwenC - 21/02/08 - Free public release  
   v1.0.5 - Corrected screenshots and added some more help
   v1.0.6 - Corrected text on Style options
+  v1.0.7 - Added coupon code in case there was interest in Gold version
 */
 
 // cater for stand-alone calls
@@ -1065,8 +1066,35 @@ $rss = @fetch_rss( $rss_feed );
 <div class="wrap"> 
   <h2><?php _e('Welcome to WP Auctions') ?></h2>
 
-<div id="zeitgeist">
 <h2><?php _e('About WP Auctions'); ?></h2>
+
+
+<div style="border-style: dotted">
+<h3>Help support WP Auctions</h3>
+
+<p>If you ever find any problems with WP Auctions, please report them on our <a href="http://demotest.wpauctions.com/errors/">Errors</a> page.</p>
+<p>We also appreciate any donations you may want to give for the further development of this plugin</p>
+<p>It keeps the pizza man coming back to our house</p>
+<p>Thanks!<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
+">
+</form></p>
+</div>
+
+
+<p>WP Auctions helps you to host and manage auctions on your own blog. You do not pay any fees to anyone for anything. Ain't it cool.</p>
+
+<p>You are using Version: <?php echo $wpa_version ?> on WordPress v<?php echo $wp_version ?>. </p>
+
+   <p>Choose an option from the menus above or select a shortcut below:</p>
+   <ul>
+     <li><a href="admin.php?page=wp-auctions-add">Create an auction</a></li>
+     <li><a href="admin.php?page=wp-auctions-manage">Edit an auction</a></li>
+     <li><a href="admin.php?page=wp-auctions-manage">Close an auction</li>
+   </ul>
 
 <div style="float:right">
 <h3>Latest News</h3>
@@ -1088,41 +1116,17 @@ else {
 </div>
 
 <div>
-<h3>Help support WP Auctions</h3>
-
-<p>If you ever find any problems with WP Auctions, please report them on our <a href="http://demotest.wpauctions.com/errors/">Errors</a> page.</p>
-<p>We also appreciate any donations you may want to give for the further development of this plugin</p>
-<p>It keeps the pizza man coming back to our house</p>
-<p>Thanks!<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_s-xclick">
-<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="Make payments with PayPal - it's fast, free and secure!">
-<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
-<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-">
-</form></p>
-</div>
-
-</div>
-
-<p>WP Auctions helps you to host and manage auctions on your own blog. You do not pay any fees to anyone for anything. Ain't it cool.</p>
-
-<p>You are using Version: <?php echo $wpa_version ?> on WordPress v<?php echo $wp_version ?>. <strong>You may want to consider upgrading to our Gold Version which has tons of other features you can read about <a href="http://www.wpauctions.com/download/">here</a></strong></p>
-
-   <p>Choose an option from the menus above or select a shortcut below:</p>
-   <ul>
-     <li><a href="admin.php?page=wp-auctions-add">Create an auction</a></li>
-     <li><a href="admin.php?page=wp-auctions-manage">Edit an auction</a></li>
-     <li><a href="admin.php?page=wp-auctions-manage">Close an auction</li>
-   </ul>
-
-<table width="500px" border="1" bgcolor="#eeeeee" cellpadding="5" cellspacing="5"><tr><td>
 <h3>Live Auctions</h3>
 
 <p>Have you registered your blog yet on our <a href="http://www.wpauctions.com/live/">Live Auctions</a> area?</p>
 <p>By doing so you can broadcast your auction on our site to visitors who may be looking for what you are selling. Registration is easy and free!</p>
 <p>It's a great way to sell your products faster, and get FREE traffic</p>
-</td></tr></table>
+</div>
 
+<div style="border-style: double">
+<p><strong>You may want to consider upgrading to our Gold Version which has tons of other features you can read about <a href="http://www.wpauctions.com/download/">here</a></strong></p>
+<p style="background-color:#FFCC00">*** SPECIAL OFFER *** Like the plugin? Use this coupon code WPAGOLD to get $15.00 off our purchase price - Go <a href="http://www.wpauctions.com/download/coupon/">here</a> to use this special limited time offer today.</p>
+</div>
    
 </div>
 
