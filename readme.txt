@@ -6,7 +6,7 @@ Requires at least: 2.2
 Tested up to: 2.8
 Stable tag: /trunk/
 
-WP Auctions is a revolutionary plugin for WordPress which allows you to host auctions on your blog and to sell ANYTHING, completely fee free!
+WP Auctions is an auction engine for WordPress blogs allowing you to host auctions on your blog and to sell ANYTHING, completely fee free! It uses an attractive Web 2.0 popup for optimum user experience and lets you run your very own auction site.
 
 == Description ==
 
@@ -45,14 +45,15 @@ Not with this version. However, the Gold version has this feature, as well as ot
 = What other features are available in the Gold version? =
 
 The Gold version has tons of enhancements and improvements. Here are some of our favourite ones:
-# A choice of 5 different visual styles
-# Auctions for registered users only. 
-# Accept PayPal, wire transfers or checks. 
-# Sell items on "Buy It Now" basis
-# Upload multiple images for each auction
-# Place auctions in a post or page. 
-# Show ads if no auctions are available
-# Specify shipment surcharges and options
+* A choice of 5 different visual styles
+* Auctions for registered users only. 
+* Accept PayPal, wire transfers or checks. 
+* Sell items on "Buy It Now" basis
+* Upload multiple images for each auction
+* Place auctions in a post or page. 
+* Show ads if no auctions are available
+* Specify shipment surcharges and options
+But don't worry, the Free version is always under development too, so we're committed to improving it and fixing any bugs.
 
 = I love your plugin ... Now can I get a discount? =
 
