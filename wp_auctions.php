@@ -1125,7 +1125,7 @@ else {
 
 <div style="border-style: double">
 <p><strong>You may want to consider upgrading to our Gold Version which has tons of other features you can read about <a href="http://www.wpauctions.com/download/">here</a></strong></p>
-<p style="background-color:#FFCC00">*** SPECIAL OFFER *** Like the plugin? Use this coupon code WPAGOLD to get $15.00 off our purchase price - Go <a href="http://www.wpauctions.com/download/coupon/">here</a> to use this special limited time offer today.</p>
+<p style="background-color:#FFCC00">*** SPECIAL OFFER *** Like the plugin? Use this coupon code WPAGOLD to get $10.00 off our purchase price - Go <a href="http://www.wpauctions.com/download/coupon/">here</a> to use this special limited time offer today.</p>
 </div>
    
 </div>

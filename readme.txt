@@ -57,7 +57,7 @@ But don't worry, the Free version is always under development too, so we're comm
 
 = I love your plugin ... Now can I get a discount? =
 
-Sure! Use this coupon code WPAGOLD to get $15.00 off our purchase price - Go here http://www.wpauctions.com/download/coupon/ to this special limited time offer today.
+Sure! Use this coupon code WPAGOLD to get $10.00 off our purchase price - Go here http://www.wpauctions.com/download/coupon/ to this special limited time offer today.
 
 More information at: http://www.wpauctions.com/
 
