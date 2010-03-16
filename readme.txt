@@ -3,7 +3,7 @@ Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auction, selling, ecommerce, widget, lightbox, sidebar, commerce, AJAX
 Requires at least: 2.2
-Tested up to: 2.8
+Tested up to: 2.9
 Stable tag: /trunk/
 
 WP Auctions is an auction engine for WordPress blogs allowing you to host auctions on your blog and to sell ANYTHING, completely fee free! It uses an attractive Web 2.0 popup for optimum user experience and lets you run your very own auction site.
@@ -54,10 +54,6 @@ The Gold version has tons of enhancements and improvements. Here are some of our
 * Show ads if no auctions are available
 * Specify shipment surcharges and options
 But don't worry, the Free version is always under development too, so we're committed to improving it and fixing any bugs.
-
-= I love your plugin ... Now can I get a discount? =
-
-Sure! Use this coupon code WPAGOLD to get $10.00 off our purchase price - Go here http://www.wpauctions.com/download/coupon/ to this special limited time offer today.
 
 More information at: http://www.wpauctions.com/
 

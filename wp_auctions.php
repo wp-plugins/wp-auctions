@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?></code> to your sidebar. Please note that deactivating this plugin will erase your auctions.
-Version: 1.0.7
+Version: 1.0.8
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 
@@ -28,6 +28,7 @@ Author URI: http://www.wpauctions.com/profile
   v1.0.5 - Corrected screenshots and added some more help
   v1.0.6 - Corrected text on Style options
   v1.0.7 - Added coupon code in case there was interest in Gold version
+  v1.0.8 - Coupon code removed
 */
 
 // cater for stand-alone calls
@@ -1125,7 +1126,6 @@ else {
 
 <div style="border-style: double">
 <p><strong>You may want to consider upgrading to our Gold Version which has tons of other features you can read about <a href="http://www.wpauctions.com/download/">here</a></strong></p>
-<p style="background-color:#FFCC00">*** SPECIAL OFFER *** Like the plugin? Use this coupon code WPAGOLD to get $10.00 off our purchase price - Go <a href="http://www.wpauctions.com/download/coupon/">here</a> to use this special limited time offer today.</p>
 </div>
    
 </div>
