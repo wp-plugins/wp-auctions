@@ -46,6 +46,7 @@ table { margin: 0 !important; padding: 0 !important; }
 /* Header */
 #wp-header-p { height: 20px; padding: 5px 10px; }
 #wp-logo-p { float: left; }
+#wp-logo-p h2 { line-height: normal; margin: 0; padding: 0; }
 #wp-close-p { float: right; font-size: 9px; text-transform: uppercase; }
 #wp-close-p img { margin-right: 6px; position: relative; top: 2px; }
 
@@ -60,7 +61,7 @@ table { margin: 0 !important; padding: 0 !important; }
 
 /* Description */
 .wpa-description { float: left; height: 286px; padding: 5px; width: 326px; }
-h3#tc-heading-p { padding: 0 0 10px; }
+h3#tc-heading-p { line-height: normal; margin: 0; padding: 0 0 10px; }
 #wp-description-p { font-size: 12px; height: 256px; overflow: auto; }
 #wp-description-p p { line-height: 18px !important; }
 #wp-description-p ul { margin: 5px 5px 5px 25px; }
@@ -75,7 +76,7 @@ ul.wpa-details li strong { display: block; padding: 0 0 5px; }
 #wp-bottom-p { height: 244px; }
 
 /* Bid Area */
-#wp-bottom-p h3 { font-size: 13px; font-weight: bold; margin: 1px; padding: 5px; }
+#wp-bottom-p h3 { font: bold 13px Verdana; margin: 1px; padding: 5px; }
 #wp-bottom-p h3 p { display: inline; font-size: 10px; font-weight: normal; }
 #wp-bottom-p table { font-size: 12px; width: 375px; }
 #wp-bottom-p table td { padding: 10px 10px 0; text-align: right; }
@@ -109,21 +110,21 @@ ol.wp-detailsbidders-p li:hover { }
 .wpa-tabs { height: 242px; position: relative; }
 .wpa-tabs ul { list-style: none; }
 	
-.pane { display: none; padding: 10px; }
-.pane p { padding: 0; }
+.wpa-pane { display: none; padding: 10px; }
+.wpa-pane p { padding: 0; }
 
-ul.tabs { height: 26px; list-style: none; margin: 0; padding: 0; }
+ul.wpatabs { height: 26px; list-style: none; margin: 0; padding: 0; }
 	
 /* Single Tab */
-ul.tabs li { cursor: pointer; float: left; font-size: 13px; font-weight: bold; margin: 0; padding: 5px 10px; }
+ul.wpatabs li { cursor: pointer; float: left; font-size: 13px; font-weight: bold; margin: 0; padding: 5px 10px; }
 	
 /* Tabs Link */
-ul.tabs li:hover { display: block; line-height: 30px; position: relative; }
-ul.tabs a:active { outline: none !important; }
-ul.tabs a:hover { cursor: pointer; }
+ul.wpatabs li:hover { display: block; line-height: 30px; position: relative; }
+ul.wpatabs a:active { outline: none !important; }
+ul.wpatabs a:hover { cursor: pointer; }
 
 /* Current Tab */
-ul.tabs li.current, ul.tabs li.current:hover, ul.tabs li.current { outline: none !important; }
+ul.wpatabs li.current, ul.wpatabs li.current:hover, ul.wpatabs li.current { outline: none !important; }
 
 /* Other Auctions */
 .pane-other { padding: 0; }
@@ -150,7 +151,7 @@ ul#wp-othercontainer-p li:hover { }
 		</div><!-- Title Ends -->
 
 		<div id="wp-close-p">
-			<a href="Javascript:get_rss();">Auctions RSS feed <img src="../wp-content/plugins/wp-auctions/requisites/rss.png" alt="Auctions RSS" border="0" /></a> [<a href="#" onclick="tb_remove()" title="close window">Close Window</a>]
+			<a href="Javascript:get_rss();">Auctions RSS feed <img src="wp-content/plugins/wp-auctions/requisites/rss.png" alt="Auctions RSS" border="0" /></a> [<a href="#" onclick="tb_remove()" title="close window">Close Window</a>]
 		</div><!-- RSS/Close Ends -->
 	
 	</div><!-- Header Ends -->
@@ -169,7 +170,7 @@ ul#wp-othercontainer-p li:hover { }
 		<div id="wp-content-p" class="clearfix">
 			
 			<div class="wpa-description">
-				<h3 id="tc-heading-p">Auction Heading</h3>
+				<h3 id="tc-heading-p">Loading Auction...</h3>
 			
 				<div id="wp-description-p">
 				
@@ -234,12 +235,12 @@ ul#wp-othercontainer-p li:hover { }
 		
 		<div class="wpa-tabs">
 		
-			<ul class="tabs">
+			<ul class="wpatabs">
 				<li>Current Bids</li>
 				<li>Other Auctions</li>
 			</ul>
 				
-			<div id="wp-right-p" class="pane pane-bids">	
+			<div id="wp-right-p" class="wpa-pane pane-bids">	
 				<div id="wp-bids-p">  
 					<ol class="wp-detailsbidders-p">
 						<li>Loading bids ...</li>
@@ -247,7 +248,7 @@ ul#wp-othercontainer-p li:hover { }
 				</div>	  
 			</div><!-- Right Ends -->
 			
-			<div id="wp-other-p" class="pane pane-other">			
+			<div id="wp-other-p" class="wpa-pane pane-other">			
 				<ul id="wp-othercontainer-p">
 					<li><a href="#"><img src="../wp-content/plugins/wp-auctions/requisistes/wp-thumb-def.gif" alt="Auction Image" width="50" height="50" /></a></li>
 					<li><a href="#"><img src="../wp-content/plugins/wp-auctions/requisistes/wp-thumb-def.gif" alt="Auction Image" width="50" height="50" /></a></li>
@@ -268,5 +269,5 @@ ul#wp-othercontainer-p li:hover { }
 jQuery(document).ready(function(){
   ajax_auction_request();
 });
-jQuery(function() { jQuery("ul.tabs").tabs(".pane", {effect:'fade'}); });
+jQuery(function() { jQuery("ul.wpatabs").tabs(".wpa-pane", {effect:'fade'}); });
 </script>

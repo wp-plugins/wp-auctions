@@ -139,21 +139,21 @@ ol.wp-detailsbidders-p li:hover { color: #000; }
 .wpa-tabs { }
 .wpa-tabs ul { }
 	
-.pane { background: #fff; border-top: 1px solid #bab076; }
-.pane p { }
+.wpa-pane { background: #fff; border-top: 1px solid #bab076; }
+.wpa-pane p { }
 
-ul.tabs { background: #BAB076; border-bottom: 1px solid #fff; }
+ul.wpatabs { background: #BAB076; border-bottom: 1px solid #fff; }
 	
 /* Single Tab */
-ul.tabs li { background: #BAB076; border-left: 1px solid #fff; color: #463425; }
+ul.wpatabs li { background: #BAB076; border-left: 1px solid #fff; color: #463425; }
 	
 /* Tabs Link */
-ul.tabs li:hover { background: #bab076; color: #000; }
-ul.tabs a:active { }
-ul.tabs a:hover { background: #ddd; }
+ul.wpatabs li:hover { background: #bab076; color: #000; }
+ul.wpatabs a:active { }
+ul.wpatabs a:hover { background: #ddd; }
 
 /* Current Tab */
-ul.tabs li.current, ul.tabs li.current:hover, ul.tabs li.current { background: #bab076; color: #000; }
+ul.wpatabs li.current, ul.wpatabs li.current:hover, ul.wpatabs li.current { background: #bab076; color: #000; }
 
 /* Other Auctions */
 .pane-other { }
