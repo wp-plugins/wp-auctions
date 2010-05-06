@@ -96,11 +96,11 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Screenshots ==
 
-1. Settings
-2. Manage
-3. Add
-4. Sidebar Widget
-5. AJAX Popup
+1. Settings Page
+2. Manage your Auctions
+3. Add an Auction
+4. WP Auctions Sidebar Widget
+5. WP Auctions AJAX Popup
 
 == Changelog ==
 
