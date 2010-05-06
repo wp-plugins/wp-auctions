@@ -1,0 +1,73 @@
+/* WP Auctions Default Style
+Style Name: Earth
+Style URL: http://www.wpauctions.com/styles
+Style Author: Hyder Jaffari
+Author URL: http://www.weborithm.com
+Get more styles at http://www.wpauctions.com/styles
+Last Update: March 19th, 2010
+*/
+
+.TB_modal { background: #D3CBA2; }
+.clear { clear:both; margin: 0; padding: 0; }
+#wp-container-p { font-size: 12px; font-family: Verdana, Arial, Helvetica, sans-serif; }
+#wp-container-p a { color: #660000; text-decoration: none; }
+#wp-container-p a img { border: none; }
+#wp-container-p a:hover { color: #463425; }
+#wp-container-p h2 { font: normal 17px Verdana; margin: 0 !important; padding: 0; }
+#wp-container-p h3 { font: normal 17px Verdana; margin: 0 !important; padding: 0 0 10px; }
+#wp-container-p h4 { font: normal 12px Verdana; text-align: center; margin: 0 0 10px !important; }
+#wp-container-p ul { margin: 0 25px !important; padding: 0; list-style: disc; }
+#wp-container-p ol { margin: 10px 10px 0 23px; padding: 0; }
+#wp-container-p li { font: normal 12px Verdana !important; padding: 0 0 10px; margin: 0; }
+#wp-container-p p { line-height: 20px; padding: 0 0 15px; margin: 0; }
+#wp-container-p input { background: #eee; border: 1px solid #bab076; padding: 3px; width: 200px; }
+#wp-container-p input:focus { background: #fff; border: 1px solid #bab076; }
+#wp-container-p .formbid { padding: 5px 3px; margin: 0 12px 0 0; width: 126px; }
+
+#wp-header-p { background: #D3CCA3 url(gradient.png) repeat-x left bottom; padding: 6px 10px 7px; }
+#wp-logo-p { float: left; }
+#wp-close-p { float: right; padding-top: 3px; }
+
+#wp-top-p { background: #fff; border-right: 1px solid #bab076; }
+#wp-top-p table { width: 100%; }
+#wp-image-p { background: #fff; border: 1px solid #bab076; height: 250px; padding: 1px; width: 250px; }
+
+#wp-content-p {	background: #fff; border-top: 1px solid #bab076; width: 500px; }
+#wp-content-p h3 { padding: 5px 10px; }
+#wp-description-p { height: 77px; margin: 0 10px 10px; overflow: auto; width: 480px; }
+#wp-refreshbar-p { background: #D3CCA3 url(gradient.png) repeat-x left bottom; border-top: 1px solid #bab076; border-bottom: 1px solid #bab076; font-size: 11px; padding: 0 5px 0 0; width: 495px; }
+
+#wp-currentbid-p { background: #fff; border-right: 1px solid #bab076; float: left; font-weight: bold; line-height: 38px; padding: 0 5px; }
+p#wp-refreshbid-p { float: right; line-height: 38px; padding: 0; width: 160px; }
+p#wp-close-p { float: left; line-height: 38px; padding: 0 0 0 45px; }
+p#wp-refreshbid-p span { float: left; }
+p#wp-refreshbid-p img { float: right; margin: 2px 0 0 5px; }
+
+#wp-bottom-p { background: #fff; border: 1px solid #bab076; border-top: 0; padding: 10px 5px 5px; }
+#wp-bottom-p h3 { font-size: 1em; font-weight: bold; padding: 0 0 5px; }
+#wp-bottom-p table { width: 100%; }
+#wp-bottom-p td { padding: 5px 5px 0; width: 50%; }
+#wp-bottom-p td td { width: auto; }
+#wp-left-p { background: #fff; border-right: 1px dashed #bab076; overflow: auto; }
+#wp-right-p { background: #fff; height: 260px; overflow: auto; }
+#wp-right-p li { padding: 0 0 15px; }
+
+#wp-details-p { padding: 0 0 5px; }
+#wp-details-p td { padding: 2px 0; text-align: left; }
+#wp-details-p p { font: normal 12px Verdana !important; padding: 0 10px 0 0; text-align: right; }
+
+#wp-bid-p table { width: 100%; }
+#wp-bid-p td { padding: 0; text-align: right; }
+#wp-bid-p p.currency { font-size: 17px; padding: 0 5px 0 0; }
+#wp-bid-p p.bidnow { background: #D3CCA3 url(gradient.png) repeat-x left bottom; border: 1px solid #bab076; font-size: 17px; margin: 0 10px 0 0; padding: 3px 5px; text-align: center; }
+#wp-bid-p p.bidnow a { color: #000; }
+p.spinner { color: #777; display: inline; font-size: 9px; margin: 0; padding: 0 !important; }
+#wp-bid-p #wp-extrainfo { font-size: 10px; }
+
+#wp-other-p h4 { font-size: 11px; }
+#wp-other-p { background: #D3CCA3 url(gradient.png) repeat-x left bottom; border: 1px solid #bab076; margin: 15px 10px 5px 0; padding: 5px; }
+#wp-other-p ul { list-style: none; text-align: center; margin: 0; padding: 0; }
+#wp-other-p li { display: inline; padding: 0 5px 0 0; margin: 0; }
+#wp-other-p li img { background: #fff; border: 1px solid #463425; padding: 1px; }
+
+#wp-powered-p { color: #999; font-size: 9px; }

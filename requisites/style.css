@@ -1,0 +1,76 @@
+/* Main Container */
+	.wp-auctions { background: url(logo.png) no-repeat left 2px; margin: 15px 15px 0 5px; padding: 40px 0 0 0; width: 90%; }
+	.wp-auctions .wrap { margin: 0; }
+	
+	.wp-auctions a { color: #21759b; font-weight: bold; text-decoration: none; }
+	.wp-auctions a:hover { color: #D54E21; }
+	
+	.wp-auctions h3 { background: #EBEBDA; font-size: 13px; margin: 0 0 10px; padding: 5px; }
+	
+	.latestnews { background: #fff; border: 1px solid #fff; border-right: 0; float: left; margin: 0; padding: 0; width: 49.4%; }
+	.latestnews ul { list-style: disc; margin: 14px 0 14px 23px; }
+	.latestnews li { margin: 0; padding: 4px 0; }
+	.latestnews h3 { background: #EBEBDA url(rss.png) no-repeat 5px 6px; padding: 5px 0 5px 26px; }
+
+	.wpa-info { background: #fff; border: 1px solid #fff; float: left; padding: 0; width: 50%; }
+	.wpa-info h3 { background: #EBEBDA url(resources.png) no-repeat 5px 5px; padding-left: 25px; }
+	.wpa-info h3.wpa-upgrade { background: #EBEBDA url(upgrade.png) no-repeat 5px 7px; padding-left: 25px; }
+	
+	/* Intro Box */
+	.wpa-intro { background: #fff; color: #333; padding-top: 15px; }
+	.wpa-intro p { font-style: italic; margin: 0; padding: 0 10px 15px; }
+	.wpa-info p { font-style: normal; font-weight: normal; margin: 0; padding: 0 10px 10px; }
+	
+	/* Main Titles */
+	.wp-auctions h2 { color: #000; font-style: normal; line-height: 1em; margin: 15px 0 0; padding: 0; }
+
+	.wp-auctions h2 span { font-size: 12px; }
+		
+	h2.settings { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.settings em { background: url(settings.png) no-repeat 5px 2px; font-style: normal; padding: 0 0 0 41px; }
+	
+	h2.payment { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.payment em { background: url(payment.png) no-repeat 5px 5px; font-style: normal; padding: 0 0 0 41px; }
+	
+	h2.other-settings { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.other-settings em { background: url(other-settings.png) no-repeat 5px top; font-style: normal; padding: 0 0 0 41px; }
+
+	h2.manage { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.manage em { background: url(manage.png) no-repeat 5px top; font-style: normal; padding: 0 0 0 41px; }
+
+	h2.details { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.details em { background: url(details.png) no-repeat 5px top; font-style: normal; padding: 2px 0 2px 41px; }
+	
+	/* Get Started */
+	
+	ul.wpa-start { margin: 15px 0 0; }
+	ul.wpa-start li { float: left; padding: 0 10px 0 0; }
+	ul.wpa-start li button { font-size: 15px !important; padding: 5px 10px; }
+	ul.wpa-start .wpa-upgrade button strong { background: url(upgrade.png) no-repeat left 2px; padding-left: 20px; }
+
+	/* Time */
+	
+	.wpa-time { background: url(time.png) no-repeat right; text-align: right; color: #333; font-size: 9px; padding: 0 27px 0 0; text-transform: uppercase; }
+
+	/* Tables */
+	
+	.wp-auctions table.widefat { border: 1px solid #ccc; border-top: 0; margin: 0 !important; -moz-border-radius: 0; -webkit-border-radius: 0; -webkit-border-bottom-left-radius: 5px; -webkit-border-bottom-right-radius: 5px; -moz-border-radius-bottomleft: 5px; -moz-border-radius-bottomright: 5px; text-shadow: #fff 0 1px; }
+	.wp-auctions table.widefat th { background: #faffee; border-right: 1px solid #bcaa97; border-top: 1px solid #fff; color: #342224; padding: 5px 10px; vertical-align: middle; width: 160px !important; }
+	.wp-auctions table.widefat td { background: #ebebda; border-bottom: 1px solid #bcaa97; border-left: 1px solid #fff; border-top: 1px solid #fff; color: #5a372c; padding: 5px 10px; }
+
+	.wp-auctions table.widefat input { border: 1px solid #bcaa97; padding: 5px; width: 200px; }
+	.wp-auctions table.widefat select { border: 1px solid #bcaa97;  width: 100px; }
+	.wp-auctions table.widefat textarea { border: 1px solid #bcaa97; padding: 5px; width: 400px; }
+	
+	.wp-auctions p.submit { padding: 15px 0 30px; }
+	.wp-auctions p.submit input { font-size: 15px !important; font-weight: bold; padding: 5px 10px; }
+
+	.options legend { color: #342224; font-size: 17px; font-weight: bold; padding: 8px 0 10px; }
+	.options table.widefat { border: 1px solid #bcaa97; }
+	.options table.widefat th { border-bottom: 0; border-left: 1px solid #fff; border-right-color: #bcaa97; }
+	.options table.widefat td { border-bottom: 1px solid #fff; border-left: 1px solid #EBEBDA; border-right: 1px solid #EBEBDA; border-top: 1px solid #bcaa97;  }
+
+	#wpa-radio { width: 25px; }
+
+	.add-auction { padding: 15px 0 30px; }
+	.add-auction input { font-size: 15px !important; font-weight: bold; padding: 5px 10px; }
