@@ -11,6 +11,7 @@ Author URI: http://www.wpauctions.com
 /* History:
    v 1.5   - New version of free plugin
         .1 - Styles updated
+        .2 - Javascript fix
 */
 
 error_reporting (E_ALL ^ E_NOTICE);
@@ -19,7 +20,7 @@ error_reporting (E_ALL ^ E_NOTICE);
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.5 Lite";
+$wpa_version = "1.5.2 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
