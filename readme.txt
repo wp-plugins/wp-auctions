@@ -104,6 +104,10 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.6 =
+
+* Added cheque/direct payment feature
+
 = 1.5.2 =
 
 * Fixed JavaScript variables to avoid conflicts

@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.5.1
+Version: 1.6
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -12,6 +12,7 @@ Author URI: http://www.wpauctions.com
    v 1.5   - New version of free plugin
         .1 - Styles updated
         .2 - Javascript fix
+   v1.6 - Added check/mailing address option
 */
 
 error_reporting (E_ALL ^ E_NOTICE);
@@ -20,7 +21,7 @@ error_reporting (E_ALL ^ E_NOTICE);
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.5.2 Lite";
+$wpa_version = "1.6 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1134,21 +1135,20 @@ function CheckCurrencyOptions() {
         <p><?php _e('Enter your PayPal email address (where you want auction winners to pay for their items)') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: 0;"><?php _e('Bank Details:') ?></th> 
-        <td class='desc' style="border-bottom: none;">
+        <th scope="row" class='row-title'><?php _e('Bank Details:') ?></th> 
+        <td class='desc'>
         <textarea rows="5" cols="100" id="wpa-bankdetails" name="wpa-bankdetails"><?php echo $bankdetails; ?></textarea>
         <br />
         <p><?php _e('Enter your bank details (where you want auction winners to wire tranfers to you)') ?></p></td> 
       </tr> 
-<!-- - Disable while we check for issues
       <tr valign="top" class="alternate"> 
-        <th scope="row" class='row-title'><?php _e('Mailing Address:') ?></th> 
+        <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('Mailing Address:') ?></th> 
         <td class='desc' style="border-bottom: none;">
         <textarea rows="5" cols="100" id="wpa-mailingaddress" name="wpa-mailingaddress"><?php echo $mailingaddress; ?></textarea>
         <br />
         <p><?php _e('Enter your mailing address address (where you want auction winners to mail you cheques and money orders)') ?></p></td> 
       </tr> 
--->
+
     </table>
 
   <h2 class="other-settings"><em><?php _e('Other Settings') ?></em></h2> 
