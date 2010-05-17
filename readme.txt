@@ -104,6 +104,10 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.7 =
+
+* Added option to have rotating ads if there are no active auctions
+
 = 1.6 =
 
 * Added cheque/direct payment feature

@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.6
+Version: 1.7
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -13,6 +13,7 @@ Author URI: http://www.wpauctions.com
         .1 - Styles updated
         .2 - Javascript fix
    v1.6 - Added check/mailing address option
+   v1.7 - Added "no auction" alternative
 */
 
 error_reporting (E_ALL ^ E_NOTICE);
@@ -21,7 +22,7 @@ error_reporting (E_ALL ^ E_NOTICE);
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.6 Lite";
+$wpa_version = "1.7 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1170,6 +1171,13 @@ function CheckCurrencyOptions() {
         <br />
         <p><?php _e('Choose a graphical style for your widget. Get new styles from our <a href="http://www.wpauctions.com/styles/">style store</a>.') ?></p></td> 
       </tr> 
+      <tr valign="top"> 
+        <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('"No Auction" Alternative:') ?></th> 
+        <td class='desc' style="border-bottom: none;">
+        <textarea rows="5" cols="100" id="wpa-noauction" name="wpa-noauction"><?php echo $noauction; ?></textarea>
+        <br />
+        <p><?php _e('Specify the HTML you would like to display if there are no active auctions. Leave blank for standard "No Auctions" display<br>To rotate ads, separate with &lt;!--more--&gt;') ?></p></td> 
+      </tr>       
     </table>
 
 	<input type="hidden" id="wp_auctions-submit" name="wp_auctions-submit" value="1" />
