@@ -24,6 +24,7 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 * Easily Edit, End or Delete your auctions.
 * Use HTML to describe your auctions, you can even include video!
 * Set a specific end date and time, down to the second.
+* Choice of display styles
 * Sleek AJAX popup to show your auctions.
 * Easy to use backend admin area to manage your auctions.
 
@@ -107,6 +108,7 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 = 1.7.1 =
 
 * Fixed some CSS styling in popup
+* Added a new style
 
 = 1.7 =
 
