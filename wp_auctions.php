@@ -14,6 +14,7 @@ Author URI: http://www.wpauctions.com
         .2 - Javascript fix
    v1.6 - Added check/mailing address option
    v1.7 - Added "no auction" alternative
+        .1 - Style fix
 */
 
 error_reporting (E_ALL ^ E_NOTICE);
@@ -22,7 +23,7 @@ error_reporting (E_ALL ^ E_NOTICE);
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.7 Lite";
+$wpa_version = "1.7.1 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');

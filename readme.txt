@@ -104,6 +104,10 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.7.1 =
+
+* Fixed some CSS styling in popup
+
 = 1.7 =
 
 * Added option to have rotating ads if there are no active auctions

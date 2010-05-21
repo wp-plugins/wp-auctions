@@ -14,9 +14,8 @@ $filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp-auctions/styles/'.$sty
 $auction=intval($_GET['ID']);
 
 ?>
-
+<!-- Lite -->
 <style type="text/css">
-
 /* WP Auctions Default Style
 Style Name: WPA
 Style URL: http://www.wpauctions.com/styles
@@ -35,26 +34,27 @@ table { margin: 0 !important; padding: 0 !important; }
 .TB_modal { }
 
 /* Container */
-#wp-container-p { font: normal 11px Verdana, Arial, sans-serif; text-shadow: #fff 0 1px; width: 753px; }
+#wp-container-p { font: normal 11px Verdana, Arial, sans-serif !important; text-shadow: #fff 0 1px; width: 753px; }
+#wp-container-p h1, #wp-container-p h2, #wp-container-p h3, #wp-container-p h4, #wp-container-p h5, #wp-container-p h6, #wp-container-p ol, #wp-container-p ul, #wp-container-p ul li, #wp-container-p ol li, #wp-container-p table p, #wp-container-p h3 p, #wp-container-p strong, #wp-container-p ul li p { font-family: Verdana, Arial, sans-serif !important; }
 
 #wp-container-p a { text-decoration: none; }
 #wp-container-p a:hover, #wp-close-p:hover { }
 
-#wp-container-p h2 { font-size: 17px; font-weight: normal; }
-#wp-container-p h3 { font-size: 17px; font-weight: normal; }
+#wp-container-p h2 { font-size: 17px !important; font-weight: normal; }
+#wp-container-p h3 { font-size: 17px !important; font-weight: normal; }
 
 /* Header */
 #wp-header-p { height: 20px; padding: 5px 10px; }
 #wp-logo-p { float: left; }
 #wp-logo-p h2 { line-height: normal; margin: 0; padding: 0; }
 #wp-close-p { float: right; font-size: 9px; text-transform: uppercase; }
-#wp-close-p img { margin-right: 6px; position: relative; top: 2px; }
+#wp-close-p img { margin-right: 6px; top: 2px; }
 
 /* Top Area */
 #wp-top-p { height: 296px; }
 #wp-content-p { float: right; height: 296px; width: 497px; }
 /* Top Image */
-.wpa-image { float: left; height: 296px; text-align: center; width: 252px; }
+.wpa-image { float: left; height: 296px; position: absolute; text-align: center; width: 252px; }
 #wp-image-p { height: 250px; padding: 1px; }
 #wp_price { font-size: 13px; font-weight: bold; padding: 5px 0 0; }
 #wp-refreshbid-p, #wp-refreshbid-p a { font-size: 10px; text-transform: uppercase; }
@@ -64,21 +64,27 @@ table { margin: 0 !important; padding: 0 !important; }
 h3#tc-heading-p { line-height: normal; margin: 0; padding: 0 0 10px; }
 #wp-description-p { font-size: 12px; height: 256px; overflow: auto; }
 #wp-description-p p { line-height: 18px !important; }
-#wp-description-p ul { margin: 5px 5px 5px 25px; }
-#wp-description-p li { padding: 5px 0; }
+#wp-description-p ul { margin: 5px 5px 5px 20px; }
+#wp-description-p li { list-style: disc; padding: 5px 0; }
 
 /* Action List */
 ul.wpa-details { float: right; list-style: none; width: 160px; }
-ul.wpa-details li { padding: 10px 5px; }
-ul.wpa-details li strong { display: block; padding: 0 0 5px; }
+ul.wpa-details li { padding: 0; }
+ul.wpa-details li strong { display: block; padding: 5px 0 0; }
+
+#wp_winningb p { padding: 0; }
+#wp_winningb strong { padding: 5px 0; }
+#wp_winningb img { margin: 0 5px 5px 0; padding: 2px; }
+
+a.wpa-bin-price { display: block; font-weight: bold; margin: 5px 0 0; padding: 5px; text-align: center; }
 
 /* Bottom Area */
 #wp-bottom-p { height: 244px; }
 
 /* Bid Area */
-#wp-bottom-p h3 { font: bold 13px Verdana; margin: 1px; padding: 5px; }
+#wp-bottom-p h3 { font: bold 13px Verdana !important; margin: 1px !important; padding: 5px; }
 #wp-bottom-p h3 p { display: inline; font-size: 10px; font-weight: normal; }
-#wp-bottom-p table { font-size: 12px; width: 375px; }
+#wp-bottom-p table { font-size: 12px !important; width: 375px; }
 #wp-bottom-p table td { padding: 10px 10px 0; text-align: right; }
 #wp-bottom-p table td p { text-align: left; width: 117px; }
 #wp-bottom-p input { padding: 5px; width: 200px; }
@@ -109,14 +115,14 @@ ol.wp-detailsbidders-p li:hover { }
 /* Tabs */
 .wpa-tabs { height: 242px; position: relative; }
 .wpa-tabs ul { list-style: none; }
-	
+
 .wpa-pane { display: none; padding: 10px; }
 .wpa-pane p { padding: 0; }
 
 ul.wpatabs { height: 26px; list-style: none; margin: 0; padding: 0; }
 	
 /* Single Tab */
-ul.wpatabs li { cursor: pointer; float: left; font-size: 13px; font-weight: bold; margin: 0; padding: 5px 10px; }
+ul.wpatabs li { cursor: pointer; float: left; font-size: 13px !important; font-weight: bold; margin: 0; padding: 5px 10px; }
 	
 /* Tabs Link */
 ul.wpatabs li:hover { display: block; line-height: 30px; position: relative; }
@@ -131,13 +137,12 @@ ul.wpatabs li.current, ul.wpatabs li.current:hover, ul.wpatabs li.current { outl
 ul#wp-othercontainer-p { height: 194px; overflow: auto; margin: 10px; }
 ul#wp-othercontainer-p li { height: 54px; margin: 0 0 10px; padding: 0; }
 ul#wp-othercontainer-p li p { padding: 5px 0 0; }
-ul#wp-othercontainer-p li p.wpa-other-title { font-size: 13px; font-weight: bold; }
+ul#wp-othercontainer-p li p.wpa-other-title { font-size: 13px !important; font-weight: bold; }
 ul#wp-othercontainer-p li img { float: left; margin: 0 10px 0 0; padding: 1px; }
 ul#wp-othercontainer-p li:hover { }
 
-#wp-powered-p { bottom: 1px; font-size: 9px; position: absolute; right: 1px; }
+#wp-powered-p { bottom: 1px; font-size: 9px !important; position: absolute; right: 1px; }
 #wp-powered-p a { }
-
 </style>
 
 <form id="auction_form">
@@ -151,7 +156,7 @@ ul#wp-othercontainer-p li:hover { }
 		</div><!-- Title Ends -->
 
 		<div id="wp-close-p">
-			<a href="Javascript:get_rss();">Auctions RSS feed <img src="wp-content/plugins/wp-auctions/requisites/rss.png" alt="Auctions RSS" border="0" /></a> [<a href="#" onclick="tb_remove()" title="close window">Close Window</a>]
+			<a href="Javascript:get_rss();">Auctions RSS feed <img src="<?php echo $filepath ?>rss.png" alt="Auctions RSS" border="0" /></a> [<a href="#" onclick="tb_remove()" title="close window">Close Window</a>]
 		</div><!-- RSS/Close Ends -->
 	
 	</div><!-- Header Ends -->
@@ -253,8 +258,6 @@ ul#wp-othercontainer-p li:hover { }
 					<li><a href="#"><img src="../wp-content/plugins/wp-auctions/requisistes/wp-thumb-def.gif" alt="Auction Image" width="50" height="50" /></a></li>
 					<li><a href="#"><img src="../wp-content/plugins/wp-auctions/requisistes/wp-thumb-def.gif" alt="Auction Image" width="50" height="50" /></a></li>
 				</ul>
-				
-				
 			</div><!-- Other Auctions Ends -->
 			<div id="wp-powered-p">Powered by <a href="http://www.wpauctions.com" target="_blank">WP Auctions</a></div>
 		</div><!-- WPA Tabs -->
