@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.7.1
+Version: 1.7.3
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -15,6 +15,8 @@ Author URI: http://www.wpauctions.com
    v1.6 - Added check/mailing address option
    v1.7 - Added "no auction" alternative
         .1 - Style fix
+        .2 - Cleared up some extra code that wasn't being used
+        .3 - Changed upload functionality as WP 3.0 media uploader didn't fit any more
 */
 
 error_reporting (E_ALL ^ E_NOTICE);
@@ -23,7 +25,7 @@ error_reporting (E_ALL ^ E_NOTICE);
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.7.1 Lite";
+$wpa_version = "1.7.3 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1305,25 +1307,57 @@ function wp_auctions_add() {
       // security check
       check_admin_referer( 'WPA-nonce');
 
+      // handle a file upload if there is one
+		  $overrides = array('test_form' => false);
+								
+		  $file = wp_handle_upload($_FILES['upload_0'], $overrides);
+
+      if ( !isset($file['error']) ) {
+         $url = $file['url'];
+         $type = $file['type'];
+         $file = $file['file'];
+         $filename = basename($file);
+
+         // Construct the object array
+         $object = array(
+           'post_title' => $filename,
+           'post_content' => $url,
+           'post_mime_type' => $type,
+           'guid' => $url);
+
+         // Save the data
+         $id = wp_insert_attachment($object, $file);
+
+         // Add the meta-data
+         wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+
+         do_action('wp_create_file_in_uploads', $file, $id); // For replication
+      
+         $strSaveImageURL = $url;
+      } else {
+         $strSaveImageURL = $_POST["wpa_ImageURL"];
+      }
+
       if($_POST["wpa_action"] == "Add Auction"):
          $strSaveName = strip_tags(htmlspecialchars($_POST["wpa_name"]));
          $strSaveDescription = $_POST["wpa_description"];
-         $strSaveImageURL = $_POST["wpa_ImageURL"];
          $strSaveStartPrice = $_POST["wpa_StartPrice"];
          $strSaveReservePrice = $_POST["wpa_ReservePrice"];
          $strSaveEndDate = $_POST["wpa_EndDate"];
          $strSaveImageURL1 = $_POST["wpa_ImageURL1"];
          $strPaymentMethod = $_POST["wpa_PaymentMethod"];              
+         //$strSaveImageURL = $_POST["wpa_ImageURL"]; - handled above!
       elseif($_POST["wpa_action"] == "Update Auction"):
          $strUpdateID = $_POST["wpa_id"];
          $strSaveName = strip_tags(htmlspecialchars($_POST["wpa_name"]));
          $strSaveDescription = $_POST["wpa_description"];
-         $strSaveImageURL = $_POST["wpa_ImageURL"];
          $strSaveStartPrice = $_POST["wpa_StartPrice"];
          $strSaveReservePrice = $_POST["wpa_ReservePrice"];
          $strSaveEndDate = $_POST["wpa_EndDate"];
          $strSaveImageURL1 = $_POST["wpa_ImageURL1"];
          $strPaymentMethod = $_POST["wpa_PaymentMethod"];              
+         //$strSaveImageURL = $_POST["wpa_ImageURL"]; - handled above!
+
          $bolUpdate = true;
       elseif($_GET["wpa_action"] == "edit"):
          $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$_GET["wpa_id"];
@@ -1436,11 +1470,6 @@ function wp_auctions_add() {
 		<h2 class="details"><em>Auction Details</em></h2>
 
 <script language="Javascript">
-function showUploadPopup(image_num) {
-   childWindow=window.open("<?php print get_settings('siteurl').PLUGIN_EXTERNAL_PATH ?>jq_upload.php?image_num="+image_num,"mywindow","width=500,height=400,scrollbars");
-   if (childWindow.opener == null) childWindow.opener = self;
-} 
-
 
 jQuery(document).ready(function() {
   
@@ -1450,7 +1479,7 @@ jQuery(document).ready(function() {
 
 </script>
 
-		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=wp-auctions-add" id="editform">
+		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=wp-auctions-add" id="editform" enctype="multipart/form-data">
 
     <?php wp_nonce_field('WPA-nonce'); ?>
 
@@ -1472,8 +1501,11 @@ jQuery(document).ready(function() {
       </tr>
       <tr valign="top" class="alternate"> 
         <th scope="row"><?php _e('Image URL:') ?></th> 
-        <td><input type="text" name="wpa_ImageURL" value="<?php print $strSaveImageURL ?>" maxlength="255" size="50" id="upload_image_0"/>  <a href="#" class="upload_image_button" id="uploadsimage_0" />Upload Image</a><br>
-        <?php _e('Specify the image URL for your auction. If your images do not appear please CHMOD the "wp-auctions/files" folder 777 via FTP. <a href="http://codex.wordpress.org/Changing_File_Permissions#Using_an_FTP_Client" target="_blank">Instructions</a>.') ?></td> 
+        <td><input type="text" name="wpa_ImageURL" value="<?php print $strSaveImageURL ?>" maxlength="255" size="50" id="upload_image_0"/>
+        <p>You can specify a URL to an image, alternatively upload one from your computer</p>
+        <label for="upload_0"><?php _e('Choose an image from your computer:'); ?></label><br /><input type="file" id="upload_0" name="upload_0" />
+        <br>
+        <?php _e('Specify the image for your auction. If your images do not appear please CHMOD the "wp-auctions/files" folder 777 via FTP. <a href="http://codex.wordpress.org/Changing_File_Permissions#Using_an_FTP_Client" target="_blank">Instructions</a>.') ?></td> 
       </tr>
       <tr valign="top" class="alternate"> 
         <th scope="row"><?php _e('Start Price:') ?></th> 
@@ -1765,62 +1797,12 @@ function wp_auctions_header() {
 
 }
 
-function wpa_handleAdminMenu() {
-   add_meta_box('WPA_Admin', 'Insert Auction', 'insertAuctionSelector', 'post', 'normal');
-   add_meta_box('WPA_Admin', 'Insert Auction', 'insertAuctionSelector', 'page', 'normal');   
-}
-
-function insertAuctionSelector() {
-
-   global $wpdb;
-	 $table_name = $wpdb->prefix . "wpa_auctions";
-	 $strSQL = "SELECT id, name, image_url FROM $table_name WHERE '".current_time('mysql',"1")."' < date_end ORDER BY date_end DESC";
-	 $rows = $wpdb->get_results ($strSQL);
-
-?>
-   <table class="form-table">
-      <tr valign="top">
-         <th scope="row"><label for="WPA_Admin_id">Select an auction</label></th>
-         <td>
-            
-	<?php if (is_array($rows)): ?>
-        <select name="WPA_Admin[id]" id="WPA_Admin_id" style="width:95%;">
-		       <?php foreach ($rows as $row) { 
-		          echo '<option value="'.$row->id.'">'.$row->name.'</option>';
-           } ?>
-         </select> 
-         <br>(You should only have a single auction on each page or post)    
-  <?php else:
-          echo "Please create some auctions first"; 
-         endif; 
-  ?>          
-            
-         </td>
-      </tr>
-   </table>
-   <p class="submit">
-      <input type="button" onclick="return WPA_Setup.sendToEditor(this.form);" value="Insert Auction" />
-   </p>
-<?php
-}
-
-function wpa_adminWPHead() {
-   if ($GLOBALS['editing']) {
-      wp_enqueue_script('WPA_Admin', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'wp_aAdminjs.php', array('jquery'), '1.0.0' );
-   }
-}
-
 
 function wpa_admin_scripts() {
-   wp_enqueue_script('media-upload');
-   wp_enqueue_script('thickbox');
-   wp_register_script('my-upload', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH .'js/upload_script.js', array('jquery','media-upload','thickbox'));
    wp_enqueue_script( 'jquery-ui-datepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/ui.datetimepicker.js', array('jquery-ui-core') , 0.1, true );
-   wp_enqueue_script('my-upload');
 }
 
 function wpa_admin_styles() {
-   wp_enqueue_style('thickbox');
    wp_enqueue_style( 'jquery-ui-datepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/overcast/jquery-ui-1.7.2.custom.css' );
 }
 
