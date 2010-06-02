@@ -19,7 +19,7 @@ Author URI: http://www.wpauctions.com
         .3 - Changed upload functionality as WP 3.0 media uploader didn't fit any more
 */
 
-error_reporting (E_ALL ^ E_NOTICE);
+//error_reporting (E_ALL ^ E_NOTICE);
 
 // cater for stand-alone calls
 if (!function_exists('get_option'))

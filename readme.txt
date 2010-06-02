@@ -105,6 +105,13 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.7.3 =
+* Changed upload functionality as with WP 3.0 media uploader didn't fit any more
+
+= 1.7.2 =
+* Cleared up some extra code that wasn't being used
+* Bug fix to resizer
+
 = 1.7.1 =
 
 * Fixed some CSS styling in popup
