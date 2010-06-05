@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.7.3
+Version: 1.7.4
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -17,6 +17,7 @@ Author URI: http://www.wpauctions.com
         .1 - Style fix
         .2 - Cleared up some extra code that wasn't being used
         .3 - Changed upload functionality as WP 3.0 media uploader didn't fit any more
+        .4 - Bug fix for admin menu errors appearing when plugin activated
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -25,7 +26,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.7.3 Lite";
+$wpa_version = "1.7.4 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -328,7 +329,11 @@ if(!function_exists('file_put_contents')) {
 function wpa_resize ( $image, $size ) {
    $resizer = get_settings('siteurl').PLUGIN_EXTERNAL_PATH.'wpa_resizer.php';
    
-   $currentServer = $_SERVER['SERVER_NAME'];
+   $currentServer = get_bloginfo('wpurl');
+   
+   // handle blog being in a folder
+   $x = parse_url( $currentServer );
+   $currentServer = $x['scheme'].'://'.$x['host'];
    
    // make sure we have a local file
    if(ereg($currentServer,$image) != true) {
@@ -1822,9 +1827,6 @@ function wp_auctions_adminmenu(){
    add_submenu_page (PLUGIN_PATH, 'Add', 'Add', 7 , 'wp-auctions-add', 'wp_auctions_add' );
 
 }
-
-add_action('admin_menu', 'wpa_handleAdminMenu');
-add_filter('admin_print_scripts', 'wpa_adminWPHead');
 
 add_action('wp_head', 'wp_auctions_header');
 add_action('widgets_init', 'widget_wp_auctions_init');

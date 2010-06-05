@@ -32,6 +32,7 @@ table { margin: 0 !important; padding: 0 !important; }
 
 /* Modal Box*/
 .TB_modal { }
+#TB_window img { border: 0 !important; display: inherit !important; margin: 0 !important; }
 
 /* Container */
 #wp-container-p { font: normal 11px Verdana, Arial, sans-serif !important; text-shadow: #fff 0 1px; width: 753px; }
@@ -76,7 +77,7 @@ ul.wpa-details li strong { display: block; padding: 5px 0 0; }
 #wp_winningb strong { padding: 5px 0; }
 #wp_winningb img { margin: 0 5px 5px 0; padding: 2px; }
 
-a.wpa-bin-price { display: block; font-weight: bold; margin: 5px 0 0; padding: 5px; text-align: center; }
+a.wpa-bin-price { display: block; font-weight: bold; margin: 5px 0; padding: 5px; text-align: center; }
 
 /* Bottom Area */
 #wp-bottom-p { height: 244px; }
@@ -196,7 +197,7 @@ ul#wp-othercontainer-p li:hover { }
 	
 		<div id="wp-left-p">	
 			<div id="wp-details-p">
-				<h3>Enter Your Details To Bid <p class="spinner"><img alt="spinner" id="spinner" class="spinner" src="<?php echo $filepath ?>spinner.gif" style="display: none;" /> *required</p></h3>
+				<h3>Enter Your Details To Bid <p class="spinner">*required</p></h3>
 								
 			<?php if ($hidebid == "Yes") echo '<div style="display:none;">'; ?>
 				
