@@ -105,6 +105,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.7.4 & 1.7.5 =
+* Bug fixes (Warning on header load and image resizing problem)
+
 = 1.7.3 =
 * Changed upload functionality as with WP 3.0 media uploader didn't fit any more
 

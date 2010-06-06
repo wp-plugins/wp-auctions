@@ -22,7 +22,7 @@ Style URL: http://www.wpauctions.com/styles
 Style Author: Hyder Jaffari
 Author URL: http://www.weborithm.com
 Get more styles at http://www.wpauctions.com/styles
-Last Update: April 29th, 2010
+Last Update: June 6th, 2010
 */
 
 /* Base */
@@ -58,7 +58,7 @@ table { margin: 0 !important; padding: 0 !important; }
 .wpa-image { float: left; height: 296px; position: absolute; text-align: center; width: 252px; }
 #wp-image-p { height: 250px; padding: 1px; }
 #wp_price { font-size: 13px; font-weight: bold; padding: 5px 0 0; }
-#wp-refreshbid-p, #wp-refreshbid-p a { font-size: 10px; text-transform: uppercase; }
+#wp-refreshbid-p, #wp-refreshbid-p a { font-size: 10px; margin: 0 !important; padding: 2px 0 0 !important; text-transform: uppercase; }
 
 /* Description */
 .wpa-description { float: left; height: 286px; padding: 5px; width: 326px; }
@@ -87,8 +87,8 @@ a.wpa-bin-price { display: block; font-weight: bold; margin: 5px 0; padding: 5px
 #wp-bottom-p h3 p { display: inline; font-size: 10px; font-weight: normal; }
 #wp-bottom-p table { font-size: 12px !important; width: 375px; }
 #wp-bottom-p table td { padding: 10px 10px 0; text-align: right; }
-#wp-bottom-p table td p { text-align: left; width: 117px; }
-#wp-bottom-p input { padding: 5px; width: 200px; }
+#wp-bottom-p table td p { text-align: left; margin: 0 !important; width: 117px; }
+#wp-bottom-p input { height: 16px; padding: 5px; width: 200px; }
 #wp-bottom-p input:focus { }
 
 /* Left */
