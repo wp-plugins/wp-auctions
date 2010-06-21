@@ -55,18 +55,6 @@ Last Update: May 5th, 2010
 #wp-bidcontainerright { float:right; width: 45%; text-align:center; margin-right: 5px; font-size: 13px; }
 #wp-bidcontainerright a { color: #000 !important; text-decoration: none !important; }
 
-/* List Styling */
-
-.wp-auction-hold { min-height: 57px; padding-top: 5px; }
-.wp-body-list { border-right: 1px solid #e34600; border-left: 1px solid #e34600; background: #fff; padding: 6px 4px 4px; border-bottom: 1px solid #e34600; }
-.wp-head-list { font-size: 15px; font-weight: bold; text-align: center; border-right: 1px solid #e34600; border-left: 1px solid #e34600; background: #FB590C url(gradient.png) repeat-x left bottom; padding: 4px; border-top: 1px solid #e34600; text-decoration: none; color: #fff; margin: 0px; }
-.wp-heading-list { font-weight: bold; font-size: 12px; text-align: left; padding: 0; }
-.wp-desc-list {	padding: 4px 0;	margin: 0px; }
-.wp-desc-list p { padding: 0; }
-.wp-bidnow-list { text-align: center; padding: 4px 0; border-bottom: 1px solid #aa0000; border-top: 1px solid #aa0000; margin: 0px 0px 6px; background: #FB590C url(gradient.png) repeat-x left bottom;	color: #fff; }
-.wp-bidnow-list a { text-decoration: none !important; color: #fff !important; border: none !important; }
-.wp-bidnow-list a:hover { text-decoration: underline !important; }
-
 /* Popup Earth Style
 Style Name: Earth
 Style URL: http://www.wpauctions.com/styles
@@ -102,22 +90,18 @@ Last Update: May 2nd, 2010
 .wpa-image { background: #FF6500 url(gradient.png) repeat-x left bottom; border-right: 1px solid #e34600; }
 #wp-image-p { background: #fff; }
 #wp_price { border-top: 1px solid #e34600; color: #000; }
-#wp-refreshbid-p, #wp-refreshbid-p a { color: #FFF5EF !important; text-shadow: #FF6500 0 1px !important; }
+#wp-refreshbid-p, #wp-refreshbid-p a { color: #463425 !important; text-shadow: #FF6500 0 1px !important; }
 
 /* Description */
 .wpa-description { background: #FFF5EF; border-right: 1px solid #e34600; text-shadow: none !important; }
-h3#tc-heading-p { }
+h3#tc-heading-p {  }
 #wp-description-p { }
 
 /* Action List */
-ul.wpa-details { background: #FF6500; }
-ul.wpa-details li { border-bottom: 1px solid #e34600; text-shadow: #FF9A57 0 1px !important; }
+ul.wpa-details { background: #FF6500; margin: 0 !important; }
+ul.wpa-details li { border-bottom: 1px solid #e34600; border-top: 1px solid #fff; text-shadow: #FF9A57 0 1px !important; }
 ul.wpa-details li strong { }
-ul.wpa-details div { border-top: 1px solid #fff; line-height: 25px !important; padding: 0 5px !important; }
-
-#wp_winningb img { background: #fff; border: 1px solid #e34600; }
-
-a.wpa-bin-price { background: #FF6500 url(gradient.png) repeat-x left -10px; border: 1px solid #e34600; }
+ul.wpa-details div { line-height: 25px !important; padding: 0 5px !important; }
 
 /* Bottom Area */
 #wp-bottom-p { background: #FFF5EF !important; border: 1px solid #e34600; border-top: 0; }
@@ -185,54 +169,3 @@ ul#wp-othercontainer-p li:hover { background: #FFE7D7; }
 
 #wp-powered-p { color: #e34600; }
 #wp-powered-p a { color: #e34600 !important; }
-
-/* AUCTION IN A POST */
-
-.wpauction { background: #fff !important; border-top: 1px solid #aa0000 !important; color: #000 !important; font: normal 0.9em Verdana !important; padding-bottom: 15px !important; }
-.wpauction a { color: #0066FF !important; }
-.wpauction a:hover { color: #0033CC !important; text-decoration: none !important; }
-.wpauction h3, .wpauction h6 { font: normal 17px Verdana !important; text-align: center !important; padding: 5px !important; margin: 0 !important; text-transform: capitalize !important; text-shadow: none !important; }
-
-/* Headings */
-
-.wpauction h3 { border-bottom: 1px solid #aa0000 !important; margin-bottom: 15px !important; }
-
-/* Images */
-	
-.auctionimages { padding: 5px !important; margin-bottom: 5px !important; text-align: center !important; }
-.auctionimages img { background: #fff !important; border: 1px solid #aa0000 !important; display: inline !important; margin: 0 10px !important; padding: 0.059em !important; }
-
-/* Description */
-
-.auctiondescription { /* custom styles can come here */ padding: 5px 5px 0 !important; border-bottom: 1px solid #aa0000 !important; }
-.auctiondescription p { color: #000 !important; }
-.auctiondescription ul { background: none !important; border: 0 !important; list-style: disc !important; margin: 0 0 10px 20px !important; }
-.auctiondescription ul li { background: none !important; border: 0 !important; font-size: 13px !important; margin: 0 !important; padding: 5px 0 !important; }
-.auctiondescription ol { margin: 0 0 10px 20px !important; }
-
-p.current-bid, p.refresh { background: #FB590C !important; border-bottom: 1px solid #aa0000 !important; border-top: 0; text-align: center !important; font-size: 1.3em !important; color: #000 !important; padding: 5px !important; margin: 0 !important; }
-p.refresh { font-size: 11px !important; margin-bottom: 15px !important; }
-		
-/* Details */
-	
-.auctiondetails { /* custom styles come here */ }
-.auctiondetails h6 { background: #FB590C !important; border: 0 !important; border-top: 0 !important; border-bottom: 1px solid #aa0000 !important; color: #000 !important; margin-bottom: 15px !important; }
-.auctiondetails ul { background: none !important; border: 0 !important; list-style: disc !important; padding: 0 !important; margin: 0 25px !important; }
-.auctiondetails ol { background: none !important; border: 0 !important; padding: 0 !important; margin: 0 0 0 35px !important; }
-.auctiondetails li { background: none !important; border: 0 !important; font-size: 13px !important; padding: 0 0 15px !important; margin: 0 !important; }
-		
-/* Fields and Buttons */
-	
-.bid-input { width: 14em !important; padding: 0.3em 0.2em !important; font-size: 0.9em !important; border: 1px solid #A7A6AA !important; letter-spacing: 1px !important; }
-.bid-input[type="text"]:focus{ border: 1px solid #000 !important; }
-.auction-button { padding: 0.3em 1em !important; font: normal 1em Georgia !important; background: #ddd !important; border-top: 1px solid #fff !important; border-left: 1px solid #fff !important; border-right: 1px solid #777 !important; border-bottom: 1px solid #777 !important; color: #222 !important; width: 13.1em !important; }
-.auction-button:hover { cursor: pointer !important; border-top: 1px solid #333 !important; border-left: 1px solid #333 !important; border-right: 1px solid #aa0000 !important; border-bottom: 1px solid #aa0000 !important; background: #aa0000 !important; color: #fff !important; }
-
-/* Tables */
-
-.auctiontables { background: #FB590C !important; border-top: 1px solid #aa0000 !important; margin: 0 !important; }
-.auctiontables h6 { background: #FB590C !important; border: 0 !important; color: #000 !important; }
-.auctiontables p { border-top: 1px solid #aa0000 !important; padding: 10px !important; font-size: 11px !important; font-style: italic !important; margin: 0 !important; }
-.auctiontables span { font-size: 11px !important; text-align: center !important; display: block !important; padding: 0 0 5px !important; }
-.auctiontables table { background: #FB590C !important; margin: 0 padding: 0 !important; border-bottom: 0 !important; border-top: 1px solid #aa0000 !important; }
-.auctiontables td { padding: 5px 10px !important; border-bottom: 1px solid #aa0000 !important; text-align: left !important; font-size: 12px !important; }

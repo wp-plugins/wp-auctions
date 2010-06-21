@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.7.5
+Version: 1.7.6
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -19,6 +19,7 @@ Author URI: http://www.wpauctions.com
         .3 - Changed upload functionality as WP 3.0 media uploader didn't fit any more
         .4 - Bug fix for admin menu errors appearing when plugin activated
         .5 - Bug fix in resizer path
+        .6 - Some Windows Hosting fixes
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -27,7 +28,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.7.5 Lite";
+$wpa_version = "1.7.6 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -912,13 +913,14 @@ if ($list == "Yes") {
       } ?>
         </ul>
    <?php endif; ?>
-        <div class="wp-rss"><a href="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss"><img src="<?=get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/rss.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/></a> <a href="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss" title="Grab My Auctions RSS Feed" >Auctions RSS Feed</a></div>
+        <div class="wp-rss"><a href="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss"><img src="<?php echo get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/rss.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/></a> <a href="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss" title="Grab My Auctions RSS Feed" >Auctions RSS Feed</a></div>
       </div>
     </div>
     <div id="wp-bidcontainer">
       <div id="wp-bidcontainerleft"><?php echo get_price($current_price,$start_price,$BIN_price,$currencysymbol,"<br>") ?></div>
 
-      <div id="wp-bidcontainerright"><?php echo $auctionlink; ?><img src="<?=get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
+      <div id="wp-bidcontainerright"><?php echo $auctionlink; ?><img src="<?php echo 
+      get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
 
     </div>
     
@@ -1409,7 +1411,8 @@ function wp_auctions_add() {
       if ($strMessage == ""):
          // force reserve value (not implemented),BINPrice and Shipping Price to ensure value written in InnoDB (which doesn't like Null decimals)
          $strSaveReservePrice = 0;
-
+         $strSaveDuration = 0;
+         
          // convert date/time to GMT
          
          $strSaveEndDate = get_gmt_from_date($strSaveEndDate);
