@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.7.6
+Version: 1.7.7
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -20,6 +20,7 @@ Author URI: http://www.wpauctions.com
         .4 - Bug fix for admin menu errors appearing when plugin activated
         .5 - Bug fix in resizer path
         .6 - Some Windows Hosting fixes
+        .7 - Added remote debug to help assist users
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -28,7 +29,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.7.6 Lite";
+$wpa_version = "1.7.7 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -53,9 +54,16 @@ define('POPUP_SIZE', "&height=579&width=755&modal=true");
 //---------------------------------------------------
 
 if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['debug'])):
+   echo "<h1>WP Auctions Remote Debug Screen</h1>";
    echo "Version Number: ".$wpa_version;
    echo "<p>";
-   phpinfo();
+
+   $options = get_option('wp_auctions');
+   if ($options['remotedebug'] != "" ) {   
+      phpinfo();
+   } else {
+      echo "Remote Debug disabled - you can turn this on in your Administration console";
+   }
 endif;
 
 
@@ -409,8 +417,7 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
 
        // Before we start .. confirm if auction has ended or not
        check_auction_end($auction_id);
-
-       // bid is the starting bid on the auction	
+	
        $table_name = $wpdb->prefix . "wpa_auctions";
 	     $strSQL = "SELECT winner FROM $table_name WHERE id=".$auction_id;
 	     $winner = $wpdb->get_var ($strSQL);          
@@ -964,7 +971,8 @@ function wp_auctions_options() {
       $options['otherauctions'] = strip_tags(stripslashes($_POST['wpa-otherauctions']));
       $options['noauction'] = stripslashes($_POST['wpa-noauction']); // don't strip tags
       $options['style'] = strip_tags(stripslashes($_POST['wpa-style']));
-      
+      $options['remotedebug'] = strip_tags(stripslashes($_POST['wpa-remotedebug']));
+
       // Currencies handled here
       if ($options['currency']==1) {
          $options['currencysymbol']="&pound;";
@@ -1032,6 +1040,7 @@ function wp_auctions_options() {
    $noauction = htmlspecialchars($options['noauction'], ENT_QUOTES);
    $otherauctions = htmlspecialchars($options['otherauctions'], ENT_QUOTES);
    $style = htmlspecialchars($options['style'], ENT_QUOTES);
+   $remotedebug = htmlspecialchars($options['remotedebug'], ENT_QUOTES);
 
   // Prepare style list based on styles in style folder
 	$folder_array=array();
@@ -1190,7 +1199,18 @@ function CheckCurrencyOptions() {
         <textarea rows="5" cols="100" id="wpa-noauction" name="wpa-noauction"><?php echo $noauction; ?></textarea>
         <br />
         <p><?php _e('Specify the HTML you would like to display if there are no active auctions. Leave blank for standard "No Auctions" display<br>To rotate ads, separate with &lt;!--more--&gt;') ?></p></td> 
-      </tr>       
+      </tr>  
+      <tr valign="top"> 
+        <th scope="row" class='row-title'><?php _e('Allow Remote Debug:') ?></th> 
+        <td class='desc'>
+        <select id="wpa-remotedebug" name="wpa-remotedebug">
+                <option value="" <?php if ($remotedebug=='') echo 'selected'; ?>>Lock it down, captain!</option>
+                <option value="Yes" <?php if ($remotedebug=='Yes') echo 'selected'; ?>>Allow the WP Auctions Support team access to your <a href="http://php.net/manual/en/function.phpinfo.php">PHP Config Information</a></option>
+         </select>
+        <br />
+        <p><?php _e('Select whether you want to divulge your server information to assist remote debugging. Your information will be visible <a href="'.get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME.'?debug">here</a>') ?></p></td> 
+      </tr> 
+           
     </table>
 
 	<input type="hidden" id="wp_auctions-submit" name="wp_auctions-submit" value="1" />

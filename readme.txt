@@ -105,6 +105,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.7.7 =
+* Added remote debug option
+
 = 1.7.4 & 1.7.5 & 1.7.6 =
 * Bug fixes (Warning on header load and image resizing problem and Windows issues)
 
