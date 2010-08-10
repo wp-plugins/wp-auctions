@@ -105,6 +105,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.7.8 =
+* Squashed bug affecting Edits on Windows Hosting using InnoDB
+
 = 1.7.7 =
 * Added remote debug option
 

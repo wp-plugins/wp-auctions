@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.7.7
+Version: 1.7.8
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -21,6 +21,7 @@ Author URI: http://www.wpauctions.com
         .5 - Bug fix in resizer path
         .6 - Some Windows Hosting fixes
         .7 - Added remote debug to help assist users
+        .8 - Squashed minor bug affecting Windows hosting using InnoDb
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -29,7 +30,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.7.7 Lite";
+$wpa_version = "1.7.8 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -559,7 +560,7 @@ function wp_auctions_uninstall () {
 function wp_auctions_install () {
    global $wpdb;
 
-   $wpa_db_version = "1.3";
+   $wpa_db_version = "1.3Lite";
    
    $installed_ver = get_option("wpa_db_version");
       
@@ -1470,6 +1471,10 @@ function wp_auctions_add() {
       endif;
 
       if ($strMessage == ""):
+         // force reserve value (not implemented),BINPrice and Shipping Price to ensure value written in InnoDB (which doesn't like Null decimals)
+         $strSaveReservePrice = 0;
+         $strSaveDuration = 0;
+
          // convert date/time to machine
          $strSaveEndDate = get_gmt_from_date($strSaveEndDate);
 
