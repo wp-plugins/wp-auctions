@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.7.8
+Version: 1.8
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -22,6 +22,7 @@ Author URI: http://www.wpauctions.com
         .6 - Some Windows Hosting fixes
         .7 - Added remote debug to help assist users
         .8 - Squashed minor bug affecting Windows hosting using InnoDb
+    v1.8 - Added custom currency option
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -1105,16 +1106,15 @@ function CheckCurrencyOptions() {
                 <option value="7" <?php if ($currency=='7') echo 'selected'; ?>>NZD</option>
                 <option value="8" <?php if ($currency=='8') echo 'selected'; ?>>CHF</option>
                 <option value="9" <?php if ($currency=='9') echo 'selected'; ?>>SGD</option>
-<!-- Turn off custom currency                <option value="99" <?php if ($currency=='99') echo 'selected'; ?>>Custom</option> -->
+                <option value="99" <?php if ($currency=='99') echo 'selected'; ?>>Custom</option>
          </select>
         <br />
-<!-- Turn off custom currency
         <div id="wpa_activetab" style="display:<?php if ($currency!='99'){ echo "none"; }?>;">
           <div style="float:right; border: 2px solid red; color: #000; width: 300px;margin: -5px 10px 15px 0; padding: 5px;"><strong><u><p>Warning!</u></strong> If you use a custom currency, please remember that PayPal only supports a <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=p/sell/mc/mc_intro-outside">small subset of currencies</a>. If you use a currency outside this set, any PayPal payments will fail.</p> <p>You can still use Bank Payments and send your Address for cheques/money orders etc...</p></div>
           <div>Currency Code: <input name="wpa-currencycode" type="text" id="wpa-currencycode" value="<?php echo $currencycode; ?>" size="5" /><br/>
-          Currency Symbol: <input name="wpa*-currencysymbol" type="text" id="wpa-currencysymbol" value="<?php echo $currencysymbol; ?>" size="5" /></div>
+          Currency Symbol: <input name="wpa-currencysymbol" type="text" id="wpa-currencysymbol" value="<?php echo $currencysymbol; ?>" size="5" /></div>
         </div>
- -->
+ 
         <p><?php _e('Choose the currency you would like to run your auctions in.</p><!-- <p><a href="http://en.wikipedia.org/wiki/List_of_circulating_currencies" target="_blank">Click here for custom Currency Codes and Symbols</a>. -->') ?></p></td> 
       </tr> 
       <tr valign="top"> 
