@@ -6,6 +6,8 @@ $options = get_option('wp_auctions');
 $style = $options['style'];
 $currencysymbol = $options['currencysymbol'];
 $title = $options['title'];
+$showrss = $options['showrss'];
+
 
 $filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp-auctions/styles/'.$style.'/';
 
@@ -157,7 +159,14 @@ ul#wp-othercontainer-p li:hover { }
 		</div><!-- Title Ends -->
 
 		<div id="wp-close-p">
-			<a href="Javascript:get_rss();">Auctions RSS feed <img src="<?php echo $filepath ?>rss.png" alt="Auctions RSS" border="0" /></a> [<a href="#" onclick="tb_remove()" title="close window">Close Window</a>]
+		
+   <?php if ($showrss != "No") { ?>
+		
+			<a href="Javascript:get_rss();">Auctions RSS feed <img src="<?php echo $filepath ?>rss.png" alt="Auctions RSS" border="0" />
+			</a> 
+   <?php } ?>
+
+			[<a href="#" onclick="tb_remove()" title="close window">Close Window</a>]
 		</div><!-- RSS/Close Ends -->
 	
 	</div><!-- Header Ends -->

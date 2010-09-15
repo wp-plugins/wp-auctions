@@ -23,6 +23,7 @@ Author URI: http://www.wpauctions.com
         .7 - Added remote debug to help assist users
         .8 - Squashed minor bug affecting Windows hosting using InnoDb
     v1.8 - Added custom currency option
+        .1 - Added option to hide RSS links
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -31,7 +32,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.7.8 Lite";
+$wpa_version = "1.8.1 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -811,6 +812,7 @@ function docommon_wp_auctions() {
    $feedback = $options['feedback'];
    $noauction = $options['noauction'];
    $otherauctions = $options['otherauctions'];
+   $showrss = $options['showrss'];
    
    $chunks = explode('<!--more-->', $noauction);
    $chunkno = mt_rand(0, sizeof($chunks) - 1);
@@ -922,7 +924,13 @@ if ($list == "Yes") {
       } ?>
         </ul>
    <?php endif; ?>
+
+   <?php if ($showrss != "No") { ?>
+
         <div class="wp-rss"><a href="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss"><img src="<?php echo get_settings('siteurl').'/'.PLUGIN_STYLE_PATH.$style?>/rss.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/></a> <a href="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss" title="Grab My Auctions RSS Feed" >Auctions RSS Feed</a></div>
+
+   <?php } ?>
+
       </div>
     </div>
     <div id="wp-bidcontainer">
@@ -974,7 +982,8 @@ function wp_auctions_options() {
       $options['noauction'] = stripslashes($_POST['wpa-noauction']); // don't strip tags
       $options['style'] = strip_tags(stripslashes($_POST['wpa-style']));
       $options['remotedebug'] = strip_tags(stripslashes($_POST['wpa-remotedebug']));
-
+      $options['showrss'] = strip_tags(stripslashes($_POST['wpa-showrss']));
+      
       // Currencies handled here
       if ($options['currency']==1) {
          $options['currencysymbol']="&pound;";
@@ -1043,6 +1052,7 @@ function wp_auctions_options() {
    $otherauctions = htmlspecialchars($options['otherauctions'], ENT_QUOTES);
    $style = htmlspecialchars($options['style'], ENT_QUOTES);
    $remotedebug = htmlspecialchars($options['remotedebug'], ENT_QUOTES);
+   $showrss = htmlspecialchars($options['showrss'], ENT_QUOTES);
 
   // Prepare style list based on styles in style folder
 	$folder_array=array();
@@ -1201,6 +1211,16 @@ function CheckCurrencyOptions() {
         <br />
         <p><?php _e('Specify the HTML you would like to display if there are no active auctions. Leave blank for standard "No Auctions" display<br>To rotate ads, separate with &lt;!--more--&gt;') ?></p></td> 
       </tr>  
+      <tr valign="top"> 
+        <th scope="row" class='row-title'><?php _e('RSS Feed link:') ?></th> 
+        <td class='desc'>
+        <select id="wpa-showrss" name="wpa-showrss">
+                <option value="No" <?php if ($showrss=='No') echo 'selected'; ?>>Hide RSS link</option>
+                <option value="" <?php if ($showrss=='') echo 'selected'; ?>>Show RSS link</option>
+         </select>
+        <br />
+        <p><?php _e('Do you want to publish a link to your auction RSS feed. This can let people know when you publish new auctions') ?></p></td> 
+      </tr> 
       <tr valign="top"> 
         <th scope="row" class='row-title'><?php _e('Allow Remote Debug:') ?></th> 
         <td class='desc'>

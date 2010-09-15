@@ -105,6 +105,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.8.1 =
+* New feature: New option to hide RSS links
+
 = 1.8 =
 * New feature: Custom Currencies
 
