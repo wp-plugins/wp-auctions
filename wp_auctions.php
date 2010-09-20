@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8
+Version: 1.8.2
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -24,6 +24,7 @@ Author URI: http://www.wpauctions.com
         .8 - Squashed minor bug affecting Windows hosting using InnoDb
     v1.8 - Added custom currency option
         .1 - Added option to hide RSS links
+        .2 - Bug fix
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -32,7 +33,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.1 Lite";
+$wpa_version = "1.8.2 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1292,7 +1293,7 @@ $rss = @fetch_rss( $rss_feed );
     	<h3>Resources</h3>
       		<p><a href="http://www.wpauctions.com/faq/">F.A.Q</a> / <a href="http://www.wpauctions.com/styles/">Buy New Styles</a></p>
 	  	<h3 class="wpa-upgrade">Upgrade to Pro</h3>
-	  		<p><em>Features include:</em> Custom bid amount, registered users bidding only, Buy it Now option, place auctions in a post, extra image uploads and many more features. <a href="http://www.wpauctions.com/upgrade/">Upgrade today!</a></p>
+	  		<p><em>Features include:</em> Custom bid amount, registered users bidding only, Buy it Now option, place auctions in a post, extra image uploads and many more features. <a href="http://www.wpauctions.com/upgrade/">Upgrade today, use code 1BCF1 to get $10 off!</a></p>
     </div>
 
     <div style="clear:both"></div>

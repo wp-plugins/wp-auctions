@@ -38,6 +38,11 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 For more information and to take a look at the Pro version, visit our website - [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress").
 
+**Special Offer**
+
+Upgrade today, use code 1BCF1 to get $10 off!
+
+
 == Installation ==
 
 1. Download the plugin file, unzip and place it in your wp-content/plugins/ folder. You can alternatively upload it via the WordPress plugin backend.
