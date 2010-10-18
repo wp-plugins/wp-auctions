@@ -110,6 +110,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.8.3 =
+* Bug fixes
+
 = 1.8.1 =
 * New feature: New option to hide RSS links
 
