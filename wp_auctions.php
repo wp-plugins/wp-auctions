@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.3
+Version: 1.8.4
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -26,6 +26,7 @@ Author URI: http://www.wpauctions.com
         .1 - Added option to hide RSS links
         .2 - Bug fix
         .3 - Fixed bug on resizer on PHP 4 / Change from using SiteURL to WPurl to increase consistency
+		.4 - Hyder added a new style, Wind
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -34,7 +35,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.3 Lite";
+$wpa_version = "1.8.4 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1266,7 +1267,7 @@ $rss = @fetch_rss( $rss_feed );
 
 	<p>Version: <?php echo $wpa_version ?></p>
 	<p style="margin-bottom: 0;">Host auctions on your blog. Keep 100% of your profits and forget about auction fees!</p>
-	
+	<p style="background: #F1F1F1; border: 1px solid #BF1717; color: #000; padding: 5px; margin: 0 10px 10px">We've partnered with AppSumo to get you an amazing deal, <a href="http://bit.ly/wpa-appsumo" style="text-decoration: underline;">click here to save over $900</a> on web apps like CrazyEgg, FormAssebly, SEOMOZ, SlideDeck <strong>and WP Auctions</strong>. Hurry, offer expires on the 31st of October!</p>
     <div class="latestnews">
         <h3>Plugin News</h3>
         <ul>
