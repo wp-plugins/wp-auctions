@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.4
+Version: 1.8.5
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -27,6 +27,7 @@ Author URI: http://www.wpauctions.com
         .2 - Bug fix
         .3 - Fixed bug on resizer on PHP 4 / Change from using SiteURL to WPurl to increase consistency
 		.4 - Hyder added a new style, Wind
+		.5 - Fringe condition where autobid is identical to user bid .. always ensure AutoBid wins (first bidder takes precedence)
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -35,7 +36,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.4 Lite";
+$wpa_version = "1.8.5 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1266,8 +1267,7 @@ $rss = @fetch_rss( $rss_feed );
 	<div class="wpa-intro">
 
 	<p>Version: <?php echo $wpa_version ?></p>
-	<p style="margin-bottom: 0;">Host auctions on your blog. Keep 100% of your profits and forget about auction fees!</p>
-	<p style="background: #F1F1F1; border: 1px solid #BF1717; color: #000; padding: 5px; margin: 0 10px 10px">We've partnered with AppSumo to get you an amazing deal, <a href="http://bit.ly/wpa-appsumo" style="text-decoration: underline;">click here to save over $900</a> on web apps like CrazyEgg, FormAssebly, SEOMOZ, SlideDeck <strong>and WP Auctions</strong>. Hurry, offer expires on the 31st of October!</p>
+	<p style="margin-bottom: 0;">Description: Host auctions on your blog. Keep 100% of your profits and forget about auction fees!</p>
     <div class="latestnews">
         <h3>Plugin News</h3>
         <ul>
@@ -1289,9 +1289,9 @@ $rss = @fetch_rss( $rss_feed );
 
     <div class="wpa-info">
     	<h3>Resources</h3>
-      		<p><a href="http://www.wpauctions.com/faq/">F.A.Q</a> / <a href="http://www.wpauctions.com/styles/">Buy New Styles</a></p>
+      		<p><a href="http://www.wpauctions.com/extras/styles/">Buy Add-ons and Styles</a></p>
 	  	<h3 class="wpa-upgrade">Upgrade to Pro</h3>
-	  		<p><em>Features include:</em> Custom bid amount, registered users bidding only, Buy it Now option, place auctions in a post, extra image uploads and many more features. <a href="http://www.wpauctions.com/upgrade/">Upgrade today, use code 1BCF1 to get $10 off!</a></p>
+	  		<p><em>Features include:</em> Custom bid amount, register to bid, Buy it Now option, place auctions in a post, extra image uploads and many more features. <a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $10 off!</a></p>
     </div>
 
     <div style="clear:both"></div>
@@ -1301,7 +1301,7 @@ $rss = @fetch_rss( $rss_feed );
 <ul class="wpa-start">
 	<li><div class="buttons"><button onclick="window.location = 'admin.php?page=wp-auctions-add';" class="button"><strong>Add An Auction</strong></button></div></li>
     <li><div class="buttons">/ &nbsp;<button onclick="window.location = 'admin.php?page=wp-auctions-manage';" class="button"><strong>Manage Auctions</strong></button></div></li>
-	<li><div class="buttons wpa-upgrade">/ &nbsp;<button onclick="window.location = 'http://www.wpauctions.com/upgrade';" class="button"><strong>Upgrade to Pro</strong></button></div></li>
+	<li><div class="buttons wpa-upgrade">/ &nbsp;<button onclick="window.location = 'http://www.weborithm.com/products/signup.php?hide_paysys=free';" class="button"><strong>Upgrade to Pro</strong></button></div></li>
 </ul>
 <div style="clear:both"></div>
 
