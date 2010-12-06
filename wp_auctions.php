@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.5
+Version: 1.8.6
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -28,6 +28,7 @@ Author URI: http://www.wpauctions.com
         .3 - Fixed bug on resizer on PHP 4 / Change from using SiteURL to WPurl to increase consistency
 		.4 - Hyder added a new style, Wind
 		.5 - Fringe condition where autobid is identical to user bid .. always ensure AutoBid wins (first bidder takes precedence)
+		.6 - Minor fixes to PHP includes
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -36,7 +37,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.5 Lite";
+$wpa_version = "1.8.6 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');

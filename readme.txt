@@ -110,6 +110,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.8.6 =
+Minor fixes
+
 = 1.8.4 =
 * New Style (Wind) added
 

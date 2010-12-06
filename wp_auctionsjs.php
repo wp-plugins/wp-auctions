@@ -90,7 +90,7 @@ function ajax_auction_request() {
    jQuery.ajax ({
       cache: false,
       type: "POST",
-      url: '<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?queryauction',
+      url: '<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME; ?>?queryauction',
       data : {
          auction_ID : auction_id,
          _ajax_nonce: '<?php echo $nonce ?>'
@@ -136,7 +136,7 @@ function ajax_auction_request() {
 	    jQuery('#tc-heading-p').html(auction_details[1]);
 	    jQuery('#wp_price').html("Current Bid: " + currencysymbol + auction_details[3]);
 	    	    
-	    if (auction_details[7] == "") { auction_details[7]='<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH?>/requisites/wp-popup-def.gif'   }
+	    if (auction_details[7] == "") { auction_details[7]='<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH; ?>/requisites/wp-popup-def.gif'   }
 
       jQuery('#wp-image-p').fadeOut("slow",function() { 
          jQuery('#wp-image-p').html('<img src="'+auction_details[7]+'" alt="Loading image ..." width="250" height="250" />');
@@ -187,7 +187,7 @@ function ajax_bids_request(auction_id) {
    jQuery.ajax ({
       cache: false,
       type: "POST",
-      url: '<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?querybids',
+      url: '<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME; ?>?querybids',
       data : {
          auction_ID : auction_id,
          _ajax_nonce: '<?php echo $nonce ?>'
@@ -242,7 +242,7 @@ function ajax_other_request(auction_id) {
    jQuery.ajax ({
       cache: false,
       type: "POST",
-      url: '<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?queryother',
+      url: '<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME; ?>?queryother',
       data : {
          auction_ID : auction_id,
          _ajax_nonce: '<?php echo $nonce ?>'
@@ -269,7 +269,7 @@ function ajax_other_request(auction_id) {
              if (other_details[i*6+3] != undefined) {
                 if (other_details[i*6+3] == '') {
                    odetdiv = odetdiv + '<li><a href="#" title="' + other_details[i*6+2] + '">';  
-                   odetdiv = odetdiv + '<img src="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH?>/requisites/wp-thumb-def.gif" border="0" alt="' + other_details[i*6+2] + '" width="50" height="50" onclick="document.getElementById(\'formauctionid\').value=' + other_details[i*6+1] + ';ajax_auction_request()"/>'; 
+                   odetdiv = odetdiv + '<img src="<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH; ?>/requisites/wp-thumb-def.gif" border="0" alt="' + other_details[i*6+2] + '" width="50" height="50" onclick="document.getElementById(\'formauctionid\').value=' + other_details[i*6+1] + ';ajax_auction_request()"/>'; 
                    odetdiv = odetdiv + '</a><p>'+other_details[i*6+2]+'</p><p>Current Bid: '+other_details[i*6+5]+'</p></li>';  
                 }
                 else {
@@ -304,7 +304,7 @@ function ajax_submit_bid() {
    jQuery.ajax ({
       cache: false,
       type: "POST",
-      url: '<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?postauction',
+      url: '<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME; ?>?postauction',
       data : {
          auction_id   : auction_id,
          bidder_name  : bidder_name,
@@ -331,7 +331,7 @@ function ajax_submit_bid() {
 }
 
 function get_rss() {
-   window.location = "<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss";
+   window.location = "<?php echo get_settings('siteurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME; ?>?rss";
 }
 
 
