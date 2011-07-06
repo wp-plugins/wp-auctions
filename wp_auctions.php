@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.6
+Version: 1.8.7
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -29,6 +29,7 @@ Author URI: http://www.wpauctions.com
 		.4 - Hyder added a new style, Wind
 		.5 - Fringe condition where autobid is identical to user bid .. always ensure AutoBid wins (first bidder takes precedence)
 		.6 - Minor fixes to PHP includes
+		.7 - Two new styles, WP 3.2 compatability
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -37,7 +38,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.6 Lite";
+$wpa_version = "1.8.7 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1203,7 +1204,7 @@ function CheckCurrencyOptions() {
 		       } ?>
             </select>
         <br />
-        <p><?php _e('Choose a graphical style for your widget. Get new styles from our <a href="http://www.wpauctions.com/styles/">style store</a>.') ?></p></td> 
+        <p><?php _e('Choose a graphical style for your widget.') ?></p></td> 
       </tr> 
       <tr valign="top"> 
         <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('"No Auction" Alternative:') ?></th> 
@@ -1268,7 +1269,6 @@ $rss = @fetch_rss( $rss_feed );
 	<div class="wpa-intro">
 
 	<p>Version: <?php echo $wpa_version ?></p>
-	<p style="margin-bottom: 0;">Description: Host auctions on your blog. Keep 100% of your profits and forget about auction fees!</p>
     <div class="latestnews">
         <h3>Plugin News</h3>
         <ul>
@@ -1289,10 +1289,10 @@ $rss = @fetch_rss( $rss_feed );
     </div>
 
     <div class="wpa-info">
-    	<h3>Resources</h3>
-      		<p><a href="http://www.wpauctions.com/extras/styles/">Buy Add-ons and Styles</a></p>
-	  	<h3 class="wpa-upgrade">Upgrade to Pro</h3>
-	  		<p><em>Features include:</em> Custom bid amount, register to bid, Buy it Now option, place auctions in a post, extra image uploads and many more features. <a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $10 off!</a></p>
+	  	<h3 class="wpa-upgradepro">Upgrade to Pro</h3>
+        	<p>Unlock a host of amazing features like:</p>
+	  		<p>Simple bidding, reverse bidding, watching auctions, color customization, shipping price, private auctions, Buy it Now option, place auctions in a post, extra image uploads and many more features.</p>
+            <p class="wpa-notice"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $15 off!</a></p>
     </div>
 
     <div style="clear:both"></div>
@@ -1523,6 +1523,10 @@ function wp_auctions_add() {
 			</fieldset>
 		<?php endif; ?>
 		
+        <div class="clearfix">
+	    	<div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Unlock all Pro features: <a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $15 off!</a></p></div>
+		</div>
+    
 		<h2 class="details"><em>Auction Details</em></h2>
 
 <script language="Javascript">
@@ -1664,8 +1668,11 @@ function wp_auctions_manage() {
 
 <div class="wrap wp-auctions"> 
 	
-	<div class="wpa-time">Wordpress Time: <?php echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></div>
-	
+    <div class="clearfix">
+    <div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Go Pro: <a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $15 off!</a></p></div>
+	<div class="wpa-time"><p>Wordpress Time: <?php echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></p></div>
+	</div>
+    
 	<h2 class="manage"><em><?php _e('Manage Auctions') ?></em></h2>
 	
 	<fieldset class="options">

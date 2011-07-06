@@ -178,8 +178,8 @@ ul.wpatabs li.current, ul.wpatabs li.current:hover, ul.wpatabs li.current { back
 ul#wp-othercontainer-p { }
 ul#wp-othercontainer-p li { background: #fff; }
 ul#wp-othercontainer-p li p { }
-ul#wp-othercontainer-p li p.wpa-other-title { }
-ul#wp-othercontainer-p li img { background: #fff; border: 1px solid #6ba8e6; }
+ul#wp-othercontainer-p li p.wpa-other-title { margin: 0; padding: 0; }
+ul#wp-othercontainer-p li img { background: #fff; border: 1px solid #6ba8e6 !important; margin: 0 10px 0 0 !important; }
 ul#wp-othercontainer-p li:hover { background: #f9f9f9; }
 
 #wp-powered-p { color: #6ba8e6; }

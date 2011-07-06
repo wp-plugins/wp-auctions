@@ -2,19 +2,19 @@
 Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions, auction, e-commerce, money, eshop, buy it now plugin
-Requires at least: 2.2
-Tested up to: 3.0.1
+Requires at least: 2.9
+Tested up to: 3.2
 Stable tag: /trunk/
 
 WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free!
 
 == Description ==
 
-WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free! It uses an attractive AJAX powered popup for optimum user experience and lets you run your very own personal auction site.
+WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free! It uses an attractive AJAX powered popup for optimum user experience and lets you run personal auctions on your site.
 
 You no longer need to worry about listing fees, seller fees, final value fees, gallery fees or any other type of fee for anything you want to sell online from this day on!
 
-Installation and activation takes less than 30 seconds and you could be hosting your first auction on your blog in under 2 minutes.
+Installation and activation takes less than 30 seconds and you could be hosting your first auction on your WordPress blog or website in under 2 minutes.
 
 **Features include:**
 
@@ -24,15 +24,15 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 * Easily Edit, End or Delete your auctions.
 * Use HTML to describe your auctions, you can even include video!
 * Set a specific end date and time, down to the second.
-* Choice of display styles
+* Choice of 5 display styles.
 * Sleek AJAX popup to show your auctions.
 * Easy to use backend admin area to manage your auctions.
 
 **Example uses include:**
 
 * Auction off advertising space.
-* Sell physical goods from iPods to Cars!
-* Sell digital goods too!
+* Sell physical goods from iPods to Cars.
+* Sell your artwork and many more such uses...
 
 **Official Site**
 
@@ -40,8 +40,7 @@ For more information and to take a look at the Pro version, visit our website - 
 
 **Special Offer**
 
-Upgrade today, use code 1BCF1 to get $10 off!
-
+Upgrade today, use code 1BCF1 to get $15 off!
 
 == Installation ==
 
@@ -49,9 +48,11 @@ Upgrade today, use code 1BCF1 to get $10 off!
 1. Activate.
 1. Configure the plugin from the WP Auctions menu in your WordPress backend. Set the plugin up with your settings like email, address etc...
 1. Add your auctions
-1. Sell, Sell, Sell!
+1. Sell your stuff and make money!
 
-The plugin is also widget ready and will appear in your Widgets list. Alternatively, you can add this snippet to the sidebar on your theme: `<?php wp_auctions(); ?>` 
+The plugin is widget ready and will appear in your "Appearance > Widgets" list. Simply drag and drop and the widget into any widget ready area, like your sidebar.
+
+Alternatively, you can also add this snippet to the sidebar on your theme: `<?php wp_auctions(); ?>` 
 
 == Frequently Asked Questions ==
 
@@ -81,24 +82,26 @@ If you are going to include text and videos, then your description area will get
 
 This could be due to the CSS of your theme. While we try to override reset settings for the popup CSS there are some instances where themes have been known to override our CSS settings. Yes, it's a vicious cycle. To fix it, try and edit the CSS of the theme if you are comfortable doing so or ask for help on the forums.
 
-Alternatively, you can hire our services to fix it for you. It will usually takes around 15 - 30 mins.
-
 = What features are available in the Pro version? =
 
-The Pro version has tons of enhancements and improvements. Here are some of our favourite ones:
+The Pro and Pro Plus versions have tons of enhancements and improvements. Here are some of our favourte ones:
 
-* A choice of 5 different visual styles.
+* 3 bidding engines to choose from: Proxy, Simple & Reverse
 * Auctions for registered users only. 
-* Accept PayPal, provide details for Wire Transfers or an address to receive Checks.
+* Set a reserve price for your auctions
 * Sell items on "Buy It Now" basis - *user favorite*.
 * Upload multiple images for each auction (up to 4).
 * Place auctions in a post or page - *user favorite*.
 * Show ads if no auctions are available.
 * Specify shipment surcharges.
+* Watch an auction feature.
+* Color customization.
+* Place auctions in a Post or Page.
+* List Widget compatibility (sold separately)
+* WYSIWYG editor.
+* and much, much more...
 
-The free version is always under development too, so we're committed to improving it and fixing any bugs.
-
-More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress")
+More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress"). Don't forget to use coupon code 1BCF1 to get $15 off!
 
 == Screenshots ==
 
@@ -110,8 +113,12 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.8.7 =
+* WordPress 3.2 compatability
+* Two new color styles
+
 = 1.8.6 =
-Minor fixes
+* Minor fixes
 
 = 1.8.4 =
 * New Style (Wind) added

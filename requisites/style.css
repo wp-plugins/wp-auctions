@@ -1,3 +1,5 @@
+	.clearfix:after { clear: both; content: " "; display: block; line-height: 0; height: 0; visibility: hidden; }
+	
 /* Main Container */
 	.wp-auctions { background: url(logo.png) no-repeat left 2px; margin: 15px 15px 0 5px; padding: 40px 0 30px 0; width: 90%; }
 	.wp-auctions .wrap { margin: 0; }
@@ -48,9 +50,13 @@
 	ul.wpa-start li button { font-size: 15px !important; padding: 5px 10px; }
 	ul.wpa-start .wpa-upgrade button strong { background: url(upgrade.png) no-repeat left 2px; padding-left: 20px; }
 
+	/* Upgrade nag */
+	
+	.wpa-upgrade { float: left; }
+
 	/* Time */
 	
-	.wpa-time { background: url(time.png) no-repeat right; text-align: right; color: #333; font-size: 9px; padding: 0 27px 0 0; text-transform: uppercase; }
+	.wpa-time { background: url(time.png) no-repeat right; float: right; text-align: right; color: #333; font-size: 9px; padding: 0 27px 0 0; text-transform: uppercase; }
 
 	/* Tables */
 	
@@ -74,3 +80,5 @@
 
 	.add-auction { padding: 15px 0 0; }
 	.add-auction input { font-size: 15px !important; font-weight: bold; padding: 5px 10px; }
+	
+	p.wpa-notice { background: #fffec9; border: 1px solid #EFE570; padding: 10px; }
