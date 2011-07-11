@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.7
+Version: 1.8.8
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -30,6 +30,7 @@ Author URI: http://www.wpauctions.com
 		.5 - Fringe condition where autobid is identical to user bid .. always ensure AutoBid wins (first bidder takes precedence)
 		.6 - Minor fixes to PHP includes
 		.7 - Two new styles, WP 3.2 compatability
+		.8 - TinyMCE editor added
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -38,7 +39,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.7 Lite";
+$wpa_version = "1.8.8 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1191,8 +1192,8 @@ function CheckCurrencyOptions() {
 
     <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
       <tr valign="top" class="alternate"> 
-        <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('Style:') ?></th> 
-        <td class='desc' style="border-bottom: none;">
+        <th scope="row" class='row-title'><?php _e('Style:') ?></th> 
+        <td class='desc'>
            <select id="wpa-style" name="wpa-style">
             <?php                           
                foreach ($folder_array as $thisstyle) {
@@ -1207,8 +1208,8 @@ function CheckCurrencyOptions() {
         <p><?php _e('Choose a graphical style for your widget.') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('"No Auction" Alternative:') ?></th> 
-        <td class='desc' style="border-bottom: none;">
+        <th scope="row" class='row-title'><?php _e('"No Auction" Alternative:') ?></th> 
+        <td class='desc'>
         <textarea rows="5" cols="100" id="wpa-noauction" name="wpa-noauction"><?php echo $noauction; ?></textarea>
         <br />
         <p><?php _e('Specify the HTML you would like to display if there are no active auctions. Leave blank for standard "No Auctions" display<br>To rotate ads, separate with &lt;!--more--&gt;') ?></p></td> 
@@ -1224,10 +1225,10 @@ function CheckCurrencyOptions() {
         <p><?php _e('Do you want to publish a link to your auction RSS feed. This can let people know when you publish new auctions') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title'><?php _e('Allow Remote Debug:') ?></th> 
-        <td class='desc'>
+        <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('Allow Remote Debug:') ?></th> 
+        <td class='desc' style="border-bottom: none;">
         <select id="wpa-remotedebug" name="wpa-remotedebug">
-                <option value="" <?php if ($remotedebug=='') echo 'selected'; ?>>Lock it down, captain!</option>
+                <option value="" <?php if ($remotedebug=='') echo 'selected'; ?>>Support not required</option>
                 <option value="Yes" <?php if ($remotedebug=='Yes') echo 'selected'; ?>>Allow the WP Auctions Support team access to your <a href="http://php.net/manual/en/function.phpinfo.php">PHP Config Information</a></option>
          </select>
         <br />
@@ -1538,6 +1539,14 @@ jQuery(document).ready(function() {
 });
 
 </script>
+<?php
+wp_tiny_mce( false , // true makes the editor "teeny"
+	array(
+		"editor_selector" => "wpa_description"
+	)
+);
+?>
+
 
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=wp-auctions-add" id="editform" enctype="multipart/form-data">
 
@@ -1551,12 +1560,9 @@ jQuery(document).ready(function() {
       </tr>
       <tr valign="top"> 
         <th scope="row"><?php _e('Description:') ?></th> 
-        <td><textarea rows="5" cols="50" name="wpa_description"><?php print $strSaveDescription ?></textarea>
-        <!--<input type="text" name="wpa_description" value="<?php print $strSaveDescription ?>" maxlength="255" size="50" /> -->
+        <td><textarea rows="5" cols="50" id="wpa_description" name="wpa_description" class="wpa_description"><?php print $strSaveDescription ?></textarea>
         <br>
         <p><?php _e('Specify the description for your auction.') ?></p>
-		<p><?php _e('You can include HTML tags like &lt;p&gt;Your Text&lt;/p&gt; and &lt;ul&gt;&lt;li&gt;List 1&lt;/li&gt;&lt;li&gt;List 2&lt;/li&gt;&lt;/ul&gt; to format your auctions.') ?></p>
-		<p><?php _e('You can even include a video!') ?><strong> <?php _e('Important: Video width and height MUST be width="324" height="254"') ?></strong></p>
 		</td> 
       </tr>
       <tr valign="top" class="alternate"> 

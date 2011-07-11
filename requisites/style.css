@@ -1,8 +1,12 @@
-	.clearfix:after { clear: both; content: " "; display: block; line-height: 0; height: 0; visibility: hidden; }
+	.clearfix:after, .wpa-upgrade:after { clear: both; content: " "; display: block; line-height: 0; height: 0; visibility: hidden; }
+	
+	.picker-left { float: left; padding: 30px 25px 0 0; }	
+	#picker { float: left; }
 	
 /* Main Container */
-	.wp-auctions { background: url(logo.png) no-repeat left 2px; margin: 15px 15px 0 5px; padding: 40px 0 30px 0; width: 90%; }
+	.wp-auctions { background: url(logo.png) no-repeat left 2px; margin: 15px 15px 0 5px; padding: 40px 0 30px 0; }
 	.wp-auctions .wrap { margin: 0; }
+	.wp-auctions p { margin: 5px 0 !important; }
 	
 	.wp-auctions a { color: #21759b; font-weight: bold; text-decoration: none; }
 	.wp-auctions a:hover { color: #D54E21; }
@@ -16,10 +20,11 @@
 
 	.wpa-info { background: #fff; border: 1px solid #fff; float: left; padding: 0; width: 50%; }
 	.wpa-info h3 { background: #EBEBDA url(resources.png) no-repeat 5px 5px; padding-left: 25px; }
-	.wpa-info h3.wpa-upgrade { background: #EBEBDA url(upgrade.png) no-repeat 5px 7px; padding-left: 25px; }
+	.wpa-info h3.wpa-about { background: #EBEBDA url(about.png) no-repeat 5px 7px; padding-left: 25px; }
+	.wpa-info h3.wpa-resources { background: #EBEBDA url(resources.png) no-repeat 5px 7px; padding-left: 25px; }
 	
 	/* Intro Box */
-	.wpa-intro { background: #fff; color: #333; padding-top: 15px; }
+	.wpa-intro { background: #fff; color: #333; padding: 10px 10px 0; }
 	.wpa-intro p { font-style: italic; margin: 0; padding: 0 10px 15px; }
 	.wpa-info p { font-style: normal; font-weight: normal; margin: 0; padding: 0 10px 10px; }
 	
@@ -43,6 +48,13 @@
 	h2.details { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.details em { background: url(details.png) no-repeat 5px 5px; font-style: normal; padding: 2px 0 2px 41px; }
 	
+	h2.shipping { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.shipping em { background: url(shipping.png) no-repeat 5px 5px; font-style: normal; padding: 2px 0 2px 41px; }
+	
+	h2.emailsettings em { background: url(email.png) no-repeat 5px 6px; }
+	
+	.wp-auctions h2.settings-nm { margin: 0; }
+	
 	/* Get Started */
 	
 	ul.wpa-start { margin: 15px 0 0; }
@@ -50,23 +62,22 @@
 	ul.wpa-start li button { font-size: 15px !important; padding: 5px 10px; }
 	ul.wpa-start .wpa-upgrade button strong { background: url(upgrade.png) no-repeat left 2px; padding-left: 20px; }
 
-	/* Upgrade nag */
-	
-	.wpa-upgrade { float: left; }
-
 	/* Time */
 	
-	.wpa-time { background: url(time.png) no-repeat right; float: right; text-align: right; color: #333; font-size: 9px; padding: 0 27px 0 0; text-transform: uppercase; }
+	.wpa-time { background: url(time.png) no-repeat left; text-align: left; color: #333; font-size: 9px; padding: 0 0 0 27px; text-transform: uppercase; }
+	.wpa-auction-engine { text-align: left; color: #333; font-size: 9px; padding: 0; text-transform: uppercase; }
 
 	/* Tables */
 	
 	.wp-auctions table.widefat { border: 1px solid #ccc; border-top: 0; margin: 0 !important; -moz-border-radius: 0; -webkit-border-radius: 0; -webkit-border-bottom-left-radius: 5px; -webkit-border-bottom-right-radius: 5px; -moz-border-radius-bottomleft: 5px; -moz-border-radius-bottomright: 5px; text-shadow: #fff 0 1px; }
-	.wp-auctions table.widefat th { background: #faffee; border-right: 1px solid #bcaa97; border-top: 1px solid #fff; color: #342224; padding: 5px 10px; vertical-align: middle; width: 160px !important; }
+	.wp-auctions table.widefat th { background: #faffee; border-right: 1px solid #bcaa97; border-top: 1px solid #fff; color: #342224; padding: 5px 10px; vertical-align: middle; width: 200px; }
+	.wp-auctions table.widefat th small { color: #342224; font-weight: normal; }
 	.wp-auctions table.widefat td { background: #ebebda; border-bottom: 1px solid #bcaa97; border-left: 1px solid #fff; border-top: 1px solid #fff; color: #5a372c; padding: 5px 10px; }
 
-	.wp-auctions table.widefat input { border: 1px solid #bcaa97; padding: 5px; width: 200px; }
-	.wp-auctions table.widefat select { border: 1px solid #bcaa97;  width: 100px; }
-	.wp-auctions table.widefat textarea { border: 1px solid #bcaa97; padding: 5px; width: 400px; }
+	.wp-auctions table.widefat input { border: 1px solid #bcaa97; margin: 0 0 5px; padding: 5px; width: 200px; }
+	.wp-auctions table.widefat select { border: 1px solid #bcaa97; margin: 0 0 5px; padding: 5px; width: 150px; }
+	.wp-auctions table.widefat #wpa-regonly, .wp-auctions table.widefat #wpa-list { border: 1px solid #bcaa97;  width: 230px; }
+	.wp-auctions table.widefat textarea { border: 1px solid #bcaa97; margin: 0 0 5px; padding: 5px; width: 400px; }
 	
 	.wp-auctions p.submit { padding: 15px 0 0; }
 	.wp-auctions p.submit input { font-size: 15px !important; font-weight: bold; padding: 5px 10px; }
@@ -74,11 +85,29 @@
 	.options legend { color: #342224; font-size: 17px; font-weight: bold; padding: 8px 0 10px; }
 	.options table.widefat { border: 1px solid #bcaa97; }
 	.options table.widefat th { border-bottom: 0; border-left: 1px solid #fff; border-right-color: #bcaa97; }
-	.options table.widefat td { border-bottom: 1px solid #fff; border-left: 1px solid #EBEBDA; border-right: 1px solid #EBEBDA; border-top: 1px solid #bcaa97;  }
+	.options table.widefat td { border-bottom: 0; border-left: 1px solid #EBEBDA; border-right: 1px solid #EBEBDA; border-top: 1px solid #bcaa97; }
+	.options table.widefat tr { border-bottom: 1px solid #bcaa97; }
 
 	#wpa-radio { width: 25px; }
 
 	.add-auction { padding: 15px 0 0; }
 	.add-auction input { font-size: 15px !important; font-weight: bold; padding: 5px 10px; }
+
+	.wp-auctions-managebids { width: 90%; }
+	.wp-auctions-managebids table.widefat { border-top: 0; }
+	.wp-auctions table.widefat td.wpa-auction-details { width: 15% !important; }
+	.wp-auctions table.widefat td.wpa-auction-details p { margin: 0;}
+	.wp-auctions table.widefat td.wpa-auction-details h4 { font-size: 12px; margin: 0 0 5px; }
+	.wp-auctions table.widefat td.wpa-auction-details img { background: #fff; border: 1px solid #bcaa97; margin: 0 0 5px; padding: 5px; }
+	.wp-auctions table.widefat td.wpa-auction-created { width: 15% !important; }
+	.wp-auctions table.widefat td.wpa-auction-bids {  width: 30% !important; }
+	.wp-auctions table.widefat td.wpa-auction-currentprice { width: 15% !important; }
+	.wp-auctions table.widefat td.wpa-auction-actions { width: 15% !important; }
+
+p.wpa-notice { background: #fffec9; border: 1px solid #EFE570; float: left; padding: 10px; }
+	.wp-auctions table.widefat .mceLayout td.mceToolbar { background: #EBEBDA; border: 0; padding: 5px 0; }
+	.wp-auctions table.widefat .mceLayout td.mceIframeContainer { background: #fff; border: 1px solid #bcaa97; padding: 0; }
+	.wp-auctions table.widefat .mceLayout td.mceStatusbar { border: 0; padding: 5px 0 0; }
+	.wp-auctions table.widefat .mce_fullscreen { display: none !important; }
 	
-	p.wpa-notice { background: #fffec9; border: 1px solid #EFE570; padding: 10px; }
+	.wpa-check { background: #E8FFC6 url(check.png) no-repeat 10px center; border: 1px solid #A0E237; color: #4B773D; font-size: 13px; margin: 0 0 5px; padding: 10px 10px 10px 36px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
