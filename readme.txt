@@ -113,6 +113,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.8.8 =
+* WYSIWYG editor added
+
 = 1.8.7 =
 * WordPress 3.2 compatability
 * Two new color styles
