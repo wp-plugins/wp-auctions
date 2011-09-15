@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.8
+Version: 1.8.9
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -26,11 +26,12 @@ Author URI: http://www.wpauctions.com
         .1 - Added option to hide RSS links
         .2 - Bug fix
         .3 - Fixed bug on resizer on PHP 4 / Change from using SiteURL to WPurl to increase consistency
-		.4 - Hyder added a new style, Wind
-		.5 - Fringe condition where autobid is identical to user bid .. always ensure AutoBid wins (first bidder takes precedence)
-		.6 - Minor fixes to PHP includes
-		.7 - Two new styles, WP 3.2 compatability
-		.8 - TinyMCE editor added
+		    .4 - Hyder added a new style, Wind
+		    .5 - Fringe condition where autobid is identical to user bid .. always ensure AutoBid wins (first bidder takes precedence)
+		    .6 - Minor fixes to PHP includes
+		    .7 - Two new styles, WP 3.2 compatability
+		    .8 - TinyMCE editor added
+		    .9 - Tightened input sanitisation on backend
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -39,7 +40,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.8 Lite";
+$wpa_version = "1.8.9 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1412,31 +1413,40 @@ function wp_auctions_add() {
 
          $bolUpdate = true;
       elseif($_GET["wpa_action"] == "edit"):
-         $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$_GET["wpa_id"];
-         $resultEdit = $wpdb->get_row($strSQL);
-         $strUpdateID = $_GET["wpa_id"];
-         $strSaveName = htmlspecialchars_decode($resultEdit->name, ENT_NOQUOTES);
-         $strSaveDescription = stripslashes($resultEdit->description);
-         $strSaveImageURL = $resultEdit->image_url;
-         $strSaveStartPrice = $resultEdit->start_price;
-         $strSaveReservePrice = $resultEdit->reserve_price;
-         $strSaveEndDate = get_date_from_gmt($resultEdit->date_end);
-         $strSaveImageURL1 = $resultEdit->extraimage1;
-         $strPaymentMethod = $resultEdit->paymentmethod;
-         $bolUpdate = true;
-         wpa_resetgetvars();
+         $wpa_id = $_GET["wpa_id"];
+      
+         if ($wpa_id > 0) {
+           $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$wpa_id;
+           
+           $resultEdit = $wpdb->get_row($strSQL);
+           $strUpdateID = $_GET["wpa_id"];
+           $strSaveName = htmlspecialchars_decode($resultEdit->name, ENT_NOQUOTES);
+           $strSaveDescription = stripslashes($resultEdit->description);
+           $strSaveImageURL = $resultEdit->image_url;
+           $strSaveStartPrice = $resultEdit->start_price;
+           $strSaveReservePrice = $resultEdit->reserve_price;
+           $strSaveEndDate = get_date_from_gmt($resultEdit->date_end);
+           $strSaveImageURL1 = $resultEdit->extraimage1;
+           $strPaymentMethod = $resultEdit->paymentmethod;
+           $bolUpdate = true;
+           wpa_resetgetvars();
+         }
       elseif($_GET["wpa_action"] == "relist"):
-         $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$_GET["wpa_id"];
-         $resultList = $wpdb->get_row($strSQL);
-         $strSaveName = htmlspecialchars_decode($resultList->name, ENT_NOQUOTES);
-         $strSaveDescription = stripslashes($resultList->description);
-         $strSaveImageURL = $resultList->image_url;
-         $strSaveStartPrice = $resultList->start_price;
-         $strSaveReservePrice = $resultList->reserve_price;
-         $strSaveEndDate = get_date_from_gmt($resultList->date_end);
-         $strSaveImageURL1 = $resultList->extraimage1;
-         $strPaymentMethod = $resultList->paymentmethod;
-         wpa_resetgetvars();
+         $wpa_id = $_GET["wpa_id"];
+      
+         if ($wpa_id > 0) {
+           $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$wpa_id;
+           $resultList = $wpdb->get_row($strSQL);
+           $strSaveName = htmlspecialchars_decode($resultList->name, ENT_NOQUOTES);
+           $strSaveDescription = stripslashes($resultList->description);
+           $strSaveImageURL = $resultList->image_url;
+           $strSaveStartPrice = $resultList->start_price;
+           $strSaveReservePrice = $resultList->reserve_price;
+           $strSaveEndDate = get_date_from_gmt($resultList->date_end);
+           $strSaveImageURL1 = $resultList->extraimage1;
+           $strPaymentMethod = $resultList->paymentmethod;
+           wpa_resetgetvars();
+         }
       endif;
    endif;
 
