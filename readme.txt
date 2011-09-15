@@ -114,7 +114,7 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 == Changelog ==
 
 = 1.8.9 =
-Tightened sanitisation of admin inputs
+* SECURITY UPDATE: Tightened sanitisation of admin inputs
 
 = 1.8.8 =
 * WYSIWYG editor added
