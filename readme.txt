@@ -113,6 +113,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 1.8.10 =
+* bug fix
+
 = 1.8.9 =
 * SECURITY UPDATE: Tightened sanitisation of admin inputs
 

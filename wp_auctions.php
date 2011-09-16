@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.9
+Version: 1.8.10
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -32,6 +32,7 @@ Author URI: http://www.wpauctions.com
 		    .7 - Two new styles, WP 3.2 compatability
 		    .8 - TinyMCE editor added
 		    .9 - Tightened input sanitisation on backend
+		    .10 - big fix
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -40,7 +41,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.9 Lite";
+$wpa_version = "1.8.10 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1415,7 +1416,7 @@ function wp_auctions_add() {
       elseif($_GET["wpa_action"] == "edit"):
          $wpa_id = $_GET["wpa_id"];
       
-         if ($wpa_id > 0) {
+         if ($wpa_id > 0):
            $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$wpa_id;
            
            $resultEdit = $wpdb->get_row($strSQL);
@@ -1430,11 +1431,11 @@ function wp_auctions_add() {
            $strPaymentMethod = $resultEdit->paymentmethod;
            $bolUpdate = true;
            wpa_resetgetvars();
-         }
+         endif;
       elseif($_GET["wpa_action"] == "relist"):
          $wpa_id = $_GET["wpa_id"];
       
-         if ($wpa_id > 0) {
+         if ($wpa_id > 0):
            $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$wpa_id;
            $resultList = $wpdb->get_row($strSQL);
            $strSaveName = htmlspecialchars_decode($resultList->name, ENT_NOQUOTES);
@@ -1446,7 +1447,7 @@ function wp_auctions_add() {
            $strSaveImageURL1 = $resultList->extraimage1;
            $strPaymentMethod = $resultList->paymentmethod;
            wpa_resetgetvars();
-         }
+         endif;
       endif;
    endif;
 
