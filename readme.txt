@@ -2,8 +2,8 @@
 Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions, auction, e-commerce, money, eshop, buy it now plugin
-Requires at least: 2.9
-Tested up to: 3.2
+Requires at least: 3.0
+Tested up to: 3.3.1
 Stable tag: /trunk/
 
 WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free!
@@ -30,8 +30,8 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 **Example uses include:**
 
-* Auction off advertising space.
-* Sell physical goods from iPods to Cars.
+* Auction off advertising space!
+* Sell physical goods from iPods to Cars!
 * Sell your artwork and many more such uses...
 
 **Official Site**
@@ -72,22 +72,16 @@ Simple, here's an example of a paragraph:
 
 There are specific instructions for you under the description entry box on the "Add" screen as well.
 
-= How do I insert a video as part of my description? =
-
-To include *one* video you have to adjust the width and height of the embed code to **width="324" height="254"**.
-
-If you are going to include text and videos, then your description area will get scroll bars, in this case you have to adjust the width of the embed code to **width="304"**, the height can whatever you like.
-
 = Why does the AJAX popup look weird on my blog? =
 
-This could be due to the CSS of your theme. While we try to override reset settings for the popup CSS there are some instances where themes have been known to override our CSS settings. Yes, it's a vicious cycle. To fix it, try and edit the CSS of the theme if you are comfortable doing so or ask for help on the forums.
+This could be due to the CSS of your theme. While we try to override reset settings for the popup CSS there are some instances where themes have been known to override our CSS settings. Yes, it's a vicious cycle. To fix it, try and edit the CSS of the theme if you are comfortable doing so or ask your theme designer for help.
 
 = What features are available in the Pro version? =
 
 The Pro and Pro Plus versions have tons of enhancements and improvements. Here are some of our favourte ones:
 
 * 3 bidding engines to choose from: Proxy, Simple & Reverse
-* Auctions for registered users only. 
+* Auctions for registered users only - *user favorite*. 
 * Set a reserve price for your auctions
 * Sell items on "Buy It Now" basis - *user favorite*.
 * Upload multiple images for each auction (up to 4).
@@ -112,6 +106,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 5. AJAX Popup
 
 == Changelog ==
+
+= 1.9 =
+* Compatibility with WordPress v3.3+
 
 = 1.8.10 =
 * bug fix
@@ -189,6 +186,10 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 * General cleaning up and code optimization
 
 == Upgrade Notice ==
+
+= 1.9 =
+
+This version fixes the date popup to enter the End Date for the auction.
 
 = 1.5 =
 

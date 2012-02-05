@@ -3,26 +3,16 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.8.10
+Version: 1.9
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
 
 /* History:
    v 1.5   - New version of free plugin
-        .1 - Styles updated
-        .2 - Javascript fix
    v1.6 - Added check/mailing address option
    v1.7 - Added "no auction" alternative
-        .1 - Style fix
-        .2 - Cleared up some extra code that wasn't being used
-        .3 - Changed upload functionality as WP 3.0 media uploader didn't fit any more
-        .4 - Bug fix for admin menu errors appearing when plugin activated
-        .5 - Bug fix in resizer path
-        .6 - Some Windows Hosting fixes
-        .7 - Added remote debug to help assist users
-        .8 - Squashed minor bug affecting Windows hosting using InnoDb
-    v1.8 - Added custom currency option
+   v1.8 - Added custom currency option
         .1 - Added option to hide RSS links
         .2 - Bug fix
         .3 - Fixed bug on resizer on PHP 4 / Change from using SiteURL to WPurl to increase consistency
@@ -33,6 +23,7 @@ Author URI: http://www.wpauctions.com
 		    .8 - TinyMCE editor added
 		    .9 - Tightened input sanitisation on backend
 		    .10 - big fix
+	v1.9 - Brought in line with WordPress 3.3
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -41,7 +32,7 @@ Author URI: http://www.wpauctions.com
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.8.10 Lite";
+$wpa_version = "1.9 Lite";
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -1293,9 +1284,8 @@ $rss = @fetch_rss( $rss_feed );
 
     <div class="wpa-info">
 	  	<h3 class="wpa-upgradepro">Upgrade to Pro</h3>
-        	<p>Unlock a host of amazing features like:</p>
-	  		<p>Simple bidding, reverse bidding, watching auctions, color customization, shipping price, private auctions, Buy it Now option, place auctions in a post, extra image uploads and many more features.</p>
-            <p class="wpa-notice"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $15 off!</a></p>
+        	<p class="wpa-notice"><a href="../wp-admin/admin.php?page=wp-auctions-upgrade">Upgrade today! Click to view your options.</a></p>
+	  		<p>Pro features: Simple bidding, reverse bidding, watching auctions, color customization, shipping price, private auctions, Buy it Now option, embed auctions in a post, extra image uploads and many more features!</p>
     </div>
 
     <div style="clear:both"></div>
@@ -1305,7 +1295,7 @@ $rss = @fetch_rss( $rss_feed );
 <ul class="wpa-start">
 	<li><div class="buttons"><button onclick="window.location = 'admin.php?page=wp-auctions-add';" class="button"><strong>Add An Auction</strong></button></div></li>
     <li><div class="buttons">/ &nbsp;<button onclick="window.location = 'admin.php?page=wp-auctions-manage';" class="button"><strong>Manage Auctions</strong></button></div></li>
-	<li><div class="buttons wpa-upgrade">/ &nbsp;<button onclick="window.location = 'http://www.weborithm.com/products/signup.php?hide_paysys=free';" class="button"><strong>Upgrade to Pro</strong></button></div></li>
+	<li><div class="buttons wpa-upgrade">/ &nbsp;<button onclick="window.location = '../wp-admin/admin.php?page=wp-auctions-upgrade';" class="button"><strong>Upgrade Plugin</strong></button></div></li>
 </ul>
 <div style="clear:both"></div>
 
@@ -1466,8 +1456,7 @@ function wp_auctions_add() {
          $strSaveReservePrice = 0;
          $strSaveDuration = 0;
          
-         // convert date/time to GMT
-         
+         // convert date/time to GMT         
          $strSaveEndDate = get_gmt_from_date($strSaveEndDate);
          $GMTTime = current_time('mysql',"1");
 
@@ -1536,7 +1525,7 @@ function wp_auctions_add() {
 		<?php endif; ?>
 		
         <div class="clearfix">
-	    	<div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Unlock all Pro features: <a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $15 off!</a></p></div>
+	    	<div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Get WP Auctions Pro: <a href="../wp-admin/admin.php?page=wp-auctions-upgrade">Upgrade Plugin</a></p></div>
 		</div>
     
 		<h2 class="details"><em>Auction Details</em></h2>
@@ -1546,7 +1535,8 @@ function wp_auctions_add() {
 jQuery(document).ready(function() {
   
   // set up datepicker
-  jQuery("#wpa_EndDate").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: ' hh:ii:ss' });
+  jQuery("#wpa_EndDate").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: ' hh:mm:ss' });
+
 });
 
 </script>
@@ -1622,6 +1612,65 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 }
 
 
+function wp_auctions_upgrade() {
+?>
+
+<link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
+
+<div class="wrap wp-auctions wp-auctions-upgrade"> 
+	
+    <div class="clearfix">
+		<h2>Your Upgrade Options</h2>
+		
+			<div class="wpa-intro wpa-plugins">
+				<p>You are using the Lite version</p>
+				
+				<div class="downloadplugin">
+					<h3>Pro, Latest Version Instant Download</h3>
+					<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPA&#038;c=single&#038;cl=16004" target="ejejcsingle">Only $35, Click for Instant Download</a></p>
+					<p>After you buy, please follow these steps.</p>
+						<ul>
+							<li>Pay and download latest Pro version instantly.</li>
+							<li>De-activate and delete the Lite version.</li>
+							<li>Upload Pro version.</li>
+							<li>Add Auctions!</li>
+							<li>Make Money!</li>
+						</ul>
+				</div>
+
+				<div class="downloadplugin">
+					<h3>Pro, Subscription</h3>
+					<p class="downloadupgrade"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Only $89, Register &amp; Download</a> Use coupon code <strong>1BCF1</strong> to save $15!</p>
+					<p>After you buy, please follow these steps.</p>
+						<ul>
+							<li>Pay and download latest Pro version from your member area.</li>
+							<li>De-activate and delete the Lite version.</li>
+							<li>Upload Pro version.</li>
+							<li>Add Auctions!</li>
+							<li>Make Money!</li>
+							<li>You also get free updates and forum support for one year.</li>
+						</ul>
+				</div>
+				
+				<div class="downloadthemes">
+					<h3>ThemeSpace - WordPress Themes, HTML Templates</h3>
+					<p>For only $35, get instant access to a growing library of all our WordPress themes, HTML templates and more!</p>
+					<p class="downloadupgrade"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Join ThemeSpace</a></p>
+						<ul>
+							<li>Get access to ALL of our current and future themes and templates for one year.</li>
+							<li>Professional design and code.</li>
+							<li>Unlimited domain use.</li>
+							<li>Easily customizable.</li>
+							<li>Free updates.</li>
+						</ul>
+				</div>
+				<div style="clear:both"></div>
+			</div>
+	</div>
+</div>    
+<?php
+}
+
 function wp_auctions_manage() {
 
    global $wpdb;
@@ -1686,7 +1735,7 @@ function wp_auctions_manage() {
 <div class="wrap wp-auctions"> 
 	
     <div class="clearfix">
-    <div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Go Pro: <a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Upgrade today, use code 1BCF1 to get $15 off!</a></p></div>
+    <div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Get WP Auctions Pro: <a href="../wp-admin/admin.php?page=wp-auctions-upgrade">Upgrade Plugin</a></p></div>
 	<div class="wpa-time"><p>Wordpress Time: <?php echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></p></div>
 	</div>
     
@@ -1879,11 +1928,13 @@ function wp_auctions_header() {
 
 
 function wpa_admin_scripts() {
-   wp_enqueue_script( 'jquery-ui-datepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/ui.datetimepicker.js', array('jquery-ui-core') , 0.1, true );
+   wp_enqueue_script( 'jquery-ui-datetimepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker','jquery-ui-slider') , 0.1, true );
 }
 
 function wpa_admin_styles() {
-   wp_enqueue_style( 'jquery-ui-datepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/overcast/jquery-ui-1.7.2.custom.css' );
+   wp_enqueue_style( 'jquery-ui-datetimepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/timepicker.custom.css' );
+   wp_enqueue_style( 'jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css');
+   
 }
 
 if (isset($_GET['page']) && $_GET['page'] == 'wp-auctions-add') {
@@ -1895,12 +1946,12 @@ if (isset($_GET['page']) && $_GET['page'] == 'wp-auctions-add') {
 function wp_auctions_adminmenu(){
 
    // add new top level menu page
-   add_menu_page ('WP Auctions', 'WP Auctions' , 7 , PLUGIN_PATH , 'wp_auctions_welcome' );
+   add_menu_page ('WP Auctions', 'WP Auctions' , 'manage_options' , PLUGIN_PATH , 'wp_auctions_welcome' );
 
    // add submenus
-   add_submenu_page (PLUGIN_PATH, 'Manage', 'Manage', 7 , 'wp-auctions-manage', 'wp_auctions_manage' );
-   add_submenu_page (PLUGIN_PATH, 'Add', 'Add', 7 , 'wp-auctions-add', 'wp_auctions_add' );
-
+   add_submenu_page (PLUGIN_PATH, 'Manage', 'Manage', 'manage_options' , 'wp-auctions-manage', 'wp_auctions_manage' );
+   add_submenu_page (PLUGIN_PATH, 'Add', 'Add', 'manage_options' , 'wp-auctions-add', 'wp_auctions_add' );
+   add_submenu_page (PLUGIN_PATH, 'Upgrade', 'Upgrade', 'manage_options' , 'wp-auctions-upgrade', 'wp_auctions_upgrade' );
 }
 
 add_action('wp_head', 'wp_auctions_header');

@@ -104,10 +104,21 @@
 	.wp-auctions table.widefat td.wpa-auction-currentprice { width: 15% !important; }
 	.wp-auctions table.widefat td.wpa-auction-actions { width: 15% !important; }
 
-p.wpa-notice { background: #fffec9; border: 1px solid #EFE570; float: left; padding: 10px; }
+	p.wpa-notice { background: #fffec9; border: 1px solid #EFE570; padding: 5px 10px; }
 	.wp-auctions table.widefat .mceLayout td.mceToolbar { background: #EBEBDA; border: 0; padding: 5px 0; }
 	.wp-auctions table.widefat .mceLayout td.mceIframeContainer { background: #fff; border: 1px solid #bcaa97; padding: 0; }
 	.wp-auctions table.widefat .mceLayout td.mceStatusbar { border: 0; padding: 5px 0 0; }
 	.wp-auctions table.widefat .mce_fullscreen { display: none !important; }
 	
 	.wpa-check { background: #E8FFC6 url(check.png) no-repeat 10px center; border: 1px solid #A0E237; color: #4B773D; font-size: 13px; margin: 0 0 5px; padding: 10px 10px 10px 36px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+
+	.wpa-plugins { padding: 10px 0; }
+	.wpa-plugins p { padding: 0 0 15px; }
+	.wp-auctions-upgrade h2 { font-size: 16px; padding: 0; margin: 5px 0 0; }
+	.wpa-plugins h3 { margin: 0 0 20px; text-transform: uppercase; }
+	.wpa-plugins .downloadplugin p, .wpa-plugins .downloadthemes p { font-style: normal; padding: 0 0 15px; }
+	.wpa-plugins p.downloadupgrade { background: url(wpa.png) no-repeat left 10px; padding: 10px 0 20px 26px; }
+	.wpa-plugins .downloadthemes p.downloadupgrade { background: url(wp.png) no-repeat left 10px; }
+	.wpa-plugins p.downloadupgrade a { background: #f2f2f2 url(/wp-admin/images/white-grad.png) repeat-x left top; border: 1px solid #f2f2f2; font-size: 15px; padding: 5px 10px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+
+	.wpa-plugins ul { list-style: disc; margin: 0 0 40px 15px; }
