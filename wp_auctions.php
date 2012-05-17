@@ -13,17 +13,8 @@ Author URI: http://www.wpauctions.com
    v1.6 - Added check/mailing address option
    v1.7 - Added "no auction" alternative
    v1.8 - Added custom currency option
-        .1 - Added option to hide RSS links
-        .2 - Bug fix
-        .3 - Fixed bug on resizer on PHP 4 / Change from using SiteURL to WPurl to increase consistency
-		    .4 - Hyder added a new style, Wind
-		    .5 - Fringe condition where autobid is identical to user bid .. always ensure AutoBid wins (first bidder takes precedence)
-		    .6 - Minor fixes to PHP includes
-		    .7 - Two new styles, WP 3.2 compatability
-		    .8 - TinyMCE editor added
-		    .9 - Tightened input sanitisation on backend
-		    .10 - big fix
-	v1.9 - Brought in line with WordPress 3.3
+	 v1.9 - Brought in line with WordPress 3.3
+	     .1 - Bug fixes
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -1535,7 +1526,7 @@ function wp_auctions_add() {
 jQuery(document).ready(function() {
   
   // set up datepicker
-  jQuery("#wpa_EndDate").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: ' hh:mm:ss' });
+  jQuery("#wpa_EndDate").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
 
 });
 
