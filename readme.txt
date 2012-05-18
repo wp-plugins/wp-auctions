@@ -22,7 +22,6 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 * Upload an image for your auction.
 * Use PayPal to accept payments.
 * Easily Edit, End or Delete your auctions.
-* Use HTML to describe your auctions, you can even include video!
 * Set a specific end date and time, down to the second.
 * Choice of 5 display styles.
 * Sleek AJAX popup to show your auctions.
@@ -32,7 +31,8 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 * Auction off advertising space!
 * Sell physical goods from iPods to Cars!
-* Sell your artwork and many more such uses...
+* Sell your artwork
+* Use it for charity auctions, etc...
 
 **Official Site**
 
@@ -41,6 +41,12 @@ For more information and to take a look at the Pro version, visit our website - 
 **Special Offer**
 
 Upgrade today, use code 1BCF1 to get $15 off!
+
+**Need Help?**
+
+We have a dedicated forum here [WP Auctions Forum](http://www.wpauctions.com/forums/ "Forum") where you can register for free and let us know about any issues you are facing. Once you register please send us an email stating the username you have selected so we can activate you as soon as possible.
+
+We encourage you to ask us any questions you may have before rating or placing a vote on the plugin. Thank you!
 
 == Installation ==
 
@@ -191,6 +197,10 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 == Upgrade Notice ==
 
 = 1.9.1 =
+
+Bug fixes.
+
+= 1.9 =
 
 This version fixes the date popup to enter the End Date for the auction.
 
