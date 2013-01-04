@@ -32,23 +32,38 @@
 	.wp-auctions h2 { color: #000; font-style: normal; line-height: 1em; margin: 15px 0 0; padding: 0; }
 
 	.wp-auctions h2 span { font-size: 12px; }
+	
+	.wp-auctions h2.payment, .wp-auctions h2.other-settings, .wp-auctions h2.manage, .wp-auctions h2.details, .wp-auctions h2.shipping, .wp-auctions h2.settings { background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #e6e6e6;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); }
 		
-	h2.settings { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.settings { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.settings em { background: url(settings.png) no-repeat 5px 2px; font-style: normal; padding: 0 0 0 41px; }
 	
-	h2.payment { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.payment { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.payment em { background: url(payment.png) no-repeat 5px 5px; font-style: normal; padding: 0 0 0 41px; }
 	
-	h2.other-settings { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.other-settings { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.other-settings em { background: url(other-settings.png) no-repeat 5px top; font-style: normal; padding: 0 0 0 41px; }
 
-	h2.manage { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.manage { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.manage em { background: url(manage.png) no-repeat 5px top; font-style: normal; padding: 0 0 0 41px; }
 
-	h2.details { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.details { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.details em { background: url(details.png) no-repeat 5px 5px; font-style: normal; padding: 2px 0 2px 41px; }
 	
-	h2.shipping { background: #fff url(/wp-admin/images/white-grad.png) repeat-x left bottom; border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.shipping { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.shipping em { background: url(shipping.png) no-repeat 5px 5px; font-style: normal; padding: 2px 0 2px 41px; }
 	
 	h2.emailsettings em { background: url(email.png) no-repeat 5px 6px; }
@@ -75,7 +90,7 @@
 	.wp-auctions table.widefat td { background: #ebebda; border-bottom: 1px solid #bcaa97; border-left: 1px solid #fff; border-top: 1px solid #fff; color: #5a372c; padding: 5px 10px; }
 
 	.wp-auctions table.widefat input { border: 1px solid #bcaa97; margin: 0 0 5px; padding: 5px; width: 200px; }
-	.wp-auctions table.widefat select { border: 1px solid #bcaa97; margin: 0 0 5px; padding: 5px; width: 150px; }
+	.wp-auctions table.widefat select { border: 1px solid #bcaa97; margin: 0 0 5px; width: 150px; }
 	.wp-auctions table.widefat #wpa-regonly, .wp-auctions table.widefat #wpa-list { border: 1px solid #bcaa97;  width: 230px; }
 	.wp-auctions table.widefat textarea { border: 1px solid #bcaa97; margin: 0 0 5px; padding: 5px; width: 400px; }
 	
@@ -119,6 +134,19 @@
 	.wpa-plugins .downloadplugin p, .wpa-plugins .downloadthemes p { font-style: normal; padding: 0 0 15px; }
 	.wpa-plugins p.downloadupgrade { background: url(wpa.png) no-repeat left 10px; padding: 10px 0 20px 26px; }
 	.wpa-plugins .downloadthemes p.downloadupgrade { background: url(wp.png) no-repeat left 10px; }
-	.wpa-plugins p.downloadupgrade a { background: #f2f2f2 url(/wp-admin/images/white-grad.png) repeat-x left top; border: 1px solid #f2f2f2; font-size: 15px; padding: 5px 10px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+	.wpa-plugins p.downloadupgrade a { background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #e6e6e6;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); border: 1px solid #f2f2f2; font-size: 15px; padding: 5px 10px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 
 	.wpa-plugins ul { list-style: disc; margin: 0 0 40px 15px; }

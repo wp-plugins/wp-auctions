@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 1.9.1
+Version: 2.0
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -14,16 +14,17 @@ Author URI: http://www.wpauctions.com
    v1.7 - Added "no auction" alternative
    v1.8 - Added custom currency option
 	 v1.9 - Brought in line with WordPress 3.3
-	     .1 - Bug fixes
+	 v2.0 - Improved based on Gold functionality (example image handling)
 */
-
-//error_reporting (E_ALL ^ E_NOTICE);
 
 // cater for stand-alone calls
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "1.9.1 Lite";
+$wpa_version = "2.0 Lite";
+
+// helper functions
+require_once('helper.php');
 
 // Consts
 define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
@@ -68,9 +69,9 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 
 	// process posted values here
 	$auction_id = $_POST['auction_id'];
-	$bidder_name = htmlspecialchars(strip_tags(stripslashes($_POST['bidder_name'])), ENT_QUOTES);
+	$bidder_name = esc_html(strip_tags(stripslashes($_POST['bidder_name'])));
 	$bidder_email = strip_tags(stripslashes($_POST['bidder_email']));
-	$bidder_url = htmlspecialchars(strip_tags(stripslashes($_POST['bidder_url'])), ENT_QUOTES);
+	$bidder_url = esc_html(strip_tags(stripslashes($_POST['bidder_url'])));
 	$max_bid = $_POST['max_bid'];
 
   $result = wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url, $max_bid );
@@ -268,110 +269,6 @@ $output .= "</channel></rss>";
 	exit;
 endif;
 
-//---------------------------------------------------
-//--------------HELPER FUNCTIONS---------------------
-//---------------------------------------------------
-
-// helper function for multi-dimensional implode
-function wpa_implode_r ($glue, $pieces) {
- $out = "";
- foreach ($pieces as $piece)
-  if (is_array ($piece)) $out .= wpa_implode_r ($glue, $piece);
-  else                   $out .= $glue.$piece;
- return $out;
-}
-
-// helper function to calculate increment based on amount
-// Gold version has custom increment too
-
-function wpa_get_increment ($value) {
-
-  $out = 0.01;
-
-  if ($value >= 1000) {
-     $out = 10;
-   } elseif ($value >= 250) {
-     $out = 5;
-   } elseif ($value >= 50) {
-     $out = 2;
-   } elseif ($value >= 25) {
-     $out = 1;
-   } elseif ($value >= 10) {
-     $out = 0.50;
-   } elseif ($value >= 5) {
-     $out = 0.25;
-   } elseif ($value >= 1) {
-     $out = 0.1;
-   } elseif ($value >= 0.5) {
-     $out = 0.05;
-   }
-
- 
- return $out;
-}
-
-// helper function to validate email address
-function wpa_valid_email($address)
-{
-// check an email address is possibly valid
-return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $address);
-}
-
-if(!function_exists('file_put_contents')) {
-    function file_put_contents($filename, $data, $file_append = false) {
-
-      $fp = fopen($filename, (!$file_append ? 'w+' : 'a+'));
-        if(!$fp) {
-          trigger_error('file_put_contents cannot write in file.', E_USER_ERROR);
-          return;
-        }
-      fputs($fp, $data);
-      fclose($fp);
-    }
-  }
-  
-function wpa_resize ( $image, $size ) {
-   $resizer = get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.'wpa_resizer.php';
-   
-   $currentServer = get_bloginfo('wpurl');
-      
-   // make sure we have a local file
-   if(ereg($currentServer,$image) != true) {
-        // get us a local copy
-        $finfo = pathinfo($image);
-        list($filename) = explode('?',$finfo['basename']);
-        $local_filepath = get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.'files/'.$filename;
-
-        // don't download a fresh copy if we got this less than 20 mins ago
-        $download_image = true;
-        if(file_exists($local_filepath)){
-           if(filemtime($local_filepath) < strtotime('+20 minutes')) {
-              $download_image = false;
-           }
-        }
-
-       if($download_image == true) {
-          $img = file_get_contents($image);
-          
-          // get physical path to file
-          $realfile = dirname(__file__).'/files/'.$filename;
-          
-          file_put_contents($realfile,$img);
-       }
-       
-      $image = $local_filepath;  
-   }
-     
-   // following line works on PHP 5 only 
-   //$relPath = parse_url($image, PHP_URL_PATH);
-   
-   $aPath = parse_url($image);
-   $relPath = $aPath['path'];
-   
-   $final = $resizer.'?width='.$size.'&amp;height='.$size.'&amp;cropratio=1:1&amp;image='.$relPath;
-
-   return $final;
-}
 
 //---------------------------------------------------
 //--------------INTERNAL CODE------------------------
@@ -763,9 +660,9 @@ function widget_wp_auctions_init() {
 		echo 'Please configure the widget from the Auctions Configuration Screen';
 	}
 
-	register_sidebar_widget(array('WP Auctions', 'widgets'), 'widget_wp_auctions');
-	register_widget_control(array('WP Auctions', 'widgets'), 'widget_wp_auctions_control', 300, 130);
-;
+	wp_register_sidebar_widget('wp_auctions','WP Auctions', 'widget_wp_auctions');
+	wp_register_widget_control('wp_auctions','WP Auctions', 'widget_wp_auctions_control', 300, 130);
+
 }
 
 function get_price($current_price,$start_price,$BIN_price,$currencysymbol,$sep) {
@@ -809,7 +706,7 @@ function docommon_wp_auctions() {
    // select a random record
    $table_name = $wpdb->prefix . "wpa_auctions";
 
-   $auction_id = $_GET["auction_to_show"];
+   $auction_id = isset($_GET["auction_to_show"]) ? $_GET["auction_to_show"] : "";
 
    if(!is_numeric($auction_id)) {
       $cond = "'".current_time('mysql',"1")."' < date_end order by rand() limit 1";
@@ -831,12 +728,6 @@ function docommon_wp_auctions() {
 
    // show default image if no image is specified
    if ($image_url == "") $image_url = get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH."requisites/default.png";
-
-if ($list == "Yes") {
-
-    echo "Something went wrong in display";
-
-} else {
 
    // cater for no records returned
    if ($id == '') {
@@ -936,14 +827,14 @@ if ($list == "Yes") {
 }
 
 // hook to terminate auction if needed (not strictly correct, but more efficient if it's here)
-check_auction_end($id);
-  
-}     
+check_auction_end($id); 
 
 }
 
 
 function wp_auctions_options() {
+ 
+   global $wpdb;
 
    // Note: Options for this plugin include a "Title" setting which is only used by the widget
    $options = get_option('wp_auctions');
@@ -953,7 +844,52 @@ function wp_auctions_options() {
       $options = array( 'title'=>'WP Auctions', 'otherauctions'=>'3', 'currency'=>'1', 'style'=>'default', 'notify'=>'', 'paypal'=>'', 'mailingaddress'=>'', 'bankdetails'=>'', 'currencysymbol'=>'$', 'currencycode'=>'USD','noauction'=>'','customcontact'=>'','customincrement'=>'');
    }
 
-   if ( $_POST['wp_auctions-submit'] ) {
+
+   if (isset($_POST['wp_auctions-action']) && ($_POST['wp_auctions-action'] == "regenerate_images")) {
+   
+      require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+   
+      echo "<h2>";
+      _e('Regenerating Images:','wpauctions');
+      echo "</h2>";
+
+		  $table_name = $wpdb->prefix . "wpa_auctions";
+		  $strSQL = "SELECT id, image_url FROM $table_name";
+		  $rows = $wpdb->get_results ($strSQL);
+
+	    if (is_array($rows)) {
+		    foreach ($rows as $row) { 
+		      echo "Processing: ";
+          echo $row->id;
+          echo " Base Image: ";
+          
+          $to_process = $row->image_url;
+          if (empty($to_process)) {
+             echo "none";
+          } else {
+             if (is_numeric($to_process)) {
+                echo "ok";
+             } else {
+                echo "Fixing";
+                
+                 $id = wpa_import_photo( $row->id, $to_process );
+                 
+                 if (intval($id) > 0) { 
+                    echo " Created: $id";
+
+                    $sql = "UPDATE ".$table_name." SET image_url = ".$id." WHERE id=".$row->id;
+                    $wpdb->query($sql);
+                 }
+             }
+          }
+          
+          echo "<br>";
+        }
+      }
+   }
+
+
+   if ( isset($_POST['wp_auctions-submit'] )) {
 
       // security check
       check_admin_referer( 'WPA-nonce');
@@ -1025,21 +961,21 @@ function wp_auctions_options() {
       update_option('wp_auctions', $options);
    }
 
-   $currencysymbol = htmlspecialchars($options['currencysymbol'], ENT_QUOTES);
-   $currencycode = htmlspecialchars($options['currencycode'], ENT_QUOTES);
+   $currencysymbol = esc_html($options['currencysymbol']);
+   $currencycode = esc_html($options['currencycode']);
 
-   $currency = htmlspecialchars($options['currency'], ENT_QUOTES);
-   $title = htmlspecialchars($options['title'], ENT_QUOTES);
-   $notify = htmlspecialchars($options['notify'], ENT_QUOTES);
-   $paypal = htmlspecialchars($options['paypal'], ENT_QUOTES);
-   $mailingaddress = htmlspecialchars($options['mailingaddress'], ENT_QUOTES);
-   $bankdetails = htmlspecialchars($options['bankdetails'], ENT_QUOTES);
-   $feedback = htmlspecialchars($options['feedback'], ENT_QUOTES);
-   $noauction = htmlspecialchars($options['noauction'], ENT_QUOTES);
-   $otherauctions = htmlspecialchars($options['otherauctions'], ENT_QUOTES);
-   $style = htmlspecialchars($options['style'], ENT_QUOTES);
-   $remotedebug = htmlspecialchars($options['remotedebug'], ENT_QUOTES);
-   $showrss = htmlspecialchars($options['showrss'], ENT_QUOTES);
+   $currency = esc_html($options['currency']);
+   $title = esc_html($options['title']);
+   $notify = esc_html($options['notify']);
+   $paypal = esc_html($options['paypal']);
+   $mailingaddress = esc_html($options['mailingaddress']);
+   $bankdetails = esc_html($options['bankdetails']);
+   $feedback = esc_html($options['feedback']);
+   $noauction = esc_html($options['noauction']);
+   $otherauctions = esc_html($options['otherauctions']);
+   $style = esc_html($options['style']);
+   $remotedebug = esc_html($options['remotedebug']);
+   $showrss = esc_html($options['showrss']);
 
   // Prepare style list based on styles in style folder
 	$folder_array=array();
@@ -1227,6 +1163,16 @@ function CheckCurrencyOptions() {
       <input type="submit" name="Submit" value="<?php _e('Update Options') ?> &raquo;" />
     </p>
   </form> 
+  
+  <h2 class="other-settings"><em><?php _e('Issue Resolution Actions','wpauctions') ?></em></h2> 
+
+  <form name="form2" method="post" action="<?php echo $_SERVER['PHP_SELF'].'?page='.PLUGIN_PATH; ?>">
+	  <input type="hidden" id="wp_auctions-action" name="wp_auctions-action" value="regenerate_images" /> 
+    <p class="submit">
+      <input type="submit" name="Submit" value="<?php _e('Regenerate Images','wpauctions') ?> &raquo;" />
+    </p>
+  </form> 
+    
 </div>
 
 <?php
@@ -1262,7 +1208,7 @@ $rss = @fetch_rss( $rss_feed );
         $rss->items = array_slice($rss->items, 0, 4);
         foreach ($rss->items as $item ) {
         ?>
-          <li><a href="<?php echo wp_filter_kses($item['link']); ?>"><?php echo wptexturize(wp_specialchars($item['title'])); ?></a></li>
+          <li><a href="<?php echo wp_filter_kses($item['link']); ?>"><?php echo wptexturize($item['title']); ?></a></li>
         <?php } ?>
         </ul>
         <?php
@@ -1365,16 +1311,18 @@ function wp_auctions_add() {
 
          // Add the meta-data
          wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
-
          do_action('wp_create_file_in_uploads', $file, $id); // For replication
-      
-         $strSaveImageURL = $url;
+         $strSaveImageURL = $id;
+         
       } else {
-         $strSaveImageURL = $_POST["wpa_ImageURL"];
+        // preserve image if edit with no change
+        if (isset($_POST["wpa_ImageURL"])) {
+          $strSaveImageURL = $_POST["wpa_ImageURL"];       
+        }  
       }
 
       if($_POST["wpa_action"] == "Add Auction"):
-         $strSaveName = strip_tags(htmlspecialchars($_POST["wpa_name"]));
+         $strSaveName = strip_tags(esc_html($_POST["wpa_name"]));
          $strSaveDescription = $_POST["wpa_description"];
          $strSaveStartPrice = $_POST["wpa_StartPrice"];
          $strSaveReservePrice = $_POST["wpa_ReservePrice"];
@@ -1384,7 +1332,7 @@ function wp_auctions_add() {
          //$strSaveImageURL = $_POST["wpa_ImageURL"]; - handled above!
       elseif($_POST["wpa_action"] == "Update Auction"):
          $strUpdateID = $_POST["wpa_id"];
-         $strSaveName = strip_tags(htmlspecialchars($_POST["wpa_name"]));
+         $strSaveName = strip_tags(esc_html($_POST["wpa_name"]));
          $strSaveDescription = $_POST["wpa_description"];
          $strSaveStartPrice = $_POST["wpa_StartPrice"];
          $strSaveReservePrice = $_POST["wpa_ReservePrice"];
@@ -1558,12 +1506,15 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 		</td> 
       </tr>
       <tr valign="top" class="alternate"> 
-        <th scope="row"><?php _e('Image URL:') ?></th> 
-        <td><input type="text" name="wpa_ImageURL" value="<?php print $strSaveImageURL ?>" maxlength="255" size="50" id="upload_image_0"/>
-        <p>You can specify a URL to an image, alternatively upload one from your computer</p>
-        <label for="upload_0"><?php _e('Choose an image from your computer:'); ?></label><br /><input type="file" id="upload_0" name="upload_0" />
-        <br>
-        <?php _e('Specify the image for your auction. If your images do not appear please CHMOD the "wp-auctions/files" folder 777 via FTP. <a href="http://codex.wordpress.org/Changing_File_Permissions#Using_an_FTP_Client" target="_blank">Instructions</a>.') ?></td> 
+        <th scope="row"><?php _e('Image URL:','wpauctions') ?></th> 
+        <td>
+        <div class="preview0" style="float:right;">
+           <img src="<?php echo wpa_resize ( $strSaveImageURL, 125 ) ?>" width="125px" height="125px" id="thumb_0">
+        </div>
+        <?php if (intval($strSaveImageURL) > 0) echo "<p>".__('Image ID:','wpauctions')." ".$strSaveImageURL."</p>"; ?>
+        <label for="upload_0"><?php _e('Choose an image from your computer:','wpauctions'); ?></label><br /><input type="file" id="upload_0" name="upload_0" /><br />
+        <input type="hidden" name="wpa_ImageURL" value="<?php echo $strSaveImageURL; ?>">
+        </td> 
       </tr>
       <tr valign="top" class="alternate"> 
         <th scope="row"><?php _e('Start Price:') ?></th> 
@@ -1618,7 +1569,7 @@ function wp_auctions_upgrade() {
 				
 				<div class="downloadplugin">
 					<h3>Pro, Latest Version Instant Download</h3>
-					<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPA&#038;c=single&#038;cl=16004" target="ejejcsingle">Only $35, Click for Instant Download</a></p>
+					<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPA&#038;c=single&#038;cl=16004" target="ejejcsingle">Only $41, Click for Instant Download</a></p>
 					<p>After you buy, please follow these steps.</p>
 						<ul>
 							<li>Pay and download latest Pro version instantly.</li>
@@ -1945,11 +1896,20 @@ function wp_auctions_adminmenu(){
    add_submenu_page (PLUGIN_PATH, 'Upgrade', 'Upgrade', 'manage_options' , 'wp-auctions-upgrade', 'wp_auctions_upgrade' );
 }
 
+function wpa_init() 
+{
+  // define thumbnail sizes
+  add_image_size( 'WPA_thumbnail', 50, 50, true );
+  add_image_size( 'WPA_widget', 125, 125, true );
+  add_image_size( 'WPA_page', 150, 150, true );
+  add_image_size( 'WPA_popup', 250, 250, true );
+}
+
 add_action('wp_head', 'wp_auctions_header');
 add_action('widgets_init', 'widget_wp_auctions_init');
 add_action('admin_menu','wp_auctions_adminmenu',1);
 add_action('activate_'.plugin_basename(__FILE__), 'wp_auctions_install');
 add_action('deactivate_'.plugin_basename(__FILE__), 'wp_auctions_uninstall');
 add_action('wpa_daily_check', 'close_expired_auctions');
-
+add_action('init', 'wpa_init', 0 );
 ?>

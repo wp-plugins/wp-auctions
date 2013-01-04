@@ -8,7 +8,6 @@ $currencysymbol = $options['currencysymbol'];
 $title = $options['title'];
 $showrss = $options['showrss'];
 
-
 $filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp-auctions/styles/'.$style.'/';
 
 // Get auction to show
@@ -208,29 +207,24 @@ ul#wp-othercontainer-p li:hover { }
 			<div id="wp-details-p">
 				<h3>Enter Your Details To Bid <p class="spinner">*required</p></h3>
 								
-			<?php if ($hidebid == "Yes") echo '<div style="display:none;">'; ?>
-				
 				<table border="0" cellpadding="0">
 				<tr class="bidder-name">
 					<td><p>Name*</p></td>
-					<td><input name="Name" type="text" class="forminput" id="Name" value="<?php echo $defaultname; ?>" /></td>
+					<td><input name="Name" type="text" class="forminput" id="Name" value="" /></td>
 				</tr>
 				<tr class="bidder-email">
 					<td><p>Email*</p></td>
-					<td><input name="Email" type="text" class="forminput" id="Email" value="<?php echo $defaultemail; ?>" /></td>
+					<td><input name="Email" type="text" class="forminput" id="Email" value="" /></td>
 				</tr>
 				<tr class="bidder-url">
 					<td><p>URL</p></td>
-					<td><input name="URL" type="text" class="forminput" id="URL" value="<?php echo $defaulturl; ?>" /></td>
+					<td><input name="URL" type="text" class="forminput" id="URL" value="" /></td>
 				</tr>
 				</table>
-
-			<?php if ($hidebid == "Yes") echo "</div>"; ?>
 
         </div><!-- Details Ends -->
 
         <div id="wp-bid-p">
-			<?php if ($hidebid == "Yes") echo '<div style="display:none;">'; ?>
 				<h3>Enter Your Maximum Bid <span id="wp-extrainfo"></span></h3>
 				  
 					<table border="0" cellpadding="0">
@@ -240,7 +234,6 @@ ul#wp-othercontainer-p li:hover { }
 						<td class="wpa-bidnow"><p class="bidnow" id="bidnow"><a href="#" onclick="ajax_submit_bid();">Bid Now</a></p></td>
 				  	</tr>
 				  	</table>
-			<?php if ($hidebid == "Yes") echo "</div>"; ?>
 	 				 
 		</div><!-- Bid Ends -->
 
