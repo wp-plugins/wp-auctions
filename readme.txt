@@ -113,7 +113,7 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
-= 2.01 = 
+= 2.02 = 
 * Bug fixes
 
 = 2.0 = 

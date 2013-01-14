@@ -247,3 +247,6 @@ p.current-bid:hover, p.refresh:hover { background: #ccc !important; cursor: defa
 .wpa-tables td img { background: #eee; display: block; margin: auto; padding: 5px; }
 .wpa-tables td a { background: #eee; border: 1px solid #ccc; color: #0099cc; font-weight: bold; padding: 2px 8px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 .wpa-tables td a:hover { color: #000; }
+
+
+header { z-index: 0 !important; }

@@ -169,3 +169,5 @@ ul#wp-othercontainer-p li:hover { background: #FFE7D7; }
 
 #wp-powered-p { color: #e34600; }
 #wp-powered-p a { color: #e34600 !important; }
+
+header { z-index: 0 !important; }
