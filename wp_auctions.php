@@ -1064,8 +1064,8 @@ function CheckCurrencyOptions() {
         <p><?php _e('If you have lots of eBay feedback, we can add a link to show users your eBay history.') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: 0;"><?php _e('Other Auctions:') ?></th> 
-        <td class='desc' style="border-bottom: 0;">
+        <th scope="row" class='row-title'><?php _e('Other Auctions:') ?></th> 
+        <td class='desc'>
         <select id="wpa-otherauctions" name="wpa-otherauctions">
                 <option value="1" <?php if ($otherauctions=='1') echo 'selected'; ?>>1</option>
                 <option value="2" <?php if ($otherauctions=='2') echo 'selected'; ?>>2</option>
@@ -1080,7 +1080,7 @@ function CheckCurrencyOptions() {
          </select>
         <br />
         <p><?php _e('How many other auctions would you like to display in the widget?') ?></p></td> 
-      </tr> 
+      </tr>
     </table>
 
   <h2 class="payment"><em><?php _e('Payment Settings <span>- Please supply at least one of the following</span>') ?></em></h2>
@@ -1146,8 +1146,8 @@ function CheckCurrencyOptions() {
         <p><?php _e('Do you want to publish a link to your auction RSS feed. This can let people know when you publish new auctions') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('Allow Remote Debug:') ?></th> 
-        <td class='desc' style="border-bottom: none;">
+        <th scope="row" class='row-title'><?php _e('Allow Remote Debug:') ?></th> 
+        <td class='desc'>
         <select id="wpa-remotedebug" name="wpa-remotedebug">
                 <option value="" <?php if ($remotedebug=='') echo 'selected'; ?>>Support not required</option>
                 <option value="Yes" <?php if ($remotedebug=='Yes') echo 'selected'; ?>>Allow the WP Auctions Support team access to your <a href="http://php.net/manual/en/function.phpinfo.php">PHP Config Information</a></option>
@@ -1155,7 +1155,29 @@ function CheckCurrencyOptions() {
         <br />
         <p><?php _e('Select whether you want to divulge your server information to assist remote debugging. Your information will be visible <a href="'.get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME.'?debug">here</a>') ?></p></td> 
       </tr> 
-           
+      <tr valign="top"> 
+        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Unlock features') ?></th> 
+        <td class='desc' style="border-bottom: 0; padding: 0;">
+			<div class="wpa-upgrade-part">
+			<p><?php _e('Unlock the following features by upgrading to Pro:') ?></p>
+			<ul>
+				<li><?php _e('Auction Engine: Simple and Reverse') ?></li>
+				<li><?php _e('More PayPal Currencies') ?></li>
+				<li><?php _e('Minimum Bid Increment: Set a global minimum bid increase amount') ?></li>
+				<li><?php _e('Email notifications management') ?></li>
+				<li><?php _e('Registered users only option') ?></li>
+				<li><?php _e('Request to bid option') ?></li>
+				<li><?php _e('Extra bidding time') ?></li>
+				<li><?php _e('Countdown timer') ?></li>
+				<li><?php _e('Auctions landing page') ?></li>
+				<li><?php _e('Custom contact field') ?></li>
+				<li><?php _e('Edit bid refresh timer') ?></li>
+				<li><?php _e('...and more!') ?></li>
+			</ul>
+			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Only $29">Upgrade *</a></p>
+			</div>
+		</td> 
+      </tr>
     </table>
 
 	<input type="hidden" id="wp_auctions-submit" name="wp_auctions-submit" value="1" />
@@ -1165,14 +1187,18 @@ function CheckCurrencyOptions() {
     </p>
   </form> 
   
-  <h2 class="other-settings"><em><?php _e('Issue Resolution Actions','wpauctions') ?></em></h2> 
+  <h2 class="issue-resolution"><em><?php _e('Issue Resolution Actions','wpauctions') ?></em></h2> 
 
   <form name="form2" method="post" action="<?php echo $_SERVER['PHP_SELF'].'?page='.PLUGIN_PATH; ?>">
 	  <input type="hidden" id="wp_auctions-action" name="wp_auctions-action" value="regenerate_images" /> 
     <p class="submit">
       <input type="submit" name="Submit" value="<?php _e('Regenerate Images','wpauctions') ?> &raquo;" />
     </p>
-  </form> 
+  </form>
+  <br />
+  <br />
+  <br />
+  <p>*NOTE: Forum support is not included with the Lite, $29 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
     
 </div>
 
@@ -1222,8 +1248,9 @@ $rss = @fetch_rss( $rss_feed );
 
     <div class="wpa-info">
 	  	<h3 class="wpa-upgradepro">Upgrade to Pro</h3>
-        	<p class="wpa-notice"><a href="../wp-admin/admin.php?page=wp-auctions-upgrade">Upgrade today! Click to view your options.</a></p>
-	  		<p>Pro features: Simple bidding, reverse bidding, watching auctions, color customization, shipping price, private auctions, Buy it Now option, embed auctions in a post, extra image uploads and many more features!</p>
+        	<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 22px;">$29</span></big> Click for Instant Download *</a></p>
+	  		<p>Limited time pricing, get the PRO version and unlock dozens of new features like:</p>
+			<p>&bull; 2 new bidding engines &bull; Reserve prices &bull; Buy it Now &bull; Embed auctions in Posts/Pages &bull; ...and much, much more!</p>
     </div>
 
     <div style="clear:both"></div>
@@ -1529,16 +1556,15 @@ wp_tiny_mce( false , // true makes the editor "teeny"
         <td><input type="text" name="wpa_EndDate" id="wpa_EndDate" value="<?php print $strSaveEndDate ?>" maxlength="20" size="20" /><br>
         <?php _e('When would you like this auction to end? Note that blog time is: '); echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></td> 
       </tr>
-      <tr valign="top" class="alternate"> 
+      <tr valign="top" class="alternate" style="border-bottom: 0;"> 
         <th scope="row" style="border-bottom: 0;"><?php _e('Payment Method:') ?></th> 
-        <td style="border-bottom: 0;">
+        <td>
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="paypal" <?php if ($strPaymentMethod=="paypal") echo "CHECKED";?> <?php if ($paypal=="") echo "DISABLED";?>><label for="wpa_PaymentMethod">PayPal<br>
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="bankdetails" <?php if ($strPaymentMethod=="bankdetails") echo "CHECKED";?> <?php if ($bankdetails=="") echo "DISABLED";?>>Wire Transfer<br>        
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="mailingaddress" <?php if ($strPaymentMethod=="mailingaddress") echo "CHECKED";?> <?php if ($mailingaddress=="") echo "DISABLED";?>>Cheque or Money Order<br>        
         <?php _e('Specify the payment method from this auction (Only options you filled on the Configuration screen are available)') ?></td> 
       </tr>
      </table>
-   
 
 		<?php if($bolUpdate == true): ?>
 			<div class="buttons add-auction"><input type="hidden" name="wpa_id" value="<?php echo $strUpdateID ?>"><input type="hidden" name="wpa_action" value="Update Auction">
@@ -1549,6 +1575,39 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 
 
 			</form>
+			<br />
+		<table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="border-top: 1px solid #ccc"> 
+		<tr valign="top"> 
+        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Unlock features') ?></th> 
+        <td class='desc' style="border-bottom: 0; padding: 0;">
+			<div class="wpa-upgrade-part">
+			<p><?php _e('Unlock the following features by upgrading to Pro:') ?></p>
+			<ul>
+				<li><?php _e('Create auction templates') ?></li>
+				<li><?php _e('WYSIWYG editor') ?></li>
+				<li><?php _e('Auction category') ?></li>
+				<li><?php _e('Assign Post/Page to auction (to embed auctions in a Post/Page)') ?></li>
+				<li><?php _e('Shipping options') ?></li>
+				<li><?php _e('Set a Buy it Now price') ?></li>
+				<li><?php _e('Set a reserve price') ?></li>
+				<li><?php _e('Start auctions at a later date') ?></li>
+				<li><?php _e('Custom bid increment') ?></li>
+				<li><?php _e('Add more images per auction') ?></li>
+				<li><?php _e('Manage bidders') ?></li>
+				<li><?php _e('Widget color settings') ?></li>
+				<li><?php _e('Email settings') ?></li>
+				<li><?php _e('...and more!') ?></li>
+			</ul>
+			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Pay securley via PayPal using your balance or credit card">Upgrade*<br />Download Instantly, Only $29!</a></p>
+			</div>
+		</td> 
+      </tr>
+     </table>
+	 
+	   <br />
+  <br />
+  <br />
+  <p>*NOTE: Forum support is not included with the Lite, $29 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
 		
 	</div>
 <?php
@@ -1563,15 +1622,14 @@ function wp_auctions_upgrade() {
 <div class="wrap wp-auctions wp-auctions-upgrade"> 
 	
     <div class="clearfix">
-		<h2>Your Upgrade Options</h2>
+		<h2>Unlock many more features, upgrade to Pro today!</h2>
 		
 			<div class="wpa-intro wpa-plugins">
 				<p>You are using the Lite version</p>
 				
 				<div class="downloadplugin">
 					<h3>Pro, Latest Version Instant Download</h3>
-					<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPA&#038;c=single&#038;cl=16004" target="ejejcsingle">Only $41, Click for Instant Download</a></p>
-					<p>After you buy, please follow these steps.</p>
+					<p class="download-lead">After you buy, please follow these steps.</p>
 						<ul>
 							<li>Pay and download latest Pro version instantly.</li>
 							<li>De-activate and delete the Lite version.</li>
@@ -1579,33 +1637,20 @@ function wp_auctions_upgrade() {
 							<li>Add Auctions!</li>
 							<li>Make Money!</li>
 						</ul>
-				</div>
-
-				<div class="downloadplugin">
-					<h3>Pro, Subscription</h3>
-					<p class="downloadupgrade"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Only $89, Register &amp; Download</a> Use coupon code <strong>1BCF1</strong> to save $15!</p>
-					<p>After you buy, please follow these steps.</p>
-						<ul>
-							<li>Pay and download latest Pro version from your member area.</li>
-							<li>De-activate and delete the Lite version.</li>
-							<li>Upload Pro version.</li>
-							<li>Add Auctions!</li>
-							<li>Make Money!</li>
-							<li>You also get free updates and forum support for one year.</li>
-						</ul>
+						<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 26px;">$29</span></big><br />Click for Instant Download</a></p>
 				</div>
 				
 				<div class="downloadthemes">
 					<h3>ThemeSpace - WordPress Themes, HTML Templates</h3>
-					<p>For only $35, get instant access to a growing library of all our WordPress themes, HTML templates and more!</p>
-					<p class="downloadupgrade"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Join ThemeSpace</a></p>
+					<p class="download-lead">For only $35, get instant access to a growing library of all our WordPress themes, HTML templates and more!</p>
 						<ul>
-							<li>Get access to ALL of our current and future themes and templates for one year.</li>
+							<li>Access to ALL current and future themes for 1 year.</li>
 							<li>Professional design and code.</li>
 							<li>Unlimited domain use.</li>
 							<li>Easily customizable.</li>
 							<li>Free updates.</li>
 						</ul>
+						<p class="downloadupgrade"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Join ThemeSpace</a></p>
 				</div>
 				<div style="clear:both"></div>
 			</div>

@@ -26,14 +26,14 @@
 	/* Intro Box */
 	.wpa-intro { background: #fff; color: #333; padding: 10px 10px 0; }
 	.wpa-intro p { font-style: italic; margin: 0; padding: 0 10px 15px; }
-	.wpa-info p { font-style: normal; font-weight: normal; margin: 0; padding: 0 10px 10px; }
+	.wpa-info p { font-style: normal; font-weight: normal; margin: 0 !important; padding: 5px 0 5px 10px; }
 	
 	/* Main Titles */
 	.wp-auctions h2 { color: #000; font-style: normal; line-height: 1em; margin: 15px 0 0; padding: 0; }
 
 	.wp-auctions h2 span { font-size: 12px; }
 	
-	.wp-auctions h2.payment, .wp-auctions h2.other-settings, .wp-auctions h2.manage, .wp-auctions h2.details, .wp-auctions h2.shipping, .wp-auctions h2.settings { background-color: #f5f5f5;
+	.wp-auctions h2.payment, .wp-auctions h2.other-settings, .wp-auctions h2.manage, .wp-auctions h2.details, .wp-auctions h2.shipping, .wp-auctions h2.settings, .wp-auctions h2.issue-resolution { background-color: #f5f5f5;
   background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
   background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
@@ -66,6 +66,9 @@
 	h2.shipping { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
 	h2.shipping em { background: url(shipping.png) no-repeat 5px 5px; font-style: normal; padding: 2px 0 2px 41px; }
 	
+	h2.issue-resolution { border: 1px solid #ccc; font-style: normal; padding: 10px 5px; -webkit-border-top-left-radius: 5px; -webkit-border-top-right-radius: 5px; -moz-border-radius-topleft: 5px; -moz-border-radius-topright: 5px; }
+	h2.issue-resolution em { background: url(issues.png) no-repeat 5px 5px; font-style: normal; padding: 2px 0 2px 41px; }
+	
 	h2.emailsettings em { background: url(email.png) no-repeat 5px 6px; }
 	
 	.wp-auctions h2.settings-nm { margin: 0; }
@@ -79,7 +82,7 @@
 
 	/* Time */
 	
-	.wpa-time { background: url(time.png) no-repeat left; text-align: left; color: #333; font-size: 9px; padding: 0 0 0 27px; text-transform: uppercase; }
+	.wpa-time { background: url(time.png) no-repeat left; text-align: left; color: #333; font-size: 9px; padding: 2px 0 2px 27px; text-transform: uppercase; }
 	.wpa-auction-engine { text-align: left; color: #333; font-size: 9px; padding: 0; text-transform: uppercase; }
 
 	/* Tables */
@@ -129,12 +132,69 @@
 
 	.wpa-plugins { padding: 10px 0; }
 	.wpa-plugins p { padding: 0 0 15px; }
+	.wpa-plugins p.download-lead { font-size: 14px; }
 	.wp-auctions-upgrade h2 { font-size: 16px; padding: 0; margin: 5px 0 0; }
 	.wpa-plugins h3 { margin: 0 0 20px; text-transform: uppercase; }
 	.wpa-plugins .downloadplugin p, .wpa-plugins .downloadthemes p { font-style: normal; padding: 0 0 15px; }
-	.wpa-plugins p.downloadupgrade { background: url(wpa.png) no-repeat left 10px; padding: 10px 0 20px 26px; }
+	p.downloadupgrade { margin: 0 0 20px !important; padding: 10px 0 20px; }
+	.wpa-info p.downloadupgrade { margin: 0 0 5px !important; padding: 10px 10px 0; }
 	.wpa-plugins .downloadthemes p.downloadupgrade { background: url(wp.png) no-repeat left 10px; }
-	.wpa-plugins p.downloadupgrade a { background-color: #f5f5f5;
+	p.downloadupgrade a { display: inline-block;
+	  *display: inline;
+	  /* IE7 inline-block hack */
+
+	  *zoom: 1;
+	  padding: 4px 12px;
+	  margin-bottom: 0;
+	  font-size: 14px;
+	  line-height: 20px;
+	  *line-height: 20px;
+	  text-align: center;
+	  vertical-align: middle;
+	  cursor: pointer;
+
+	  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+	  border: 1px solid #bbbbbb;
+	  *border: 0;
+	  -webkit-border-radius: 4px;
+	  -moz-border-radius: 4px;
+	  border-radius: 4px;
+	  *margin-left: .3em;
+	  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+	  -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+	  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+
+	  color: #ffffff;
+	  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	  background-color: #5bb75b;
+	  background-image: -moz-linear-gradient(top, #62c462, #51a351);
+	  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+	  background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+	  background-image: -o-linear-gradient(top, #62c462, #51a351);
+	  background-image: linear-gradient(to bottom, #62c462, #51a351);
+	  background-repeat: repeat-x;
+	  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+	  border-color: #51a351 #51a351 #387038;
+	  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+	  *background-color: #51a351;
+	  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+	  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); width: 230px;
+	}
+	.wpa-info p.downloadupgrade a { width: auto; }
+	p.downloadupgrade a:hover { color: #ffffff; background: #51a351 !important; *background-color: #499249 !important; }
+
+	.wpa-plugins ul { background: url(paper.png) no-repeat; list-style: circle; margin: 0 0 0px 0px; padding: 25px 35px 15px 35px; height: 237px; width: 240px; font-style: italic; font-size: 16px; line-height: 20px; }
+	.wpa-plugins li { margin: 0; padding: 0 50px 15px 0px; }
+
+	.wpa-upgrade-part { background: #fbfbfb; font-size: 13px !important; padding: 10px; }
+	.wpa-upgrade-part ul { list-style: disc; font-size: 13px !important; margin: 10px 0 0 14px; }
+	.wpa-upgrade-part li { margin: 0; padding: 2px 0; }
+	.wpa-upgrade-part p { margin: 0 !important; font-size: 13px !important; }
+
+	p.upgrade-part a { color: #333333;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  background-color: #f5f5f5;
   background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
   background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
   background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
@@ -147,6 +207,10 @@
   *background-color: #e6e6e6;
   /* Darken IE7 buttons by default so they stand out more given they won't have borders */
 
-  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false); border: 1px solid #f2f2f2; font-size: 15px; padding: 5px 10px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
-
-	.wpa-plugins ul { list-style: disc; margin: 0 0 40px 15px; }
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  border: 1px solid #bbbbbb;
+  *border: 0;
+  border-bottom-color: #a2a2a2; }
+  p.upgrade-part a:hover { color: #333333;
+  background: #e6e6e6 !important;
+  *background-color: #d9d9d9 !important; }
