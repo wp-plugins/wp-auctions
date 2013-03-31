@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 2.02
+Version: 2.03
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -16,13 +16,14 @@ Author URI: http://www.wpauctions.com
 	 v1.9 - Brought in line with WordPress 3.3
 	 v2.0 - Improved based on Gold functionality (example image handling)
 	 v2.02 - Bug fixes
+	 v2.03 - Minor tweaks
 */
 
 // cater for stand-alone calls
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "2.02 Lite";
+$wpa_version = "2.03 Lite";
 
 // helper functions
 require_once('helper.php');
@@ -48,7 +49,7 @@ define('POPUP_SIZE', "&height=579&width=755&modal=true");
 //---------------------------------------------------
 //--------------AJAX CALLPOINTS----------------------
 //---------------------------------------------------
-
+ 
 if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['debug'])):
    echo "<h1>WP Auctions Remote Debug Screen</h1>";
    echo "Version Number: ".$wpa_version;
@@ -1156,10 +1157,10 @@ function CheckCurrencyOptions() {
         <p><?php _e('Select whether you want to divulge your server information to assist remote debugging. Your information will be visible <a href="'.get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME.'?debug">here</a>') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Unlock features') ?></th> 
+        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Pro features') ?></th> 
         <td class='desc' style="border-bottom: 0; padding: 0;">
 			<div class="wpa-upgrade-part">
-			<p><?php _e('Unlock the following features by upgrading to Pro:') ?></p>
+			<p><?php _e('Get the following features by upgrading to Pro:') ?></p>
 			<ul>
 				<li><?php _e('Auction Engine: Simple and Reverse') ?></li>
 				<li><?php _e('More PayPal Currencies') ?></li>
@@ -1174,7 +1175,7 @@ function CheckCurrencyOptions() {
 				<li><?php _e('Edit bid refresh timer') ?></li>
 				<li><?php _e('...and more!') ?></li>
 			</ul>
-			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Only $29">Upgrade *</a></p>
+			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Only $35">Download WP Auctions Pro *</a></p>
 			</div>
 		</td> 
       </tr>
@@ -1198,7 +1199,7 @@ function CheckCurrencyOptions() {
   <br />
   <br />
   <br />
-  <p>*NOTE: Forum support is not included with the Lite, $29 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
+  <p>*NOTE: Forum support is not included with the Lite, $35 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
     
 </div>
 
@@ -1248,8 +1249,8 @@ $rss = @fetch_rss( $rss_feed );
 
     <div class="wpa-info">
 	  	<h3 class="wpa-upgradepro">Upgrade to Pro</h3>
-        	<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 22px;">$29</span></big> Click for Instant Download *</a></p>
-	  		<p>Limited time pricing, get the PRO version and unlock dozens of new features like:</p>
+        	<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 22px;">$35</span></big> Click for Instant Download *</a></p>
+	  		<p>Limited time pricing, get the PRO version with dozens of new features like:</p>
 			<p>&bull; 2 new bidding engines &bull; Reserve prices &bull; Buy it Now &bull; Embed auctions in Posts/Pages &bull; ...and much, much more!</p>
     </div>
 
@@ -1578,10 +1579,10 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 			<br />
 		<table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="border-top: 1px solid #ccc"> 
 		<tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Unlock features') ?></th> 
+        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Pro features') ?></th> 
         <td class='desc' style="border-bottom: 0; padding: 0;">
 			<div class="wpa-upgrade-part">
-			<p><?php _e('Unlock the following features by upgrading to Pro:') ?></p>
+			<p><?php _e('Get the following features by upgrading to Pro:') ?></p>
 			<ul>
 				<li><?php _e('Create auction templates') ?></li>
 				<li><?php _e('WYSIWYG editor') ?></li>
@@ -1598,7 +1599,7 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 				<li><?php _e('Email settings') ?></li>
 				<li><?php _e('...and more!') ?></li>
 			</ul>
-			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Pay securley via PayPal using your balance or credit card">Upgrade*<br />Download Instantly, Only $29!</a></p>
+			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Pay securley via PayPal using your balance or credit card">Go Pro*<br />Download Instantly, Only $35!</a></p>
 			</div>
 		</td> 
       </tr>
@@ -1607,7 +1608,7 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 	   <br />
   <br />
   <br />
-  <p>*NOTE: Forum support is not included with the Lite, $29 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
+  <p>*NOTE: Forum support is not included with the Lite, $35 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
 		
 	</div>
 <?php
@@ -1622,7 +1623,7 @@ function wp_auctions_upgrade() {
 <div class="wrap wp-auctions wp-auctions-upgrade"> 
 	
     <div class="clearfix">
-		<h2>Unlock many more features, upgrade to Pro today!</h2>
+		<h2>Get many more features, upgrade to Pro today!</h2>
 		
 			<div class="wpa-intro wpa-plugins">
 				<p>You are using the Lite version</p>
@@ -1637,7 +1638,7 @@ function wp_auctions_upgrade() {
 							<li>Add Auctions!</li>
 							<li>Make Money!</li>
 						</ul>
-						<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 26px;">$29</span></big><br />Click for Instant Download</a></p>
+						<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 26px;">$35</span></big><br />Click for Instant Download</a></p>
 				</div>
 				
 				<div class="downloadthemes">
