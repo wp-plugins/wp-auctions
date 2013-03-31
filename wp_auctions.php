@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 2.03
+Version: 2.03b
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -16,14 +16,14 @@ Author URI: http://www.wpauctions.com
 	 v1.9 - Brought in line with WordPress 3.3
 	 v2.0 - Improved based on Gold functionality (example image handling)
 	 v2.02 - Bug fixes
-	 v2.03 - Minor tweaks
+	 v2.03b - Minor tweaks
 */
 
 // cater for stand-alone calls
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "2.03 Lite";
+$wpa_version = "2.03b Lite";
 
 // helper functions
 require_once('helper.php');

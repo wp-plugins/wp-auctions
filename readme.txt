@@ -38,16 +38,6 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 For more information and to take a look at the Pro version, visit our website - [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress").
 
-**Special Offer**
-
-Upgrade today, use code 1BCF1 to get $15 off!
-
-**Need Help?**
-
-We have a dedicated forum here [WP Auctions Forum](http://www.wpauctions.com/forums/ "Forum") where you can register for free and let us know about any issues you are facing. Once you register please send us an email stating the username you have selected so we can activate you as soon as possible.
-
-We encourage you to ask us any questions you may have before rating or placing a vote on the plugin. Thank you!
-
 == Installation ==
 
 1. Download the plugin file, unzip and place it in your wp-content/plugins/ folder. You can alternatively upload it via the WordPress plugin backend.
@@ -65,18 +55,6 @@ Alternatively, you can also add this snippet to the sidebar on your theme: `<?ph
 = The plugin isn't working well on my blog. What could the problem be? =
 
 The plugin uses the jQuery Javascript library and was coded with best practices so as not to conflict with your theme or other plugins. To check where the problem could be, try to switch to the default theme and disable your other plugins and see if that will fix the problem.
-
-= Why do my images not show up? =
-
-This could be due to a number of factors, but mostly due to the fact that the "files" folder needs to be CHMOD 777 in order to save your images. We've included links to instructions in the backend area, under the "Add" screen, on how to do it.
-
-= How do I insert HTML as part of my description? =
-
-Simple, here's an example of a paragraph:
-
-&lt;p&gt;Your text comes here&lt;/p&gt;
-
-There are specific instructions for you under the description entry box on the "Add" screen as well.
 
 = Why does the AJAX popup look weird on my blog? =
 
@@ -101,7 +79,7 @@ The Pro and Pro Plus versions have tons of enhancements and improvements. Here a
 * WYSIWYG editor.
 * and much, much more...
 
-More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress"). Don't forget to use coupon code 1BCF1 to get $15 off!
+More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress").
 
 == Screenshots ==
 
@@ -112,6 +90,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 5. AJAX Popup
 
 == Changelog ==
+
+= 2.03 = 
+* Text update
 
 = 2.02 = 
 * Bug fixes
@@ -201,6 +182,10 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 * General cleaning up and code optimization
 
 == Upgrade Notice ==
+
+= 2.03 =
+
+Text updates
 
 = 2.0 =
 
