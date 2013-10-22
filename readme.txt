@@ -2,19 +2,19 @@
 Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions, auction, e-commerce, money, eshop, buy it now plugin
-Requires at least: 3.0
-Tested up to: 3.5
+Requires at least: 3.2
+Tested up to: 3.6.1
 Stable tag: /trunk/
 
 WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free!
 
 == Description ==
 
-WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free! It uses an attractive AJAX powered popup for optimum user experience and lets you run personal auctions on your site.
+WP Auctions is a revolutionary plugin which allows you to host auctions on your WordPress powered blog or website completely fee free! Show your auctions in an attractive AJAX powered popup for optimum user experience.
 
-You no longer need to worry about listing fees, seller fees, final value fees, gallery fees or any other type of fee for anything you want to sell online from this day on!
+Stop paying listing fees, seller fees, final value fees, gallery fees or any other type of fee for your auctions on other 3rd party sites. Run your own auctions and sell to your site visitors!
 
-Installation and activation takes less than 30 seconds and you could be hosting your first auction on your WordPress blog or website in under 2 minutes.
+Installation and activation takes less than 30 seconds and you could be hosting your first auction on your website in under 2 minutes.
 
 **Features include:**
 
@@ -42,11 +42,11 @@ For more information and to take a look at the Pro version, visit our website - 
 
 1. Download the plugin file, unzip and place it in your wp-content/plugins/ folder. You can alternatively upload it via the WordPress plugin backend.
 1. Activate.
-1. Configure the plugin from the WP Auctions menu in your WordPress backend. Set the plugin up with your settings like email, address etc...
+1. Set up the plugin from the WP Auctions menu in your WordPress backend.
 1. Add your auctions
 1. Sell your stuff and make money!
 
-The plugin is widget ready and will appear in your "Appearance > Widgets" list. Simply drag and drop and the widget into any widget ready area, like your sidebar.
+The plugin is widget ready and the widget will appear in your "Appearance > Widgets" list. Simply drag and drop the widget into any widget ready area, like your sidebar.
 
 Alternatively, you can also add this snippet to the sidebar on your theme: `<?php wp_auctions(); ?>` 
 
@@ -54,11 +54,11 @@ Alternatively, you can also add this snippet to the sidebar on your theme: `<?ph
 
 = The plugin isn't working well on my blog. What could the problem be? =
 
-The plugin uses the jQuery Javascript library and was coded with best practices so as not to conflict with your theme or other plugins. To check where the problem could be, try to switch to the default theme and disable your other plugins and see if that will fix the problem.
+The plugin uses the jQuery Javascript library and was coded with best practices to not conflict with your theme or other plugins. To check where the problem could be, try to switch to the default theme and disable your other plugins and see if that will fix the problem.
 
 = Why does the AJAX popup look weird on my blog? =
 
-This could be due to the CSS of your theme. While we try to override reset settings for the popup CSS there are some instances where themes have been known to override our CSS settings. Yes, it's a vicious cycle. To fix it, try and edit the CSS of the theme if you are comfortable doing so or ask your theme designer for help.
+This could be due to the CSS of your theme. While we try to override reset settings for the popup CSS there are some instances where themes have been known to override our CSS settings. Yes, it's a vicious cycle. To fix this issue, try and edit the CSS of the theme if you are comfortable doing so or ask your theme designer for help.
 
 = What features are available in the Pro version? =
 
@@ -91,6 +91,10 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 2.04 = 
+* Bug and text fixes
+* Tested with WordPress v3.6+
+
 = 2.03 = 
 * Text update
 
@@ -98,7 +102,7 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 * Bug fixes
 
 = 2.0 = 
-* Pulled in some Gold functionality, example Images in WP media library
+* Pulled in some Pro functionality, example images in WP media library
 
 = 1.9.1 =
 * Bug Fixes

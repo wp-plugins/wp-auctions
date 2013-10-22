@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/downloads
 Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 2.03b
+Version: 2.04
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com
 */
@@ -16,14 +16,15 @@ Author URI: http://www.wpauctions.com
 	 v1.9 - Brought in line with WordPress 3.3
 	 v2.0 - Improved based on Gold functionality (example image handling)
 	 v2.02 - Bug fixes
-	 v2.03b - Minor tweaks
+	 v2.03 - Text updates
+	 v2.04 - Minor text updates
 */
 
 // cater for stand-alone calls
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "2.03b Lite";
+$wpa_version = "2.04 Lite";
 
 // helper functions
 require_once('helper.php');
@@ -49,7 +50,7 @@ define('POPUP_SIZE', "&height=579&width=755&modal=true");
 //---------------------------------------------------
 //--------------AJAX CALLPOINTS----------------------
 //---------------------------------------------------
- 
+
 if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['debug'])):
    echo "<h1>WP Auctions Remote Debug Screen</h1>";
    echo "Version Number: ".$wpa_version;
@@ -1175,7 +1176,8 @@ function CheckCurrencyOptions() {
 				<li><?php _e('Edit bid refresh timer') ?></li>
 				<li><?php _e('...and more!') ?></li>
 			</ul>
-			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Only $35">Download WP Auctions Pro *</a></p>
+			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Only $39">Download WP Auctions Pro *</a></p>
+			<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
 			</div>
 		</td> 
       </tr>
@@ -1199,7 +1201,7 @@ function CheckCurrencyOptions() {
   <br />
   <br />
   <br />
-  <p>*NOTE: Forum support is not included with the Lite, $35 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
+  <p>*NOTE: Forum support is not included with the Lite, $39 or $49 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
     
 </div>
 
@@ -1249,9 +1251,9 @@ $rss = @fetch_rss( $rss_feed );
 
     <div class="wpa-info">
 	  	<h3 class="wpa-upgradepro">Upgrade to Pro</h3>
-        	<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 22px;">$35</span></big> Click for Instant Download *</a></p>
-	  		<p>Limited time pricing, get the PRO version with dozens of new features like:</p>
-			<p>&bull; 2 new bidding engines &bull; Reserve prices &bull; Buy it Now &bull; Embed auctions in Posts/Pages &bull; ...and much, much more!</p>
+        	<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$49</del> <span style="font-size: 22px;">$39</span></big> Click for Instant Download *</a></p>
+			<p><strong style="color: #D54E21;">Features:</strong> 3 Bidding Engines &bull; Reserve Prices &bull; Buy it Now &bull; Embed auctions in Posts &bull; ...and much more!</p>
+			<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
     </div>
 
     <div style="clear:both"></div>
@@ -1548,7 +1550,7 @@ wp_tiny_mce( false , // true makes the editor "teeny"
       <tr valign="top" class="alternate"> 
         <th scope="row"><?php _e('Start Price:') ?></th> 
         <td><input type="text" name="wpa_StartPrice" value="<?php print $strSaveStartPrice ?>" maxlength="255" size="10" /><br>
-        <?php _e('Specify the starting price for your auction. Leave empty (or 0) for Fixed Price BIN') ?>
+        <?php _e('Specify the starting price for your auction.') ?>
         <?php if (!empty($customincrement)) { echo '<br>'; _e('Remember that you have configured bidding in increments of '); echo $customincrement; } ?>
         </td> 
       </tr>
@@ -1563,7 +1565,7 @@ wp_tiny_mce( false , // true makes the editor "teeny"
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="paypal" <?php if ($strPaymentMethod=="paypal") echo "CHECKED";?> <?php if ($paypal=="") echo "DISABLED";?>><label for="wpa_PaymentMethod">PayPal<br>
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="bankdetails" <?php if ($strPaymentMethod=="bankdetails") echo "CHECKED";?> <?php if ($bankdetails=="") echo "DISABLED";?>>Wire Transfer<br>        
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="mailingaddress" <?php if ($strPaymentMethod=="mailingaddress") echo "CHECKED";?> <?php if ($mailingaddress=="") echo "DISABLED";?>>Cheque or Money Order<br>        
-        <?php _e('Specify the payment method from this auction (Only options you filled on the Configuration screen are available)') ?></td> 
+        <?php _e('Specify the payment method from this auction. You can only select one. (Only options you filled on the Configuration screen are available)') ?></td> 
       </tr>
      </table>
 
@@ -1599,7 +1601,8 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 				<li><?php _e('Email settings') ?></li>
 				<li><?php _e('...and more!') ?></li>
 			</ul>
-			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Pay securley via PayPal using your balance or credit card">Go Pro*<br />Download Instantly, Only $35!</a></p>
+			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Pay securley via PayPal using your balance or credit card">Go Pro*<br />Download Instantly, Only $39!</a></p>
+			<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
 			</div>
 		</td> 
       </tr>
@@ -1608,7 +1611,7 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 	   <br />
   <br />
   <br />
-  <p>*NOTE: Forum support is not included with the Lite, $35 or $41 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
+  <p>*NOTE: Forum support is not included with the Lite, $39 or $49 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
 		
 	</div>
 <?php
@@ -1634,11 +1637,12 @@ function wp_auctions_upgrade() {
 						<ul>
 							<li>Pay and download latest Pro version instantly.</li>
 							<li>De-activate and delete the Lite version.</li>
-							<li>Upload Pro version.</li>
+							<li>Upload the wp-auctions ZIP file.</li>
 							<li>Add Auctions!</li>
 							<li>Make Money!</li>
 						</ul>
-						<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$41</del> <span style="font-size: 26px;">$35</span></big><br />Click for Instant Download</a></p>
+						<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$49</del> <span style="font-size: 26px;">$39</span></big><br />Click for Instant Download</a></p>
+						<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
 				</div>
 				
 				<div class="downloadthemes">
@@ -1940,7 +1944,7 @@ function wp_auctions_adminmenu(){
    // add submenus
    add_submenu_page (PLUGIN_PATH, 'Manage', 'Manage', 'manage_options' , 'wp-auctions-manage', 'wp_auctions_manage' );
    add_submenu_page (PLUGIN_PATH, 'Add', 'Add', 'manage_options' , 'wp-auctions-add', 'wp_auctions_add' );
-   add_submenu_page (PLUGIN_PATH, 'Upgrade', 'Upgrade', 'manage_options' , 'wp-auctions-upgrade', 'wp_auctions_upgrade' );
+   add_submenu_page (PLUGIN_PATH, 'Upgrade', 'Upgrade Instructions', 'manage_options' , 'wp-auctions-upgrade', 'wp_auctions_upgrade' );
 }
 
 function wpa_init() 
