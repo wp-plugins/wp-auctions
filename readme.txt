@@ -1,7 +1,7 @@
 === WordPress Auction Plugin ===
 Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
-Tags: auctions, auction, e-commerce, money, eshop, buy it now plugin
+Tags: auctions,auction,wp auction,auction plugin,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.2
 Tested up to: 3.8.1
 Stable tag: /trunk/
