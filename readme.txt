@@ -3,7 +3,7 @@ Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions,auction,wp auction,auction plugin,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.2
-Tested up to: 3.8.1
+Tested up to: 4.0
 Stable tag: /trunk/
 
 WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free!
