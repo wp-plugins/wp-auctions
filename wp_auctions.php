@@ -1,49 +1,49 @@
 <?php
 /*
 Plugin Name: WP_Auctions
-Plugin URI: http://www.wpauctions.com/downloads
-Description: WP Auctions allows you to host auctions on your own blog or website.
-Version: 2.04 
+Plugin URI: http://www.wpauctions.com/download/
+Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
+Version: 2.1
 Author: Owen Cutajar & Hyder Jaffari
-Author URI: http://www.wpauctions.com
+Author URI: http://www.wpauctions.com/profile
 */
 
-/* History:
-   v 1.5   - New version of free plugin
-   v1.6 - Added check/mailing address option
-   v1.7 - Added "no auction" alternative
-   v1.8 - Added custom currency option
-	 v1.9 - Brought in line with WordPress 3.3
-	 v2.0 - Improved based on Gold functionality (example image handling)
-	 v2.02 - Bug fixes
-	 v2.03 - Text updates
-	 v2.04 - Minor text updates
+  /* History:
+  v0.1 Beta  - OwenC - 29/01/08 - Initial beta release
+  v1.0 Free  - OwenC - 21/02/08 - Free public release  
+  v2.1 Free  - OwenC - 14/10/14 - Refreshed with premium features - Added Bid Increment - Added TinyMCE and WP Media
 */
+
+//error_reporting (E_ALL ^ E_NOTICE);
 
 // cater for stand-alone calls
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "2.04 Lite";
-
-// helper functions
-require_once('helper.php');
+$wpa_version = "2.1";
 
 // Consts
-define('PLUGIN_EXTERNAL_PATH', '/wp-content/plugins/wp-auctions/');
-define('PLUGIN_STYLE_PATH', 'wp-content/plugins/wp-auctions/styles/');
-define('PLUGIN_NAME', 'wp_auctions.php');
-define('JSCRIPT_NAME', 'wp_auctionsjs.php');
-define('PLUGIN_PATH', 'wp-auctions/wp_auctions.php');
+if (!defined('WPA_PLUGIN_NAME')) {
+ 
+  define ('WPA_PLUGIN_NAME', trim(dirname(plugin_basename(__FILE__)),'/'));
+  define ('WPA_PLUGIN_DIR', dirname( plugin_basename( __FILE__ ) ));
+  define ('WPA_PLUGIN_URL', plugins_url() . '/' . WPA_PLUGIN_NAME);
+   
+  define ('WPA_PLUGIN_FILE', 'wp_auctions.php');
+  define ('WPA_PLUGIN_FULL_PATH', WPA_PLUGIN_URL . "/" . WPA_PLUGIN_FILE );
+  define ('WPA_PLUGIN_RSS', WPA_PLUGIN_FULL_PATH . "?rss" );
+  define ('WPA_PLUGIN_STYLE', WPA_PLUGIN_URL . "/styles/" );
+  define ('WPA_PLUGIN_REQUISITES', WPA_PLUGIN_URL . "/requisites" );  
+}
 
 // ensure localisation support
 if (function_exists('load_plugin_textdomain')) {
-    $localedir = dirname(plugin_basename(__FILE__)).'/locales';
-		load_plugin_textdomain('WPAuctions', '', $localedir );
+		load_plugin_textdomain('WPAuctions', WPA_PLUGIN_URL . '/locales/' );
 }
 
 define('BID_WIN', __('Congratulations, you are the highest bidder on this item.','WPAuctions') );
-define('BID_LOSE', __("I'm sorry, but your Maximum Bid is below the current bid.",'WPAuctions') );
+define('BID_LOSE', __("I'm sorry, but a preceeding bidder has outbid you.",'WPAuctions') );
+define('BIN_WIN', __("Thanks for buying! Payment instructions have been emailed.",'WPAuctions') );
 
 define('POPUP_SIZE', "&height=579&width=755&modal=true");
 
@@ -51,42 +51,33 @@ define('POPUP_SIZE', "&height=579&width=755&modal=true");
 //--------------AJAX CALLPOINTS----------------------
 //---------------------------------------------------
 
-if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['debug'])):
-   echo "<h1>WP Auctions Remote Debug Screen</h1>";
-   echo "Version Number: ".$wpa_version;
-   echo "<p>";
-
-   $options = get_option('wp_auctions');
-   if ($options['remotedebug'] != "" ) {   
-      phpinfo();
-   } else {
-      echo "Remote Debug disabled - you can turn this on in your Administration console";
-   }
-endif;
-
-
-if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['postauction'])):
+if (strstr($_SERVER['PHP_SELF'],WPA_PLUGIN_NAME) && isset($_GET['postauction'])):
 
   // check security
   check_ajax_referer( "WPA-nonce" );
 
 	// process posted values here
 	$auction_id = $_POST['auction_id'];
-	$bidder_name = esc_html(strip_tags(stripslashes($_POST['bidder_name'])));
+	$bidder_name = htmlspecialchars(strip_tags(stripslashes($_POST['bidder_name'])), ENT_QUOTES);
 	$bidder_email = strip_tags(stripslashes($_POST['bidder_email']));
-	$bidder_url = esc_html(strip_tags(stripslashes($_POST['bidder_url'])));
+	$bidder_url = htmlspecialchars(strip_tags(stripslashes($_POST['bidder_url'])), ENT_QUOTES);
 	$max_bid = $_POST['max_bid'];
+	$BIN_amount = $_POST['BIN_amount'];
 
-  $result = wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url, $max_bid );
-
+   $result = wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url, $max_bid, $BIN_amount );
+   
     echo $result;
 	exit;
 endif;
 
-if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['queryauction'])):
+if (strstr($_SERVER['PHP_SELF'],WPA_PLUGIN_NAME) && isset($_GET['queryauction'])):
 
 	global $wpdb;
-
+  
+  // thumbnail size is set here
+  $thumbnail_size = 25;
+  $image_size = 250;
+ 
 	function fail($s) { header('HTTP/1.0 406 Not Acceptable'); die($s);}
 
   // check security
@@ -104,7 +95,7 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 
   	// prepare result
   	$table_name = $wpdb->prefix . "wpa_auctions";
-  	$strSQL = "SELECT id, name,description,current_price,date_create,date_end,start_price,image_url, '".current_time('mysql',"1")."' < date_end, winner, winning_price, 0 as x , extraimage1, '' as y,'' as z , 0.00 as 'next_bid' FROM $table_name WHERE id=".$auction_id;
+  	$strSQL = "SELECT id, name,description,current_price,date_create,date_end,start_price,image_url, '".current_time('mysql',"1")."' < date_end, winner, winning_price, BIN_price, extraimage1, extraimage2, extraimage3, 0.00 as 'next_bid', shipping_price, shipping_to, 'placeholder' as 'otherimages' FROM $table_name WHERE id=".$auction_id;
   	$rows = $wpdb->get_row ($strSQL, ARRAY_N);
 
   	// send back result
@@ -113,14 +104,28 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 
     // pass image through resizer
     
-    // first image should always exist 
-    if ($rows[7] == "") $rows[7] = get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH."requisites/wp-popup-def.gif";
-    $rows[7] = wpa_resize ($rows[7],250);
     
+    $temp = $rows[7];
+    $rows[7] = wpa_resize ($rows[7],$image_size);
+    
+    $rows[18] = "";
     // other images could be blank .. in which case, don't resize
-    if ($rows[12] != "") $rows[12] = wpa_resize ($rows[12],250);
-
-    
+    if ($rows[12] != "") {
+       $rows[18] = $rows[18].'^'.wpa_resize ($rows[12],$thumbnail_size);
+       $rows[12] = wpa_resize ($rows[12],$image_size);
+    }
+    if ($rows[13] != "") {
+       $rows[18] = $rows[18].'^'.wpa_resize ($rows[13],$thumbnail_size);
+       $rows[13] = wpa_resize ($rows[13],$image_size);
+    }       
+    if ($rows[14] != "") { 
+       $rows[18] = $rows[18].'^'.wpa_resize ($rows[14],$thumbnail_size);
+       $rows[14] = wpa_resize ($rows[14],$image_size);
+    }
+       
+    //. append initial image if we have other images
+    if ( $rows[18] != "") $rows[18] = $rows[18] . '^'.wpa_resize ($temp,$thumbnail_size);
+        
     // normalise dates
     $rows[4] = date('dS M Y h:i A',strtotime(get_date_from_gmt($rows[4])));
     $rows[5] = date('dS M Y h:i A',strtotime(get_date_from_gmt($rows[5])));
@@ -140,7 +145,7 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 	exit;
 endif;
 
-if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['querybids'])):
+if (strstr($_SERVER['PHP_SELF'],WPA_PLUGIN_NAME) && isset($_GET['querybids'])):
 
 	global $wpdb;
 
@@ -158,18 +163,23 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 		
 	// prepare result
 	$table_name = $wpdb->prefix . "wpa_bids";
-	$strSQL = "SELECT bidder_name, bidder_url ,date, current_bid_price FROM $table_name WHERE auction_id=".$auction_id." ORDER BY current_bid_price DESC";
+	$strSQL = "SELECT bidder_name, bidder_url ,date,current_bid_price, bid_type FROM $table_name WHERE auction_id=".$auction_id." ORDER BY current_bid_price DESC, bid_type";
 	$rows = $wpdb->get_results ($strSQL, ARRAY_N);
 
 	// send back result
     if (!($rows)) // no records found
        $result_set="";
     else {
+//       foreach ($rows as &$row) {
+//          $row[2] = date('dS M Y h:i A',strtotime(get_date_from_gmt($row[2]))); // convert dates to WP timezone
+//       }
+
+// change above code as it didn't work in PHP 4
+
          foreach($rows as $i=>$row){
             $row[2] = date('dS M Y h:i A',strtotime(get_date_from_gmt($row[2]))); // convert dates to WP timezone
-            
             // replace the row in the table
-            $rows[$i]=$row;            
+            $rows[$i]=$row;
          }
        $result_set = wpa_implode_r("|",$rows);
     }
@@ -179,7 +189,7 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 endif;
 
 
-if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['queryother'])):
+if (strstr($_SERVER['PHP_SELF'],WPA_PLUGIN_NAME) && isset($_GET['queryother'])):
 
 	global $wpdb;
 
@@ -201,7 +211,7 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
 	$rows = $wpdb->get_results ($strSQL, ARRAY_N);
 
       foreach($rows as $i=>$row){
-        if ($row[2] == "") $row[2] = get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH."requisites/default.png";
+
         $row[2] = wpa_resize($row[2],50);
 
             // insert current price
@@ -214,7 +224,6 @@ if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET
          // replace the row in the table
          $rows[$i]=$row;
       }
-
 
 	// send back result
     if (!($rows)) // no records found
@@ -229,7 +238,7 @@ endif;
 //---------------------------------------------------
 //--------------RSS FEED-----------------------------
 //---------------------------------------------------
-if (strstr($_SERVER['PHP_SELF'],PLUGIN_EXTERNAL_PATH.PLUGIN_NAME) && isset($_GET['rss'])):
+if (strstr($_SERVER['PHP_SELF'],WPA_PLUGIN_NAME) && isset($_GET['rss'])):
 header("Content-Type:application/rss+xml");
 
 	global $wpdb;
@@ -249,7 +258,7 @@ $output = "<?xml version=\"1.0\"?>
             <rss version=\"2.0\">
                 <channel>
                     <title>".get_option('blogname')." Auctions</title>
-                    <link>".get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME."?rss.</link>
+                    <link>". WPA_PLUGIN_RSS . "</link>
                     <description>Auction feed generated by wp_auctions (http://www.wpauctions.com) version ".$wpa_version."</description>
                     <language>en-us</language>
                     <pubDate>$now</pubDate>
@@ -272,23 +281,133 @@ $output .= "</channel></rss>";
 	exit;
 endif;
 
+//---------------------------------------------------
+//--------------HELPER FUNCTIONS---------------------
+//---------------------------------------------------
+
+// helper function for multi-dimensional implode
+function wpa_implode_r ($glue, $pieces) {
+ $out = "";
+ foreach ($pieces as $piece)
+  if (is_array ($piece)) $out .= wpa_implode_r ($glue, $piece);
+  else                   $out .= $glue.$piece;
+ return $out;
+}
+
+// helper function to calculate increment based on amount
+function wpa_get_increment ($value) {
+
+ $options = get_option('wp_auctions');
+ $customincrement = $options['customincrement'];
+
+ if (empty($customincrement)) {
+  $out = 0.01;
+
+  if ($value >= 1000) {
+     $out = 10;
+   } elseif ($value >= 250) {
+     $out = 5;
+   } elseif ($value >= 50) {
+     $out = 2;
+   } elseif ($value >= 25) {
+     $out = 1;
+   } elseif ($value >= 10) {
+     $out = 0.50;
+   } elseif ($value >= 5) {
+     $out = 0.25;
+   } elseif ($value >= 1) {
+     $out = 0.1;
+   } elseif ($value >= 0.5) {
+     $out = 0.05;
+   }
+ } else {
+   $out = $customincrement;
+ }
+
+ return $out;
+}
+
+// helper function to validate email address
+function wpa_valid_email($address)
+{
+// check an email address is possibly valid
+return eregi('^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,3})$', $address);
+}
+
+if(!function_exists('file_put_contents')) {
+    function file_put_contents($filename, $data, $file_append = false) {
+
+      $fp = fopen($filename, (!$file_append ? 'w+' : 'a+'));
+        if(!$fp) {
+          trigger_error('file_put_contents cannot write in file.', E_USER_ERROR);
+          return;
+        }
+      fputs($fp, $data);
+      fclose($fp);
+    }
+  }
+  
+// new resize function .. using WP's built in resizer
+function wpa_resize ( $image, $size, $height = 0 ) {
+
+	// resize now done on upload. All we need to do is produce correct image URL
+
+	if (is_numeric($image) || ($image == "")) {
+
+		switch ( $size ) {
+		case 250:
+			$class = "WPA_popup";
+			break;
+		case 100:
+			$class = "WPA_page";
+			break;
+		case 125:
+			$class = "WPA_widget";
+			break;
+		default:
+			$class = "WPA_thumbnail";
+		}
+
+		$thumbnail = wp_get_attachment_image_src ( $image , $class );
+
+		if (empty($thumbnail[0])) {
+			$thumb = WPA_PLUGIN_REQUISITES . "/default-$size.png";
+		} else {
+			$thumb = $thumbnail[0];
+		}
+	} else {
+		$thumb = "ERROR: Image not in media library";
+	}
+
+	return $thumb;
+
+	//$options = get_option('wp_auctions_design');
+	//$DoNotCrop = htmlspecialchars($options['DoNotCrop'], ENT_QUOTES);
+	//$cut = ($DoNotCrop != "Yes");
+}
 
 //---------------------------------------------------
 //--------------INTERNAL CODE------------------------
 //---------------------------------------------------
 
 
-function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url, $max_bid ) {
+function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url, $max_bid, $BIN_amount ) {
 
 	global $wpdb;
 
-  //echo "<!-- in Process_Bid code -->";
+  //echo "<!-- in code -->";
   
   $result = "";
   $options = get_option('wp_auctions');
   $notify = $options['notify'];
   $title = $options['title'];
+  $regonly = $options['regonly'];
   $currencysymbol = $options['currencysymbol'];
+  
+  // Setup email fields.         
+  $emailoptions = get_option('wp_auctions_email');
+  
+  $bid_type = "user";
 
 	// validate input
 	if (!is_numeric($auction_id)): // ID not numeric
@@ -301,6 +420,8 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
         $result = __('Please supply a valid email address','WPAuctions');
     elseif (!is_numeric($max_bid)):  // Bidder email not specified
         $result = __('Your bid value is invalid','WPAuctions');
+    elseif (($regonly=="Yes") && !is_user_logged_in()): // Bidder needs to be registered and isn't (HACK TEST)
+        $result = __('You need to be signed in to place bids','WPAuctions');
     endif;
 		
     if ($result == '') {
@@ -308,7 +429,8 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
 
        // Before we start .. confirm if auction has ended or not
        check_auction_end($auction_id);
-	
+
+       // bid is the starting bid on the auction	
        $table_name = $wpdb->prefix . "wpa_auctions";
 	     $strSQL = "SELECT winner FROM $table_name WHERE id=".$auction_id;
 	     $winner = $wpdb->get_var ($strSQL);          
@@ -320,9 +442,23 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
 			 $strSQL = "SELECT current_price,start_price,staticpage FROM $table_name WHERE id=".$auction_id;
 			 $rows = $wpdb->get_row ($strSQL);
 
+       $staticpage = $rows->staticpage; // (don't need this here, just more efficient)
+
        if ($rows->start_price > $max_bid) $result=__("Sorry, your bid must exceed the auction start price",'WPAuctions');
        if ($rows->current_price >= $max_bid) $result=__("Sorry, your bid must exceed the current bid price",'WPAuctions');
        if ($rows->current_price + wpa_get_increment($rows->current_price) > $max_bid) $result=__("Sorry, your bid must exceed",'WPAuctions')." ".$currencysymbol.number_format($rows->current_price + wpa_get_increment($rows->current_price), 2, '.', ',');;
+
+       // override bidding process if auction in a "Buy It Now"
+       if ($BIN_amount > 0) {      
+          $thisbid = $BIN_amount;
+          $result = BIN_WIN;
+
+          // close the auction
+  			  $table_name = $wpdb->prefix . "wpa_auctions";
+	  		  $sql = "UPDATE ".$table_name." SET date_end = '".current_time('mysql',"1")."' WHERE id=".$auction_id;
+		  	  $wpdb->query($sql);
+
+       }
 
        if ($result=='') {
 		   // Step 1 - Retrieve current maximum bid on item
@@ -356,18 +492,38 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
 				 $strSQL = "SELECT id, name,description,current_price,date_create,date_end,start_price,image_url FROM $table_name WHERE id=".$auction_id;
 				 $rows = $wpdb->get_row ($strSQL);
 	
-				 // Setup email fields.
-				 //$headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n";  --> Windows fix
-				 $headers = "From: " . get_option('admin_email') . "\r\n";
+         if ( $emailoptions['windowsmail'] == "" ) {
+				   $headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n";  
+				 } else {
+	   			 $headers = "From: " . get_option('admin_email') . "\r\n";
+	   		 }
 				 $to      = $current->bidder_email;
 				 $subject = "[".$title."] You have been outbid on ".$rows->name;
-				 $body   = "You have just been outbid on an auction on " . get_option('blogname') . "\n\n";
-				 $body  .= "Unfortunately someone else is currently winning ".$rows->name." after placing a bid for ".$currencysymbol.$thisbid.". ";
-				 $body  .= "You're still in time to win the auction, so click the link below and bid again.";
 
-				 $body 	.= "\n\nLink: " . get_bloginfo('wpurl') ."?auction_to_show=".$auction_id;
-
-				 $body 	.= "\n\n--------------------------------------------\n";
+         if ($emailoptions["outbid"] == "") {
+   				  $body   = "You have just been outbid on an auction on {site_name}\n\n";
+				    $body  .= "Unfortunately someone else is currently winning {auction_name} after placing a bid for {current_price}. ";
+				    $body  .= "You're still in time to win the auction, so click the link below and bid again.";
+				    $body 	.= "\n\nLink: {auction_link}";         
+				    $body 	.= "\n\n--------------------------------------------\n";
+				 } else {
+				    $body = $emailoptions["outbid"];
+				    
+				    // clean up CRLFs
+				    $body = str_replace("\r\n", "\n", $body);
+				 }				
+         // prepare link
+         if (strlen($staticpage) > 0) {
+           $link 	= $staticpage."?auction_id=".$auction_id;         
+         } else {
+           $link 	= get_option('siteurl')."?auction_to_show=".$auction_id;
+         } 
+    
+         // replace keywords
+         $body = str_replace ( "{site_name}", get_option('blogname') , $body );
+         $body = str_replace ( "{auction_name}", $rows->name , $body );
+         $body = str_replace ( "{auction_link}", $link , $body );
+         $body = str_replace ( "{current_price}", $currencysymbol.number_format($thisbid, 2, '.', ','), $body );
 				
 				 // Send the email.
 				 mail($to, $subject, $body, $headers);
@@ -375,6 +531,11 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
 			  } else {
 				 $winner = "old";
 	
+	       // stick in an extra record in the bids table to track that a new bid has been superceeded
+			  $table_name = $wpdb->prefix . "wpa_bids";
+			  $sql = "INSERT INTO ".$table_name." (id, auction_id, date, bidder_name ,bidder_email, bidder_url, current_bid_price, max_bid_price, bid_type) VALUES (NULL, ".$auction_id.", '".current_time('mysql',"1")."', '".$bidder_name."', '".$bidder_email."', '".$bidder_url."', ".$max_bid.", ".$max_bid.", 'outbid');";
+			  $wpdb->query($sql);
+	       
 				 // increase bid to take it above new bid
 				 $thisbid = $max_bid + wpa_get_increment($max_bid);
 	
@@ -386,6 +547,7 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
 				$bidder_email = $current->bidder_email;
 				$bidder_url = $current->bidder_url;
 				$max_bid = $current->max_bid_price;
+        $bid_type = "auto";
 	
 				$result = BID_LOSE;
 			  }
@@ -393,10 +555,10 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
            }
        }
 
-		   if ($result == BID_WIN || $result == BID_LOSE ) {
+		   if ($result == BID_WIN || $result == BID_LOSE || $result == BIN_WIN) {
 			  // Update bid table with details on bid
 			  $table_name = $wpdb->prefix . "wpa_bids";
-			  $sql = "INSERT INTO ".$table_name." (id, auction_id, date, bidder_name ,bidder_email, bidder_url, current_bid_price, max_bid_price) VALUES (NULL, ".$auction_id.", '".current_time('mysql',"1")."', '".$bidder_name."', '".$bidder_email."', '".$bidder_url."', ".$thisbid.", ".$max_bid.");";
+			  $sql = "INSERT INTO ".$table_name." (id, auction_id, date, bidder_name ,bidder_email, bidder_url, current_bid_price, max_bid_price, bid_type) VALUES (NULL, ".$auction_id.", '".current_time('mysql',"1")."', '".$bidder_name."', '".$bidder_email."', '".$bidder_url."', ".$thisbid.", ".$max_bid.", '".$bid_type."');";
 			  $wpdb->query($sql);
 	
 			  //Update auction table
@@ -406,15 +568,22 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
 
          // notify site owner if notification requested
          if ($notify != '') {
-				    // Setup email fields.
-				    //$headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n"; --> Windows fix
-				    $headers = "From: " . get_option('admin_email') . "\r\n";
+            if ( $emailoptions['windowsmail'] == "" ) {
+				       $headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n";  
+				    } else {
+	   		      $headers = "From: " . get_option('admin_email') . "\r\n";
+	   	     }
+
 				    $to      = $notify;
 				    $subject = "[".$title."] New bid on ".$auction_id;
 				    $body   = "New bid on your auction.";
 
-   			    $body 	.= "\n\nLink: " . get_bloginfo('wpurl')."?auction_to_show=".$auction_id;
-				    
+            if (strlen($staticpage) > 0) {
+				       $body 	.= "\n\nLink: " . $staticpage."?auction_id=".$auction_id;         
+            } else {
+   				    $body 	.= "\n\nLink: " . get_option('siteurl')."?auction_to_show=".$auction_id;
+				    }
+
 				    $body 	.= "\n\n--------------------------------------------\n";
 				
 				    // Send the email.
@@ -424,6 +593,12 @@ function wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url,
         
     }
 		   
+		// finalise auction if BIN
+		if ($result == BIN_WIN)  {
+       // wait a bit, to make sure Now() in termination check doesn't match NOW() here.
+       sleep (2);
+
+		   check_auction_end($auction_id); }
 
    return $result;
 }
@@ -450,7 +625,7 @@ function wp_auctions_uninstall () {
 function wp_auctions_install () {
    global $wpdb;
 
-   $wpa_db_version = "1.3Lite";
+   $wpa_db_version = "1.5";
    
    $installed_ver = get_option("wpa_db_version");
       
@@ -502,6 +677,7 @@ function wp_auctions_install () {
 	  bidder_IP tinytext,
 	  current_bid_price decimal(10,2) NOT NULL,
 	  max_bid_price decimal(10,2),
+	  bid_type tinytext,
 	  UNIQUE KEY id (id)
 	);";
 
@@ -537,6 +713,8 @@ function close_expired_auctions() {
 
 function check_auction_end($auction_id) {
 
+   global $wpdb;
+
    // make sure we have a numeric auction number
    $auction_id = $auction_id + 0;
 
@@ -548,22 +726,24 @@ function check_auction_end($auction_id) {
    $currencycode = $options['currencycode'];
    $title = $options['title'];
 
-   global $wpdb;
-
+   // Setup email fields.         
+   $emailoptions = get_option('wp_auctions_email');
+   
    // prepare result
    $table_name = $wpdb->prefix . "wpa_auctions";
-   $strSQL = "SELECT id, '".current_time('mysql',"1")."' <= date_end, winner, 0, paymentmethod FROM $table_name WHERE id=".$auction_id;
+   $strSQL = "SELECT id, '".current_time('mysql',"1")."' <= date_end, winner, shipping_price, paymentmethod FROM $table_name WHERE id=".$auction_id;
    $rows = $wpdb->get_row ($strSQL, ARRAY_N);
 
-   // pull out payment details
-   $payment_method = $rows[3];  // in Lite -> 0 above returns NO COLUMN!!
+   // pull out shipping/payment details
+   $shipping_price = $rows[3];
+   $payment_method = $rows[4];
 
    if ($rows[0] == $auction_id && $rows[1] == 0 && $rows[2] == '') {
       // auction has closed - update winner and price
 
       // prepare result
       $table_name = $wpdb->prefix . "wpa_bids";
-	    $strSQL = "SELECT bidder_name, bidder_email, date, current_bid_price FROM $table_name WHERE auction_id=".$auction_id." ORDER BY current_bid_price DESC LIMIT 1";
+	    $strSQL = "SELECT bidder_name, bidder_email, date, current_bid_price FROM $table_name WHERE auction_id=".$auction_id." ORDER BY current_bid_price DESC, bid_type LIMIT 1";
 	    $bidrows = $wpdb->get_row ($strSQL);
 
       if ($bidrows != '') {  // there is a bid
@@ -576,55 +756,85 @@ function check_auction_end($auction_id) {
          $strSQL = "SELECT * FROM $table_name WHERE id=".$auction_id;
          $rows = $wpdb->get_row ($strSQL);
 
-   	    // Setup email fields.
-	       //$headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n";  -> Windows fix
-	        $headers = "From: " . get_option('admin_email') . "\r\n";
-	       $to      = $bidrows->bidder_email;
-	       $subject = "[".$title."] Auction Closed: ".$auction_id;
-	       $body   = "Congratulations! You have just won the following auction.";
-	       $body 	.= "\n\nAuction: " . $rows->name . " for " . $currencysymbol . $rows->winning_price;
-	       
-         $body 	.= "\n\nLink: " . get_bloginfo('wpurl')."?auction_to_show=".$auction_id;
-				  
-	       switch ($payment_method) {
-	          case "":
-     	         $body 	.= "\n\nUndefined payment method";	          
-     	         break;
+         $emailoptions = get_option('wp_auctions_email');
+
+         if ( $emailoptions['windowsmail'] == "" ) {
+				   $headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n";  
+				 } else {
+	   			 $headers = "From: " . get_option('admin_email') . "\r\n";
+	   		 }
+				 $to      = $bidrows->bidder_email;
+	       $subject = "[".$title."] Auction Closed: ".$rows->name;
+
+         if ($emailoptions["win"] == "") {
+   	        $body   = "Congratulations! You have just won the following auction on {site_name}.";
+	          $body 	.= "\n\nAuction: {auction_name} for {current_price}";
+				    $body 	.= "\n\nLink: {auction_link}";         
+				    $body 	.= "\n\n--------------------------------------------\n";
+				    $body 	.= "{payment_details}";
+            $body 	.= "\n\nShould you require any further assistance, please contact me at {contact_email}.";
+	          $body 	.= "\n\n--------------------------------------------\n";
+	          
+				 } else {
+				    $body = $emailoptions["win"];
+
+				    // clean up CRLFs
+				    $body = str_replace("\r\n", "\n", $body);
+				 }				
+         // prepare link
+         if (strlen($staticpage) > 0) {
+           $link 	= $staticpage."?auction_id=".$auction_id;         
+         } else {
+           $link 	= get_option('siteurl')."?auction_to_show=".$auction_id;
+         } 
+
+         // prepare payment
+ 	       switch ($payment_method) {
 	          case "paypal":
-     	         $body 	.= "\n\nYou can pay for the auction by clicking on the link below:";
-	             $body 	.= "\n\nhttps://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=".urlencode($paypal)."&item_name=".urlencode($rows->name)."&amount=".urlencode($rows->winning_price)."&shipping=0&no_shipping=0&no_note=1&currency_code=".$currencycode."&lc=GB&bn=PP%2dBuyNowBF&charset=UTF%2d8";
+     	         $payment  = "\n\nYou can pay for the auction by clicking on the link below:";
+	             $payment .= "\n\nhttps://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=".urlencode($paypal)."&item_name=".urlencode($rows->name)."&amount=".urlencode($rows->winning_price)."&shipping=".urlencode($shipping_price)."&no_shipping=0&no_note=1&currency_code=".$currencycode."&lc=GB&bn=PP%2dBuyNowBF&charset=UTF%2d8";
 	             break;
 	          case "bankdetails":
-     	         $body 	.= "\n\nMy banking details are as follows:\n\n";
-     	         $body  .= $bankdetails;
-	             $body 	.= "\n\nPlease submit your payment for ".$currencysymbol.($rows->winning_price)." using the auction number (".$auction_id.") as a reference";
+     	         $payment	 = "\n\nMy banking details are as follows:\n\n";
+     	         $payment .= $bankdetails;
+	             $payment .= "\n\nPlease submit your payment for ".$currencysymbol.($rows->winning_price+$shipping_price)." using the auction number (".$auction_id.") as a reference";
 	             break;
 	          case "mailingaddress":
-     	         $body 	.= "\n\nMy postal address is as follows:\n\n";
-     	         $body  .= $mailingaddress;
-	             $body 	.= "\n\nPlease send me a cheque or postal order for ".$currencysymbol.($rows->winning_price)." quoting the auction number (".$auction_id.") as a reference";
+     	         $payment  = "\n\nMy postal address is as follows:\n\n";
+     	         $payment .= $mailingaddress;
+	             $payment	.= "\n\nPlease send me a cheque or postal order for ".$currencysymbol.($rows->winning_price+$shipping_price)." quoting the auction number (".$auction_id.") as a reference";
 	             break;	       
 	       }
-	  
-         $body 	.= "\n\nShould you require any further assistance, please contact me at ".get_option('admin_email').".";
-   
-	       $body 	.= "\n\n--------------------------------------------\n";
-		
-	       // Send the email.
+	          
+         // replace keywords
+         $body = str_replace ( "{site_name}", get_option('blogname') , $body );
+         $body = str_replace ( "{auction_name}", $rows->name , $body );
+         $body = str_replace ( "{auction_link}", $link , $body );
+         $body = str_replace ( "{payment_details}", $payment , $body );
+         $body = str_replace ( "{current_price}", $currencysymbol . $rows->winning_price . "( " . $currencysymbol . $shipping_price . " shipping)", $body );
+         $body = str_replace ( "{contact_email}", get_option('admin_email') , $body );
+			
+				 // Send the email.
 	       mail($to, $subject, $body, $headers);
      }
 
       // notify site owner if notification requested
 	  if ($notify != '') {
 		 // Setup email fields.
-		 //$headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n";  -> Windows fix
-		 $headers = "From: " . get_option('admin_email') . "\r\n";
+     if ( $emailoptions['windowsmail'] == "" ) {
+       $headers = "From: " . get_option('blogname') . " <" . get_option('admin_email') . ">\r\n";  
+     } else {
+       $headers = "From: " . get_option('admin_email') . "\r\n";
+     }
 		 $to      = $notify;
 		 $subject = "[".$title."] Auction Closed: ".$auction_id;
 		 $body   = "Your auction has closed.";
 
-		 $body 	.= "\n\nLink: " . get_bloginfo('wpurl')."?auction_to_show=".$auction_id;
-
+     if (strlen($rows->staticpage) > 0) {
+				$body 	.= "\n\nLink: " . $rows->staticpage."?auction_id=".$auction_id;         
+     } else {
+			 $body 	.= "\n\nLink: " . get_option('siteurl')."?auction_to_show=".$auction_id;
+		}
 	       switch ($payment_method) {
 	          case "paypal":
      	         $body 	.= "\n\nThe winner has been sent an email with a PayPal link to complete the transaction";
@@ -663,9 +873,9 @@ function widget_wp_auctions_init() {
 		echo 'Please configure the widget from the Auctions Configuration Screen';
 	}
 
-	wp_register_sidebar_widget('wp_auctions','WP Auctions', 'widget_wp_auctions');
-	wp_register_widget_control('wp_auctions','WP Auctions', 'widget_wp_auctions_control', 300, 130);
-
+	register_sidebar_widget(array('WP Auctions', 'widgets'), 'widget_wp_auctions');
+	register_widget_control(array('WP Auctions', 'widgets'), 'widget_wp_auctions_control', 300, 130);
+;
 }
 
 function get_price($current_price,$start_price,$BIN_price,$currencysymbol,$sep) {
@@ -688,6 +898,307 @@ function wp_auctions(){
    docommon_wp_auctions();
 }
 
+// Post Auction goes here
+function dopost_wp_auctions($auction_id) {
+
+   global $wpdb;
+
+   $options = get_option('wp_auctions');
+   $style = $options['style'];
+   $currencysymbol = $options['currencysymbol'];
+   $title = $options['title'];
+   $regonly = $options['regonly'];
+   $currencycode = $options['currencycode'];
+   $customcontact = $options['customcontact'];
+    
+   $options = get_option('wp_auctions');
+
+   if ($_GET['auction_id'] > 0) {
+      $auction_id = $_GET['auction_id'];
+   }
+	
+   
+   // First of all, has a bid just been posted?
+   $result = "";
+   if ( $_POST["mode"] == "bid" ) { 
+   
+     $auction_id = $_POST['auction_id'];
+	   $bidder_name = htmlspecialchars(strip_tags(stripslashes($_POST['bidder_name'])), ENT_QUOTES);
+	   $bidder_email = strip_tags(stripslashes($_POST['bidder_email']));
+	   $bidder_url = htmlspecialchars(strip_tags(stripslashes($_POST['bidder_url'])), ENT_QUOTES);
+	   $max_bid = $_POST['max_bid'];
+	   $BIN_amount = $_POST['BIN_Amount'];
+	   
+     $result = wpa_process_bid( $auction_id, $bidder_name, $bidder_email, $bidder_url, $max_bid, $BIN_amount );
+   }
+   
+   // do some pre-work on whether we need registration or not and what the default settings are
+	 $needreg = false;
+	 if (($regonly=="Yes") && !is_user_logged_in()) {  
+	    $needreg = true;
+	 } else { 
+	  
+	  // if the user is logged in .. might as well prepopulate the form
+	  $defaultname = "";
+	  $defaultemail = "";
+	  $defaulturl = "";
+	  if (is_user_logged_in()) {
+	     global $current_user;
+	     get_currentuserinfo();
+	     
+	     $defaultname = $current_user->display_name;
+	     $defaultemail = $current_user->user_email;
+	     $defaulturl = $current_user->user_url;
+	  }
+   }	  
+	  
+   // select the correct record
+   $table_name = $wpdb->prefix . "wpa_auctions";
+
+   // don't have an ID? let's get a random one
+   if(!is_numeric($auction_id)) {    
+      // let's see if we can work out which auction we need from the database
+      $strSQL = "SELECT id FROM ".$table_name." WHERE staticpage='".get_permalink()."'";
+      echo "<!-- $strSQL -->";
+      
+      $row = $wpdb->get_row ($strSQL);
+      $auction_id = $row->id;
+      
+      echo "<!-- Going with $auction_id -->";
+      
+   } else {  echo "<!-- Going with $auction_id -->"; }
+      
+   // if we *still* don't have an ID .. let's just pick a random one     
+   if(!is_numeric($auction_id)) {  
+      $cond = "'".current_time('mysql',"1")."' < date_end order by rand() limit 1";
+   } else {
+      $cond = "id=".$auction_id;
+   }
+   $strSQL = "SELECT id, image_url, extraimage1, extraimage2, extraimage3, name, description, date_end, duration, BIN_price, start_price, current_price, shipping_price, shipping_to, shipping_from, paymentmethod, staticpage, '".current_time('mysql',"1")."' < date_end AS active FROM ".$table_name." WHERE ".$cond;
+   $row = $wpdb->get_row ($strSQL);
+
+   // grab values we need
+   $image_url = $row->image_url;
+   $name = $row->name;
+   $description = $row->description;
+   $end_date = get_date_from_gmt($row->date_end);
+   $current_price = $row->current_price;
+   $BIN_price = $row->BIN_price;
+   $start_price = $row->start_price;
+   $id = $row->id;
+   $shipping_price = $row->shipping_price;
+   $shipping_to = $row->shipping_to;
+   $shipping_from = $row->shipping_from;
+   $staticpage = $row->staticpage;
+   $active = $row->active;
+   $payment_method = $row->paymentmethod;
+   $extraimage = array($row->extraimage1, $row->extraimage2, $row->extraimage3 );
+   
+   // work out next min bid
+   $nextbid = $currencysymbol . number_format($current_price + wpa_get_increment($current_price), 2, '.', ',');
+
+	// get bids
+	$table_name = $wpdb->prefix . "wpa_bids";
+	$strSQL = "SELECT bidder_name, bidder_url ,date,current_bid_price, bid_type FROM $table_name WHERE auction_id=".$auction_id." ORDER BY current_bid_price DESC, bid_type";
+	$rows = $wpdb->get_results ($strSQL);
+
+  $printstring = '<!-- Wp Code Starts Here-->';
+
+  $printstring .= '<SCRIPT language="JavaScript">function clickBid() {  document.auctionform.submit(); }</SCRIPT>';
+
+  if ( $BIN_price > 0 ) {
+     $printstring .= '<SCRIPT language="JavaScript">function clickBuy() {  document.auctionform.max_bid.value = '.$BIN_price.'; document.auctionform.BIN_Amount.value = '.$BIN_price.'; document.auctionform.submit(); }</SCRIPT>';
+  }
+
+  $printstring .= '<div class="wpauction" id="wpauction">';
+
+	$printstring .= '<h3>'.$name.'</h3>';
+	
+	$printstring .= '<div class="auctionimages">';
+	$printstring .= '<a href="'.wp_get_attachment_url($image_url).'" title="'.$name.'" class="thickbox"><img src="'.wpa_resize($image_url,100).'" alt="Auction Image" width="100" /></a>';
+
+	for ($i = 0; $i <= 2; $i++) {
+     if ($extraimage[$i] != "" ) {
+   	   $printstring .= '<a href="'.wp_get_attachment_url($extraimage[$i]).'" title="'.$name.'" class="thickbox"><img src="'.wpa_resize($extraimage[$i],100).'" alt="Auction Image" width="100" /></a>';  
+     } 
+  }
+	$printstring .= '</div>';
+	
+	
+	$printstring .= '<div class="auctiondescription">';
+	$printstring .= wpautop($description);
+	$printstring .= '</div>';
+
+   if ($result != "") {
+      
+      $colour = "red";
+      if ($result == BID_WIN || $result == BIN_WIN) { $colour = "green"; }
+      
+      $printstring .= '<div id="auction-alert" style="background:'.$colour.'; padding: 5px; text-align: center; color: #fff;">'.$result.'</div>';   
+   }
+   
+   $printstring .= '<div class="auctiondetails">';
+	
+	$printstring .= '<p title="'.get_price($current_price,$start_price,$BIN_price,$currencysymbol," ").', place your bid now!" class="current-bid">'.get_price($current_price,$start_price,$BIN_price,$currencysymbol," ").'</p>';
+	$printstring .= '<p class="refresh"><a href="'.get_permalink().'?auction_id='.$auction_id.'" title="'.__('Refresh the current bid','WPAuctions').'">'.__('Refresh Current Bid','WPAuctions').'</a></p>';
+	
+	$printstring .= '<ul>';
+	$printstring .= '<li title="'.__('Auction ends on this date','WPAuctions').'">'.__('Ending Date','WPAuctions').' - '. date('dS M Y H:i:s',strtotime($end_date)) .'</li>';
+	
+	if ($shipping_price > 0) {
+	   $printstring .= '<li title="'.__('Shipping price will be added to total','WPAuctions').'">'.__('Shipping','WPAuctions').' - '.$currencysymbol.$shipping_price.'</li>';  }
+	if ($shipping_to != '') {
+	   $printstring .= '<li title="'.__('Seller ships to designated locations','WPAuctions').'">'.__('Ships to','WPAuctions').' - '.$shipping_to.'</li>'; }
+	if ($shipping_from != '') {	   
+	   $printstring .= '<li title="'.__('Item will be shipped from this location','WPAuctions').'">'; 
+	   $printstring .= '<address>';
+	   $printstring .= '<span>'.__('Location','WPAuctions').'</span> - '.$shipping_from;
+	   $printstring .= '</address>';
+	   $printstring .= '</li>'; }
+	$printstring .= '</ul>';
+	
+	$printstring .= '</div>';
+
+	$printstring .= '<div class="auctiontables">';
+
+  if ($active) {
+	$printstring .= '<h6>'.__('Place Your Bid Here','WPAuctions').'</h6><span>Bid '.$nextbid.' or higher [<a href="http://www.wpauctions.com/faq/" target="_blank" rel="nofollow">?</a>]</span>';
+
+    $printstring .= '<form action="'.$staticpage.'#auction-alert" method="POST" name="auctionform">';
+    $printstring .= '<table width="100%" cellpadding="0" cellspacing="0">';
+    
+    if ($needreg) {
+       $printstring .= '<tr>';
+       $printstring .= '<td colspan="2">'.__('Only registered users can bid on this auction.','WPAuctions').' <a href="'.wp_login_url().'">'.__('Please login or register an account','WPAuctions').'</a></td>';
+       $printstring .= '</tr>';
+
+    } else {
+        $printstring .= '<tr>';
+        $printstring .= '<td width="120">'.__('Name','WPAuctions').'</td>';
+
+        $printstring .= '<td><input name="bidder_name" type="text" class="bid-input" tabindex="1" value="'.$defaultname.'" /> *</td>';
+        $printstring .= '</tr>';
+        $printstring .= '<tr>';
+        $printstring .= '<td width="120">'.__('Email','WPAuctions').'</td>';
+        $printstring .= '<td><input name="bidder_email" type="text" class="bid-input" tabindex="2" value="'.$defaultemail.'" /> *</td>';
+        $printstring .= '</tr>';
+
+        $printstring .= '<tr>';
+        if ($customcontact == "") {
+           $printstring .= '<td width="120">'.__('Web URL','WPAuctions').'</td>';
+        } else {
+           $printstring .= '<td width="120">'.$customcontact.'</td>';        
+        }
+        $printstring .= '<td><input name="bidder_url" type="text" class="bid-input" tabindex="3" value="'.$defaulturl.'" /></td>';
+        $printstring .= '</tr>';
+        
+        // cater for Immediate
+        if ($start_price > 0) {
+           $printstring .= '<tr>';
+           $printstring .= '<td width="120">'.__('Bid Amount','WPAuctions').'</td>';
+           $printstring .= '<td><input name="max_bid" type="text" class="bid-input" tabindex="4" /> * '.$currencycode.'</td>';
+
+           $printstring .= '</tr>';
+
+           $printstring .= '<tr>';
+           $printstring .= '<td width="120"><div id="BIN"></div>&nbsp;</td>';
+
+           $printstring .= '<td><input name="Bid Now" type="button" value="Bid Now" class="auction-button" title="Bid Now" tabindex="5" onClick="clickBid()"/></td>';
+           $printstring .= '</tr>';
+
+        } else {
+          $printstring .= '<input type="hidden" name="max_bid" value="'.$BIN_price.'">';	  
+        }
+
+    }
+    $printstring .= '</table>';
+	
+    $printstring .= '<input type="hidden" name="mode" value="bid">';
+    $printstring .= '<input type="hidden" name="auction_id" value="'.$auction_id.'">';	
+    $printstring .= '<input type="hidden" name="BIN_Amount" value="">';	
+    $printstring .= '</form>';
+
+
+    if ( $BIN_price > 0 ) {
+       if (!$needreg) {
+		  $printstring .= '<h6>'.__('Buy it Now','WPAuctions').'</h6>';
+          $printstring .= '<table width="100%" cellpadding="0" cellspacing="0">';
+          $printstring .= '<tr>';
+          $printstring .= '<td width="120">'.__('Buy it Now Price','WPAuctions').'</td>';
+          $printstring .= '<td><strong>'.$currencysymbol.number_format($BIN_price, 2, '.', ',').'</strong></td>';
+          $printstring .= '</tr>';
+          $printstring .= '<tr>';
+          $printstring .= '<td width="120">'.__('Click to Buy','WPAuctions').'</td>';
+          $printstring .= '<td><input name="'.__('Buy Now','WPAuctions').'" type="button" value="'.__('Buy Now','WPAuctions').'" class="auction-button" title="Buy it Now" onClick="clickBuy()"/></td>';
+          $printstring .= '</tr>';
+
+          $printstring .= '</table>';
+       }
+    }
+  } else {
+    $printstring .= '<p style="text-align: center;">'.__('Auction closed','WPAuctions').'</p>';
+    
+  }
+    
+	$printstring .= '</div>';
+		
+	$printstring .= '<div class="auctiondetails">';
+	$printstring .= '<h6>'.__('Current bids','WPAuctions').'</h6>';
+	$printstring .= '<ol>';
+	foreach ($rows as $bid) {
+		$printstring .= '<li>';
+	   if ($bid->bidder_url != "" && $customcontact = "") {
+	      $printstring .= '<a href="'.$bid->bidder_url.'" rel="nofollow">'.$bid->bidder_name.'</a>';
+	   } else {
+	      $printstring .= $bid->bidder_name;
+	   }
+	   $printstring .= ' bid '.$currencysymbol.number_format($bid->current_bid_price, 2, '.', ',').' on '.get_date_from_gmt($bid->date);
+	   if ($bid->bid_type == "auto") $printstring .= ' [auto]';
+	   $printstring .= '</li>';
+   }
+$printstring .= '</ol>';
+	$printstring .= '</div>';
+	
+	// part moved ends here
+	
+	$printstring .= '<div class="auctiontables">';
+	$printstring .= '<h6>'.__('Payment Details','WPAuctions').'</h6>';
+
+	$printstring .= '<p>'.__('Payment must be made using the following method','WPAuctions').'</p>';
+	$printstring .= '<table width="100%" border="0" cellpadding="0" cellspacing="0">';
+
+
+   switch ($payment_method) {
+      case "paypal":
+         $printstring .= '		  <tr>';
+         $printstring .= '			<td>PayPal</td>';
+         $printstring .= '			<td>'.__('Auction winner will get a PayPal payment link via email.','WPAuctions').'</td>';
+         $printstring .= '		  </tr>';
+         break;
+      case "bankdetails":
+         $printstring .= '		  <tr>';
+         $printstring .= '			<td>'.__('Wire Transfer','WPAuctions').'</td>';
+         $printstring .= '			<td>'.__('Bank details will be provided to the auction winner via email.','WPAuctions').'</td>';
+         $printstring .= '		  </tr>';
+         break;
+      case "mailingaddress":
+         $printstring .= '		  <tr>';
+         $printstring .= '			<td>'.__('Cheque or postal order','WPAuctions').'</td>';
+         $printstring .= '			<td>'.__('Address will be provided to the auction winner.','WPAuctions').'</td>';
+         $printstring .= '		  </tr>';
+         break;	       
+   }
+
+	$printstring .= '  	  </table>';
+	$printstring .= '	</div>';
+
+   $printstring .= '</div>';
+      
+   $printstring .= '<!-- Code Ends Here -->';
+ 
+  return $printstring;
+}
+
 // Sidebar code goes here
 function docommon_wp_auctions() {
 
@@ -697,6 +1208,7 @@ function docommon_wp_auctions() {
    $style = $options['style'];
    $currencysymbol = $options['currencysymbol'];
    $title = $options['title'];
+   $list = $options['list'];
    $feedback = $options['feedback'];
    $noauction = $options['noauction'];
    $otherauctions = $options['otherauctions'];
@@ -709,7 +1221,7 @@ function docommon_wp_auctions() {
    // select a random record
    $table_name = $wpdb->prefix . "wpa_auctions";
 
-   $auction_id = isset($_GET["auction_to_show"]) ? $_GET["auction_to_show"] : "";
+   $auction_id = $_GET["auction_to_show"];
 
    if(!is_numeric($auction_id)) {
       $cond = "'".current_time('mysql',"1")."' < date_end order by rand() limit 1";
@@ -728,9 +1240,74 @@ function docommon_wp_auctions() {
    $BIN_price = $row->BIN_price;
    $start_price = $row->start_price;
    $id = $row->id;
+   $staticpage = $row->staticpage;
 
-   // show default image if no image is specified
-   if ($image_url == "") $image_url = get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH."requisites/default.png";
+if ($list == "Yes") {
+
+   echo '<!-- Main WP Container Starts -->';
+
+   // cater for no records returned
+   if ($id == '') {
+      echo '<div id="wp-container">';
+      echo '<div style="border: 1px solid #ccc; padding: 5px 2px; margin: 0px !important; background: none !important;">';
+      echo ( $noauctiontext ); 
+      echo '</div>';
+      echo '</div>';
+   } else {
+      echo '<div id="wp-container">';
+      echo '<div class="wp-head-list">'.$title.'</div>';
+      echo '<div class="wp-body-list">';
+      
+      // selected auction first
+	  echo '<div class="wp-auction-hold">';
+      echo '<img src="'.wpa_resize($image_url,50).'" height="50" width="50" align="left" style="margin-right: 5px;" />';
+      echo '<div class="wp-heading-list">'.$name.'</div>';
+      if (strlen($staticpage) > 0) {
+         echo '<div class="wp-desc-list">'.$description.'<span class="wp-more"> - <a href="'.$staticpage.'?auction_id='.$id.'" title="read more">more...</a></span></div>';
+         echo '<div class="wp-bidnow-list"><a href="'.$staticpage.'?auction_id='.$id.'" title="read more">'.get_price($current_price,$start_price,$BIN_price,$currencysymbol," - ").'</a></div>';
+      } else {
+         echo '<div class="wp-desc-list">'.$description.'<span class="wp-more"> - <a href="'.WPA_PLUGIN_URL . '/auction.php?ID=' . $id . POPUP_SIZE.'"  class="thickbox" title="read more">more...</a></span></div>';
+		 echo '</div>';
+         echo '<div class="wp-bidnow-list"><a href="'.WPA_PLUGIN_URL . '/auction.php?ID=' . $id.POPUP_SIZE. '"  class="thickbox" title="read more">'.get_price($current_price,$start_price,$BIN_price,$currencysymbol," - ").'</a></div>';
+      }         
+
+      // select "other" auctions
+      $table_name = $wpdb->prefix . "wpa_auctions";
+
+      $strSQL = "SELECT * FROM ".$table_name." WHERE '".current_time('mysql',"1")."' < date_end and id<>".$id." order by rand()";  // show all other auctions
+      $rows = $wpdb->get_results ($strSQL);
+
+      foreach ($rows as $row) {  
+
+         $image_url = $row->image_url;
+
+		    echo '<div class="wp-auction-hold">';
+        echo '<img src="'.wpa_resize($image_url,50).'" height="50" width="50" align="left" style="margin-right: 5px;" />';
+        echo '<div class="wp-heading-list">'.$row->name.'</div>';
+        echo '<div class="wp-desc-list">'.substr($row->description,0,75)."...".'<span class="wp-more"> - ';
+
+        if (strlen($row->staticpage) > 0) {
+           $link = '<a href="'.$row->staticpage.'?auction_id='.$row->id.'" title="read more">';
+        } else {
+           $link = '<a href="'.WPA_PLUGIN_URL . '/auction.php?ID=' . $row->id.POPUP_SIZE. '" class="thickbox" title="read more">';        
+        }
+        
+        echo $link;
+        echo 'more...</a></span></div>';
+    		echo '</div>';
+        echo '<div class="wp-bidnow-list">'.$link.get_price($row->current_price,$row->start_price,$row->BIN_price,$currencysymbol," - ").'</a></div>';
+
+      }       
+      if ($showrss != "No") {
+         echo '<div class="wp-rss"><a href="'.WPA_PLUGIN_RSS .'"><img src="'.WPA_PLUGIN_REQUISITES.'/rss.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/>'.__('Auctions RSS Feed','WPAuctions').'</a></div>';
+      }
+
+      echo '</div>';
+      echo '</div>'; 
+   }
+   echo '<!-- Main WP Container Ends -->';
+
+} else {
 
    // cater for no records returned
    if ($id == '') {
@@ -773,8 +1350,11 @@ function docommon_wp_auctions() {
    $rows = $wpdb->get_results ($strSQL);
 
    // prepare auction link
-   $auctionlink = '<a href="'.get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH . 'auction.php?ID=' . $id .POPUP_SIZE.'" class="thickbox" title="Bid Now">';
-
+   if (strlen($staticpage) > 0) { 
+      $auctionlink = '<a href="'.$staticpage.'?auction_id='.$id.'" title="Bid Now">';
+   } else {
+      $auctionlink = '<a href="'.WPA_PLUGIN_URL . '/auction.php?ID=' . $id .POPUP_SIZE.'" class="thickbox" title="Bid Now">';
+   }
 ?>
 <!--WP-Auction - Sidebar Presentation Section -->     
   <!-- Main WP Container Starts -->
@@ -787,11 +1367,10 @@ function docommon_wp_auctions() {
 
       <div id="wp-desc"><?php echo $description; ?><span class="wp-more"> - <?php echo $auctionlink; ?>more...</a></span> </div>
 
-      <div id="wp-date"><?php _e('Ending','WPAuctions'); ?>: <?php echo date('dS M Y H:i:s',strtotime($end_date)) ?></div>
-
-      <?php if ($feedback!=''): ?>      
-         <div id="wp-date"><a href="<?php echo $feedback ?>" target="_blank"><?php _e("My eBay feedback",'WPAuctions'); ?></a></div>
+      <?php if ($BIN_price > 0): ?>
+         <div id="wp-date">B.I.N.: <?php echo $currencysymbol.number_format($BIN_price, 2, '.', ',') ?></div>
       <?php endif ?>
+      <div id="wp-date"><?php _e('Ending','WPAuctions'); ?>: <?php echo date('dS M Y H:i:s',strtotime($end_date)) ?></div>
 
       <div id="wp-other">
 
@@ -800,25 +1379,25 @@ function docommon_wp_auctions() {
         <ul>
       <?php foreach ($rows as $row) {  
          echo "<li>";
-         echo "- <a href='".get_bloginfo('wpurl')."?auction_to_show=".$row->id."'>";
+         if (strlen($row->staticpage) > 0) {
+            echo "- <a href='".$row->staticpage."?auction_id=".$row->id."'>";
+         } else {
+            echo "- <a href='".get_bloginfo('wpurl')."?auction_to_show=".$row->id."'>";
+         }
          echo $row->name;
          echo "</a></li>";
       } ?>
         </ul>
    <?php endif; ?>
-
-   <?php if ($showrss != "No") { ?>
-
-        <div class="wp-rss"><a href="<?php echo get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss"><img src="<?php echo get_bloginfo('wpurl').'/'.PLUGIN_STYLE_PATH.$style?>/rss.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/></a> <a href="<?php echo get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME?>?rss" title="Grab My Auctions RSS Feed" >Auctions RSS Feed</a></div>
-
-   <?php } ?>
-
+        <?php if ($showrss != "No") { ?>
+           <div class="wp-rss"><a href="<?php echo WPA_PLUGIN_RSS; ?>"><img src="<?php echo WPA_PLUGIN_REQUISITES; ?>/rss.png" alt="Auctions RSS Feed" border="0" title="Grab My Auctions RSS Feed"/></a> <a href="<?php echo WPA_PLUGIN_RSS; ?>" title="Grab My Auctions RSS Feed" >Auctions RSS Feed</a></div>
+        <?php } ?>
       </div>
     </div>
     <div id="wp-bidcontainer">
       <div id="wp-bidcontainerleft"><?php echo get_price($current_price,$start_price,$BIN_price,$currencysymbol,"<br>") ?></div>
 
-      <div id="wp-bidcontainerright"><?php echo $auctionlink; ?><img src="<?php echo get_bloginfo('wpurl').'/'.PLUGIN_STYLE_PATH.$style?>/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
+      <div id="wp-bidcontainerright"><?php echo $auctionlink; ?><img src="<?php echo WPA_PLUGIN_STYLE.$style; ?>/bidnow.png" alt="Bid Now" width="75" height="32" border="0" /></a> </div>
 
     </div>
     
@@ -830,14 +1409,14 @@ function docommon_wp_auctions() {
 }
 
 // hook to terminate auction if needed (not strictly correct, but more efficient if it's here)
-check_auction_end($id); 
+check_auction_end($id);
+  
+}     
 
 }
 
 
 function wp_auctions_options() {
- 
-   global $wpdb;
 
    // Note: Options for this plugin include a "Title" setting which is only used by the widget
    $options = get_option('wp_auctions');
@@ -847,52 +1426,7 @@ function wp_auctions_options() {
       $options = array( 'title'=>'WP Auctions', 'otherauctions'=>'3', 'currency'=>'1', 'style'=>'default', 'notify'=>'', 'paypal'=>'', 'mailingaddress'=>'', 'bankdetails'=>'', 'currencysymbol'=>'$', 'currencycode'=>'USD','noauction'=>'','customcontact'=>'','customincrement'=>'');
    }
 
-
-   if (isset($_POST['wp_auctions-action']) && ($_POST['wp_auctions-action'] == "regenerate_images")) {
-   
-      require_once(ABSPATH . "wp-admin" . '/includes/image.php');
-   
-      echo "<h2>";
-      _e('Regenerating Images:','wpauctions');
-      echo "</h2>";
-
-		  $table_name = $wpdb->prefix . "wpa_auctions";
-		  $strSQL = "SELECT id, image_url FROM $table_name";
-		  $rows = $wpdb->get_results ($strSQL);
-
-	    if (is_array($rows)) {
-		    foreach ($rows as $row) { 
-		      echo "Processing: ";
-          echo $row->id;
-          echo " Base Image: ";
-          
-          $to_process = $row->image_url;
-          if (empty($to_process)) {
-             echo "none";
-          } else {
-             if (is_numeric($to_process)) {
-                echo "ok";
-             } else {
-                echo "Fixing";
-                
-                 $id = wpa_import_photo( $row->id, $to_process );
-                 
-                 if (intval($id) > 0) { 
-                    echo " Created: $id";
-
-                    $sql = "UPDATE ".$table_name." SET image_url = ".$id." WHERE id=".$row->id;
-                    $wpdb->query($sql);
-                 }
-             }
-          }
-          
-          echo "<br>";
-        }
-      }
-   }
-
-
-   if ( isset($_POST['wp_auctions-submit'] )) {
+   if ( $_POST['wp_auctions-submit'] ) {
 
       // security check
       check_admin_referer( 'WPA-nonce');
@@ -903,12 +1437,20 @@ function wp_auctions_options() {
       $options['paypal'] = strip_tags(stripslashes($_POST['wpa-paypal']));
       $options['mailingaddress'] = strip_tags(stripslashes($_POST['wpa-mailingaddress']));
       $options['bankdetails'] = strip_tags(stripslashes($_POST['wpa-bankdetails']));
+      $options['list'] = strip_tags(stripslashes($_POST['wpa-list']));
       $options['feedback'] = strip_tags(stripslashes($_POST['wpa-feedback']));
+      $options['regonly'] = strip_tags(stripslashes($_POST['wpa-regonly']));
       $options['otherauctions'] = strip_tags(stripslashes($_POST['wpa-otherauctions']));
+      $options['customcontact'] = strip_tags(stripslashes($_POST['wpa-customcontact']));
       $options['noauction'] = stripslashes($_POST['wpa-noauction']); // don't strip tags
       $options['style'] = strip_tags(stripslashes($_POST['wpa-style']));
-      $options['remotedebug'] = strip_tags(stripslashes($_POST['wpa-remotedebug']));
+      $options['customincrement'] = strip_tags(stripslashes($_POST['wpa-customincrement']));
       $options['showrss'] = strip_tags(stripslashes($_POST['wpa-showrss']));
+
+      // make sure we clear custom increment if drop down is set to standard
+      if (strip_tags(stripslashes($_POST['wpa-bidincrement'])) == "1") {
+         $options['customincrement'] = "";
+      }
       
       // Currencies handled here
       if ($options['currency']==1) {
@@ -964,27 +1506,31 @@ function wp_auctions_options() {
       update_option('wp_auctions', $options);
    }
 
-   $currencysymbol = esc_html($options['currencysymbol']);
-   $currencycode = esc_html($options['currencycode']);
+   $currencysymbol = htmlspecialchars($options['currencysymbol'], ENT_QUOTES);
+   $currencycode = htmlspecialchars($options['currencycode'], ENT_QUOTES);
 
-   $currency = esc_html($options['currency']);
-   $title = esc_html($options['title']);
-   $notify = esc_html($options['notify']);
-   $paypal = esc_html($options['paypal']);
-   $mailingaddress = esc_html($options['mailingaddress']);
-   $bankdetails = esc_html($options['bankdetails']);
-   $feedback = esc_html($options['feedback']);
-   $noauction = esc_html($options['noauction']);
-   $otherauctions = esc_html($options['otherauctions']);
-   $style = esc_html($options['style']);
-   $remotedebug = esc_html($options['remotedebug']);
-   $showrss = esc_html($options['showrss']);
+   $currency = htmlspecialchars($options['currency'], ENT_QUOTES);
+   $title = htmlspecialchars($options['title'], ENT_QUOTES);
+   $notify = htmlspecialchars($options['notify'], ENT_QUOTES);
+   $paypal = htmlspecialchars($options['paypal'], ENT_QUOTES);
+   $mailingaddress = htmlspecialchars($options['mailingaddress'], ENT_QUOTES);
+   $bankdetails = htmlspecialchars($options['bankdetails'], ENT_QUOTES);
+   $list = htmlspecialchars($options['list'], ENT_QUOTES);
+   $feedback = htmlspecialchars($options['feedback'], ENT_QUOTES);
+   $noauction = htmlspecialchars($options['noauction'], ENT_QUOTES);
+   $regonly = htmlspecialchars($options['regonly'], ENT_QUOTES);
+   $otherauctions = htmlspecialchars($options['otherauctions'], ENT_QUOTES);
+   $customcontact = htmlspecialchars($options['customcontact'], ENT_QUOTES);
+   $style = htmlspecialchars($options['style'], ENT_QUOTES);
+   $customincrement = htmlspecialchars($options['customincrement'], ENT_QUOTES);
+   $showrss = htmlspecialchars($options['showrss'], ENT_QUOTES);
 
   // Prepare style list based on styles in style folder
 	$folder_array=array();
 	$folder_count = 1;
 
-	$path=ABSPATH.PLUGIN_STYLE_PATH;
+	//$path=ABSPATH.WPA_PLUGIN_URL.'/styles/';
+	$path = ABSPATH.'wp-content/plugins/'.WPA_PLUGIN_DIR.'/styles/';
 	
 	if ($handle = opendir($path)) { 
 		while (false !== ($file = readdir($handle))) { 
@@ -1013,24 +1559,36 @@ function CheckCurrencyOptions() {
    }
 
 }
+function CheckIncrementOptions() {
+
+   var chosen=document.getElementById("wpa-bidincrement").value;
+   var WPA_activetab=document.getElementById("wpa_incrementtab");
+
+   if (chosen=="2") {
+      WPA_activetab.style.display = "";
+   } else {
+      WPA_activetab.style.display = "none";   
+   }
+
+}
 </script>
 
 <div class="wrap"> 
-  <form name="form1" method="post" action="<?php echo $_SERVER['PHP_SELF'].'?page='.PLUGIN_PATH; ?>">
+  <form name="form1" method="post" action="<?php admin_url('admin.php?page='.WPA_PLUGIN_NAME); ?>">
   
   <?php wp_nonce_field('WPA-nonce'); ?>
   
-  <h2 class="settings"><em><?php _e('General Settings') ?></em></h2> 
+  <h2 class="settings"><em><?php _e('General Settings','WPAuctions') ?></em></h2>
 
-    <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
+    <table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="margin-top: 1em;"> 
       <tr valign="top" class="alternate"> 
-        <th scope="row" class='row-title'><?php _e('Auction Title:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('Auction Title:','WPAuctions') ?></th> 
         <td class='desc'><input name="wpa-title" type="text" id="wpa-title" value="<?php echo $title; ?>" size="40" />
         <br />
-        <p><?php _e('Enter the header title for your auctions.') ?></p></td> 
+        <p><?php _e('Enter header title for your auctions','WPAuctions') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title'><?php _e('Currency:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('Currency:','WPAuctions') ?></th> 
         <td class='desc'>
         <select id="wpa-currency" name="wpa-currency" onclick="CheckCurrencyOptions()">
                 <option value="1" <?php if ($currency=='1') echo 'selected'; ?>>GBP</option>
@@ -1047,26 +1605,32 @@ function CheckCurrencyOptions() {
         <br />
         <div id="wpa_activetab" style="display:<?php if ($currency!='99'){ echo "none"; }?>;">
           <div style="float:right; border: 2px solid red; color: #000; width: 300px;margin: -5px 10px 15px 0; padding: 5px;"><strong><u><p>Warning!</u></strong> If you use a custom currency, please remember that PayPal only supports a <a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=p/sell/mc/mc_intro-outside">small subset of currencies</a>. If you use a currency outside this set, any PayPal payments will fail.</p> <p>You can still use Bank Payments and send your Address for cheques/money orders etc...</p></div>
-          <div>Currency Code: <input name="wpa-currencycode" type="text" id="wpa-currencycode" value="<?php echo $currencycode; ?>" size="5" /><br/>
-          Currency Symbol: <input name="wpa-currencysymbol" type="text" id="wpa-currencysymbol" value="<?php echo $currencysymbol; ?>" size="5" /></div>
+          <div><?php _e('Currency Code:','WPAuctions') ?> <input name="wpa-currencycode" type="text" id="wpa-currencycode" value="<?php echo $currencycode; ?>" size="5" /><br/>
+          <?php _e('Currency Symbol:','WPAuctions') ?> <input name="wpa*-currencysymbol" type="text" id="wpa-currencysymbol" value="<?php echo $currencysymbol; ?>" size="5" /></div>
         </div>
- 
-        <p><?php _e('Choose the currency you would like to run your auctions in.</p><!-- <p><a href="http://en.wikipedia.org/wiki/List_of_circulating_currencies" target="_blank">Click here for custom Currency Codes and Symbols</a>. -->') ?></p></td> 
+        <p><?php _e('Choose the currency you would like to run your auctions in','WPAuctions') ?></p><p><a href="http://en.wikipedia.org/wiki/List_of_circulating_currencies" target="_blank"><?php _e('Click here for custom Currency Codes and Symbols','WPAuctions') ?></a>.</p></td> 
+      </tr> 
+      <tr valign="top" class="alternate"> 
+        <th scope="row" class='row-title'><?php _e('Bid Increment:','WPAuctions') ?></th> 
+        <td class='desc'>
+        <select id="wpa-bidincrement" name="wpa-bidincrement" onclick="CheckIncrementOptions()">
+                <option value="1" <?php if ($customincrement=='') echo 'selected'; ?>><?php _e('Standard','WPAuctions') ?></option>
+                <option value="2" <?php if ($customincrement!='') echo 'selected'; ?>><?php _e('Custom','WPAuctions') ?></option>
+         </select>
+        <br />
+        <div id="wpa_incrementtab" style="display:<?php if ($customincrement==''){ echo "none"; }?>;">
+          <div><?php _e('Your increment amount:','WPAuctions') ?><br /><input name="wpa-customincrement" type="text" id="wpa-customincrement" value="<?php echo $customincrement; ?>" size="5" /></div>
+        </div>
+        <p><?php _e('If you want to override the custom automatic increments, you can specify a custom increment here. This defines what the next bid value would be.','WPAuctions') ?></p></td> 
       </tr> 
       <tr valign="top"> 
         <th scope="row" class='row-title'><?php _e('Bid Notification:') ?></th> 
         <td class='desc'><input name="wpa-notify" type="text" id="wpa-notify" value="<?php echo $notify; ?>" size="40" />
         <br />
-        <p><?php _e('Enter your email address if you would like to be notified whenever a new bid is placed.') ?></p></td> 
-      </tr> 
-      <tr valign="top" class="alternate"> 
-        <th scope="row" class='row-title'><?php _e('eBay Feedback:') ?></th> 
-        <td class='desc'><input name="wpa-feedback" type="text" id="wpa-feedback" value="<?php echo $feedback; ?>" size="40" />
-        <br />
-        <p><?php _e('If you have lots of eBay feedback, we can add a link to show users your eBay history.') ?></p></td> 
+        <p><?php _e('Enter your email address if you want to be notified whenever a new bid is placed','WPAuctions') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title'><?php _e('Other Auctions:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('Other Auctions:','WPAuctions') ?></th> 
         <td class='desc'>
         <select id="wpa-otherauctions" name="wpa-otherauctions">
                 <option value="1" <?php if ($otherauctions=='1') echo 'selected'; ?>>1</option>
@@ -1081,41 +1645,52 @@ function CheckCurrencyOptions() {
                 <option value="all" <?php if ($otherauctions=='all') echo 'selected'; ?>>All</option>
          </select>
         <br />
-        <p><?php _e('How many other auctions would you like to display in the widget?') ?></p></td> 
+        <p><?php _e('How many other auctions would you like to display in the widget?','WPAuctions') ?></p></td> 
+      </tr> 
+      <!-- - W2 - Test Registered Users Only before releasing
+      <tr valign="top" class="alternate"> 
+        <th scope="row" class='row-title' style="border-bottom: 0;"><?php _e('Registered Users Only?','WPAuctions') ?></th> 
+        <td class='desc' style="border-bottom: 0;">
+        <select id="wpa-regonly" name="wpa-regonly">
+                <option value="" <?php if ($regonly=='') echo 'selected'; ?>><?php _e('No, anyone can bid','WPAuctions') ?></option>
+                <option value="Yes" <?php if ($regonly=='Yes') echo 'selected'; ?>><?php _e('Yes, only registered users can bid','WPAuctions') ?></option>
+         </select>
+        <br />
+        <p><?php _e('Do bidders have to have a registered WordPress account to bid?','WPAuctions') ?></p></td> 
       </tr>
+      --> 
     </table>
 
-  <h2 class="payment"><em><?php _e('Payment Settings <span>- Please supply at least one of the following</span>') ?></em></h2>
+  <h2 class="payment"><em><?php _e('Payment Settings - Please supply at least one of the following','WPAuctions') ?></em></h2>
 
-    <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
+    <table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="margin-top: 1em;"> 
       <tr valign="top" class="alternate"> 
-        <th scope="row" class='row-title'><?php _e('PayPal account:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('PayPal account:','WPAuctions') ?></th> 
         <td class='desc'><input name="wpa-paypal" type="text" id="wpa-paypal" value="<?php echo $paypal; ?>" size="40" />
         <br />
-        <p><?php _e('Enter your PayPal email address (where you want auction winners to pay for their items)') ?></p></td> 
+        <p><?php _e('Enter your PayPal email address (where you want auction winners to pay for their items)','WPAuctions') ?></p></td> 
       </tr> 
       <tr valign="top"> 
-        <th scope="row" class='row-title'><?php _e('Bank Details:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('Bank Details:','WPAuctions') ?></th> 
         <td class='desc'>
         <textarea rows="5" cols="100" id="wpa-bankdetails" name="wpa-bankdetails"><?php echo $bankdetails; ?></textarea>
         <br />
-        <p><?php _e('Enter your bank details (where you want auction winners to wire tranfers to you)') ?></p></td> 
+        <p><?php _e('Enter your bank details (where you want auction winners to wire tranfers to you)','WPAuctions') ?></p></td> 
       </tr> 
       <tr valign="top" class="alternate"> 
-        <th scope="row" class='row-title' style="border-bottom: none;"><?php _e('Mailing Address:') ?></th> 
+        <th scope="row" class='row-title' style="border-bottom: 0;"><?php _e('Mailing Address:','WPAuctions') ?></th> 
         <td class='desc' style="border-bottom: none;">
         <textarea rows="5" cols="100" id="wpa-mailingaddress" name="wpa-mailingaddress"><?php echo $mailingaddress; ?></textarea>
         <br />
-        <p><?php _e('Enter your mailing address address (where you want auction winners to mail you cheques and money orders)') ?></p></td> 
+        <p><?php _e('Enter your mailing address address (where you want auction winners to mail you cheques and money orders)','WPAuctions') ?></p></td> 
       </tr> 
-
     </table>
 
-  <h2 class="other-settings"><em><?php _e('Other Settings') ?></em></h2> 
+  <h2 class="other-settings"><em><?php _e('Other Settings','WPAuctions') ?></em></h2> 
 
-    <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
+    <table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="margin-top: 1em;"> 
       <tr valign="top" class="alternate"> 
-        <th scope="row" class='row-title'><?php _e('Style:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('Style:','WPAuctions') ?></th> 
         <td class='desc'>
            <select id="wpa-style" name="wpa-style">
             <?php                           
@@ -1128,81 +1703,57 @@ function CheckCurrencyOptions() {
 		       } ?>
             </select>
         <br />
-        <p><?php _e('Choose a graphical style for your widget.') ?></p></td> 
+        <p><?php _e('Choose a graphical style for your widget. Get new styles from our <a href="http://www.wpauctions.com/styles">style store</a>.','WPAuctions') ?></p></td> 
       </tr> 
+      <!-- W3 - Test List Format before releasing
       <tr valign="top"> 
-        <th scope="row" class='row-title'><?php _e('"No Auction" Alternative:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('List Format:','WPAuctions') ?></th> 
+        <td class='desc'>
+        <select id="wpa-list" name="wpa-list">
+                <option value="" <?php if ($list=='') echo 'selected'; ?>><?php _e('No, I prefer a graphical format','WPAuctions') ?></option>
+                <option value="Yes" <?php if ($list=='Yes') echo 'selected'; ?>><?php _e('Yes, show auctions in list format','WPAuctions') ?></option>
+         </select>
+        <br />
+        <p><?php _e('Select whether you prefer the sidebar widget to show a graphical or list format','WPAuctions') ?></p></td> 
+      </tr>
+      -->
+       
+      <tr valign="top" class="alternate"> 
+        <th scope="row" class='row-title'><?php _e('"No Auction" Alternative:','WPAuctions') ?></th> 
         <td class='desc'>
         <textarea rows="5" cols="100" id="wpa-noauction" name="wpa-noauction"><?php echo $noauction; ?></textarea>
         <br />
-        <p><?php _e('Specify the HTML you would like to display if there are no active auctions. Leave blank for standard "No Auctions" display<br>To rotate ads, separate with &lt;!--more--&gt;') ?></p></td> 
-      </tr>  
+        <p><?php _e('Specify the HTML you would like to display if there are no active auctions. Leave blank for standard "No Auctions" display<br>To rotate ads, separate with &lt;!--more--&gt;','WPAuctions') ?></p></td> 
+      </tr> 
+      <!-- W4 - Test Custom Contact before releasing
       <tr valign="top"> 
-        <th scope="row" class='row-title'><?php _e('RSS Feed link:') ?></th> 
+        <th scope="row" class='row-title'><?php _e('Custom Contact Field:','WPAuctions') ?></th> 
+        <td class='desc'><input name="wpa-customcontact" type="text" id="wpa-customcontact" value="<?php echo $customcontact; ?>" size="10" />
+        <br />
+        <p><?php _e('Enter your custom contact field caption (leave blank for URL <- this is the default setting)','WPAuctions') ?></p></td> 
+      </tr>
+      --> 
+      <tr valign="top"> 
+        <th scope="row" class='row-title'><?php _e('RSS Feed link:','WPAuctions') ?></th> 
         <td class='desc'>
         <select id="wpa-showrss" name="wpa-showrss">
-                <option value="No" <?php if ($showrss=='No') echo 'selected'; ?>>Hide RSS link</option>
-                <option value="" <?php if ($showrss=='') echo 'selected'; ?>>Show RSS link</option>
+                <option value="No" <?php if ($showrss=='No') echo 'selected'; ?>><?php _e('Hide RSS link','WPAuctions') ?></option>
+                <option value="" <?php if ($showrss=='') echo 'selected'; ?>><?php _e('Show RSS link','WPAuctions') ?></option>
          </select>
         <br />
-        <p><?php _e('Do you want to publish a link to your auction RSS feed. This can let people know when you publish new auctions') ?></p></td> 
+        <p><?php _e('Do you want to publish a link to your auction RSS feed. This can let people know when you publish new auctions','WPAuctions') ?></p></td> 
       </tr> 
-      <tr valign="top"> 
-        <th scope="row" class='row-title'><?php _e('Allow Remote Debug:') ?></th> 
-        <td class='desc'>
-        <select id="wpa-remotedebug" name="wpa-remotedebug">
-                <option value="" <?php if ($remotedebug=='') echo 'selected'; ?>>Support not required</option>
-                <option value="Yes" <?php if ($remotedebug=='Yes') echo 'selected'; ?>>Allow the WP Auctions Support team access to your <a href="http://php.net/manual/en/function.phpinfo.php">PHP Config Information</a></option>
-         </select>
-        <br />
-        <p><?php _e('Select whether you want to divulge your server information to assist remote debugging. Your information will be visible <a href="'.get_bloginfo('wpurl').PLUGIN_EXTERNAL_PATH.PLUGIN_NAME.'?debug">here</a>') ?></p></td> 
-      </tr> 
-      <tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Pro features') ?></th> 
-        <td class='desc' style="border-bottom: 0; padding: 0;">
-			<div class="wpa-upgrade-part">
-			<p><?php _e('Get the following features by upgrading to Pro:') ?></p>
-			<ul>
-				<li><?php _e('Auction Engine: Simple and Reverse') ?></li>
-				<li><?php _e('More PayPal Currencies') ?></li>
-				<li><?php _e('Minimum Bid Increment: Set a global minimum bid increase amount') ?></li>
-				<li><?php _e('Email notifications management') ?></li>
-				<li><?php _e('Registered users only option') ?></li>
-				<li><?php _e('Request to bid option') ?></li>
-				<li><?php _e('Extra bidding time') ?></li>
-				<li><?php _e('Countdown timer') ?></li>
-				<li><?php _e('Auctions landing page') ?></li>
-				<li><?php _e('Custom contact field') ?></li>
-				<li><?php _e('Edit bid refresh timer') ?></li>
-				<li><?php _e('...and more!') ?></li>
-			</ul>
-			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Only $39">Download WP Auctions Pro *</a></p>
-			<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
-			</div>
-		</td> 
-      </tr>
+
     </table>
+
+<?php 	do_action('wpa_options_form'); ?>
 
 	<input type="hidden" id="wp_auctions-submit" name="wp_auctions-submit" value="1" />
 
-    <p class="submit">
-      <input type="submit" name="Submit" value="<?php _e('Update Options') ?> &raquo;" />
+    <p>
+      <input type="submit" name="Submit" class="button add-auction" value="<?php _e('Update Options','WPAuctions') ?> &raquo;" />
     </p>
   </form> 
-  
-  <h2 class="issue-resolution"><em><?php _e('Issue Resolution Actions','wpauctions') ?></em></h2> 
-
-  <form name="form2" method="post" action="<?php echo $_SERVER['PHP_SELF'].'?page='.PLUGIN_PATH; ?>">
-	  <input type="hidden" id="wp_auctions-action" name="wp_auctions-action" value="regenerate_images" /> 
-    <p class="submit">
-      <input type="submit" name="Submit" value="<?php _e('Regenerate Images','wpauctions') ?> &raquo;" />
-    </p>
-  </form>
-  <br />
-  <br />
-  <br />
-  <p>*NOTE: Forum support is not included with the Lite, $39 or $49 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
-    
 </div>
 
 <?php
@@ -1226,44 +1777,50 @@ $rss = @fetch_rss( $rss_feed );
 <link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
 
 <div class="wrap wp-auctions">
-  
+		
+	<div class="update-nag" style="margin: 0 0 20px 0 !important; padding: 5px 13px !important;">
+		<p>Upgrade to WP Auctions Pro <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click for Instant Download</a></button>&nbsp;&nbsp;<strong style="color: #D54E21;">Features:</strong> 3 Bidding Engines &bull; Reserve Prices &bull; Buy it Now &bull; Responsive design</p>
+	</div>
 	<div class="wpa-intro">
-
-	<p>Version: <?php echo $wpa_version ?></p>
-    <div class="latestnews">
-        <h3>Plugin News</h3>
+	
+  	<p><?php _e('Version:','WPAuctions') ?> <?php echo $wpa_version ?> Lite</p>
+  
+	<div class="latestnews">
+        <h3><?php _e('WP Auctions Pro News','WPAuctions') ?></h3>
         <ul>
         <?php
         if ( isset($rss->items) && 1 < count($rss->items) ) {
         $rss->items = array_slice($rss->items, 0, 4);
         foreach ($rss->items as $item ) {
         ?>
-          <li><a href="<?php echo wp_filter_kses($item['link']); ?>"><?php echo wptexturize($item['title']); ?></a></li>
+          <li><a href="<?php echo wp_filter_kses($item['link']); ?>"><?php echo wptexturize(wp_specialchars($item['title'])); ?></a></li>
         <?php } ?>
         </ul>
         <?php
         }
         else {
-          echo ("No news found ..");
+          _e('No news found ..','WPAuctions');
         }
         ?>
     </div>
 
     <div class="wpa-info">
-	  	<h3 class="wpa-upgradepro">Upgrade to Pro</h3>
-        	<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$49</del> <span style="font-size: 22px;">$39</span></big> Click for Instant Download *</a></p>
-			<p><strong style="color: #D54E21;">Features:</strong> 3 Bidding Engines &bull; Reserve Prices &bull; Buy it Now &bull; Embed auctions in Posts &bull; ...and much more!</p>
-			<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
+    	<h3><?php _e('Resources','WPAuctions') ?></h3>
+      		<p><a href="https://wordpress.org/support/plugin/wp-auctions"><?php _e('Support','WPAuctions') ?></a></p>
+	  	<h3 class="wpa-upgrade"><?php _e('Leave a Rating','WPAuctions'); ?></h3>
+	  		<p style="padding-bottom: 0; margin-bottom: 0;"><?php _e('Your ratings make us develop awesome features! Leave yours on ','WPAuctions'); ?> - <a href="https://wordpress.org/support/view/plugin-reviews/wp-auctions"><?php _e('WordPress.org','WPAuctions'); ?></a></p>
+			<p style="padding-bottom: 0; margin-bottom: 0;"><img src="../wp-content/plugins/wp-auctions/requisites/star.png" width="16" height="16"/><img src="../wp-content/plugins/wp-auctions/requisites/star.png" width="16" height="16"/><img src="../wp-content/plugins/wp-auctions/requisites/star.png" width="16" height="16"/><img src="../wp-content/plugins/wp-auctions/requisites/star.png" width="16" height="16"/><img src="../wp-content/plugins/wp-auctions/requisites/star.png" width="16" height="16"/></p>
     </div>
 
     <div style="clear:both"></div>
 </div>
-<h2>Get Started</h2>
+
+<h2><?php _e('Get Started:','WPAuctions'); ?></h2>
 
 <ul class="wpa-start">
-	<li><div class="buttons"><button onclick="window.location = 'admin.php?page=wp-auctions-add';" class="button"><strong>Add An Auction</strong></button></div></li>
-    <li><div class="buttons">/ &nbsp;<button onclick="window.location = 'admin.php?page=wp-auctions-manage';" class="button"><strong>Manage Auctions</strong></button></div></li>
-	<li><div class="buttons wpa-upgrade">/ &nbsp;<button onclick="window.location = '../wp-admin/admin.php?page=wp-auctions-upgrade';" class="button"><strong>Upgrade Plugin</strong></button></div></li>
+	<li><div class="buttons"><button onclick="window.location = 'admin.php?page=wp-auctions-add';" class="button"><strong><?php _e('Add An Auction','WPAuctions'); ?></strong></button></div></li>
+    <li><div class="buttons">/ &nbsp;<button onclick="window.location = 'admin.php?page=wp-auctions-manage';" class="button"><strong><?php _e('Manage Auctions','WPAuctions'); ?></strong></button></div></li>
+	<li><div class="buttons wpa-upgrade">/ &nbsp;<button onclick="window.location = 'https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004';" class="button"><strong>Upgrade Plugin</strong></button></div></li>
 </ul>
 <div style="clear:both"></div>
 
@@ -1319,161 +1876,161 @@ function wp_auctions_add() {
       // security check
       check_admin_referer( 'WPA-nonce');
 
-      // handle a file upload if there is one
-		  $overrides = array('test_form' => false);
-								
-		  $file = wp_handle_upload($_FILES['upload_0'], $overrides);
-
-      if ( !isset($file['error']) ) {
-         $url = $file['url'];
-         $type = $file['type'];
-         $file = $file['file'];
-         $filename = basename($file);
-
-         // Construct the object array
-         $object = array(
-           'post_title' => $filename,
-           'post_content' => $url,
-           'post_mime_type' => $type,
-           'guid' => $url);
-
-         // Save the data
-         $id = wp_insert_attachment($object, $file);
-
-         // Add the meta-data
-         wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
-         do_action('wp_create_file_in_uploads', $file, $id); // For replication
-         $strSaveImageURL = $id;
-         
-      } else {
-        // preserve image if edit with no change
-        if (isset($_POST["wpa_ImageURL"])) {
-          $strSaveImageURL = $_POST["wpa_ImageURL"];       
-        }  
-      }
-
       if($_POST["wpa_action"] == "Add Auction"):
-         $strSaveName = strip_tags(esc_html($_POST["wpa_name"]));
+         $strSaveName = strip_tags(htmlspecialchars($_POST["wpa_name"]));
          $strSaveDescription = $_POST["wpa_description"];
          $strSaveStartPrice = $_POST["wpa_StartPrice"];
          $strSaveReservePrice = $_POST["wpa_ReservePrice"];
+         $strSaveBINPrice = $_POST["wpa_BINPrice"];
          $strSaveEndDate = $_POST["wpa_EndDate"];
-         $strSaveImageURL1 = $_POST["wpa_ImageURL1"];
-         $strPaymentMethod = $_POST["wpa_PaymentMethod"];              
-         //$strSaveImageURL = $_POST["wpa_ImageURL"]; - handled above!
+         $strSaveShippingPrice = $_POST["wpa_ShippingPrice"];
+         $strSaveShippingTo = strip_tags(htmlspecialchars($_POST["wpa_ShippingTo"]));
+         $strSaveShippingFrom = strip_tags(htmlspecialchars($_POST["wpa_ShippingFrom"]));                           
+         $strStaticPage = $_POST["wpa_StaticPage"];     
+         $strPaymentMethod = $_POST["wpa_PaymentMethod"];
+         
+         $strSaveImageURL = $_POST["wpa_ImageURL"];
+		 $strSaveImageURL1 = $_POST["wpa_ImageURL1"];
+		 $strSaveImageURL2 = $_POST["wpa_ImageURL2"];
+		 $strSaveImageURL3 = $_POST["wpa_ImageURL3"];
+                       
       elseif($_POST["wpa_action"] == "Update Auction"):
          $strUpdateID = $_POST["wpa_id"];
-         $strSaveName = strip_tags(esc_html($_POST["wpa_name"]));
+         $strSaveName = strip_tags(htmlspecialchars($_POST["wpa_name"]));
          $strSaveDescription = $_POST["wpa_description"];
          $strSaveStartPrice = $_POST["wpa_StartPrice"];
          $strSaveReservePrice = $_POST["wpa_ReservePrice"];
+         $strSaveBINPrice = $_POST["wpa_BINPrice"];
          $strSaveEndDate = $_POST["wpa_EndDate"];
-         $strSaveImageURL1 = $_POST["wpa_ImageURL1"];
-         $strPaymentMethod = $_POST["wpa_PaymentMethod"];              
-         //$strSaveImageURL = $_POST["wpa_ImageURL"]; - handled above!
-
+         $strSaveShippingPrice = $_POST["wpa_ShippingPrice"];
+         $strSaveShippingTo = strip_tags(htmlspecialchars($_POST["wpa_ShippingTo"]));
+         $strSaveShippingFrom = strip_tags(htmlspecialchars($_POST["wpa_ShippingFrom"]));
+         $strStaticPage = $_POST["wpa_StaticPage"];
+         $strPaymentMethod = $_POST["wpa_PaymentMethod"]; 
+         
+         $strSaveImageURL = $_POST["wpa_ImageURL"];
+		 $strSaveImageURL1 = $_POST["wpa_ImageURL1"];
+		 $strSaveImageURL2 = $_POST["wpa_ImageURL2"];
+		 $strSaveImageURL3 = $_POST["wpa_ImageURL3"];
+                      
          $bolUpdate = true;
       elseif($_GET["wpa_action"] == "edit"):
-         $wpa_id = $_GET["wpa_id"];
-      
-         if ($wpa_id > 0):
-           $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$wpa_id;
-           
-           $resultEdit = $wpdb->get_row($strSQL);
-           $strUpdateID = $_GET["wpa_id"];
-           $strSaveName = htmlspecialchars_decode($resultEdit->name, ENT_NOQUOTES);
-           $strSaveDescription = stripslashes($resultEdit->description);
-           $strSaveImageURL = $resultEdit->image_url;
-           $strSaveStartPrice = $resultEdit->start_price;
-           $strSaveReservePrice = $resultEdit->reserve_price;
-           $strSaveEndDate = get_date_from_gmt($resultEdit->date_end);
-           $strSaveImageURL1 = $resultEdit->extraimage1;
-           $strPaymentMethod = $resultEdit->paymentmethod;
-           $bolUpdate = true;
-           wpa_resetgetvars();
-         endif;
+         $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$_GET["wpa_id"];
+         $resultEdit = $wpdb->get_row($strSQL);
+         $strUpdateID = $_GET["wpa_id"];
+         $strSaveName = htmlspecialchars_decode($resultEdit->name, ENT_NOQUOTES);
+         $strSaveDescription = stripslashes($resultEdit->description);
+         $strSaveImageURL = $resultEdit->image_url;
+         $strSaveStartPrice = $resultEdit->start_price;
+         $strSaveReservePrice = $resultEdit->reserve_price;
+         $strSaveBINPrice = $resultEdit->BIN_price;
+         $strSaveEndDate = get_date_from_gmt($resultEdit->date_end);
+         $strSaveShippingPrice = $resultEdit->shipping_price;
+         $strSaveShippingFrom = htmlspecialchars_decode($resultEdit->shipping_from, ENT_NOQUOTES);
+         $strSaveShippingTo = htmlspecialchars_decode($resultEdit->shipping_to, ENT_NOQUOTES);                  
+         $strSaveImageURL1 = $resultEdit->extraimage1;
+         $strSaveImageURL2 = $resultEdit->extraimage2;
+         $strSaveImageURL3 = $resultEdit->extraimage3;
+         $strStaticPage = $resultEdit->staticpage;
+         $strPaymentMethod = $resultEdit->paymentmethod;
+         $bolUpdate = true;
+         wpa_resetgetvars();
       elseif($_GET["wpa_action"] == "relist"):
-         $wpa_id = $_GET["wpa_id"];
-      
-         if ($wpa_id > 0):
-           $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$wpa_id;
-           $resultList = $wpdb->get_row($strSQL);
-           $strSaveName = htmlspecialchars_decode($resultList->name, ENT_NOQUOTES);
-           $strSaveDescription = stripslashes($resultList->description);
-           $strSaveImageURL = $resultList->image_url;
-           $strSaveStartPrice = $resultList->start_price;
-           $strSaveReservePrice = $resultList->reserve_price;
-           $strSaveEndDate = get_date_from_gmt($resultList->date_end);
-           $strSaveImageURL1 = $resultList->extraimage1;
-           $strPaymentMethod = $resultList->paymentmethod;
-           wpa_resetgetvars();
-         endif;
+         $strSQL = "SELECT * FROM ".$table_name." WHERE id=".$_GET["wpa_id"];
+         $resultList = $wpdb->get_row($strSQL);
+         $strSaveName = htmlspecialchars_decode($resultList->name, ENT_NOQUOTES);
+         $strSaveDescription = stripslashes($resultList->description);
+         $strSaveImageURL = $resultList->image_url;
+         $strSaveStartPrice = $resultList->start_price;
+         $strSaveReservePrice = $resultList->reserve_price;
+         $strSaveBINPrice = $resultList->BIN_price;
+         $strSaveEndDate = get_date_from_gmt($resultList->date_end);
+         $strSaveShippingPrice = $resultEdit->shipping_price;
+         $strSaveShippingFrom = htmlspecialchars_decode($resultEdit->shipping_from, ENT_NOQUOTES);
+         $strSaveShippingTo = htmlspecialchars_decode($resultEdit->shipping_to, ENT_NOQUOTES);                  
+         $strSaveImageURL1 = $resultList->extraimage1;
+         $strSaveImageURL2 = $resultList->extraimage2;
+         $strSaveImageURL3 = $resultList->extraimage3;
+         $strStaticPage = $resultList->staticpage;
+         $strPaymentMethod = $resultList->paymentmethod;
+         wpa_resetgetvars();
       endif;
    endif;
 
    // Validation & Save
    if($_POST["wpa_action"] == "Add Auction"):
       if(wpa_chkfields($strSaveName, $strSaveDescription,$strSaveEndDate)==1):
-         $strMessage = "Please fill out all fields.";
+         $strMessage = __('Please fill out all fields.','WPAuctions');
       elseif(strtotime($strSaveEndDate) < strtotime(get_date_from_gmt(date('Y-m-d H:i:s')))):      
-         $strMessage = "Auction end date/time cannot be in the past: (Specified: ".$strSaveEndDate." - Current: ".get_date_from_gmt(date('Y-m-d H:i:s')).")";
-      elseif(wpa_chkPrices($strSaveStartPrice,$strSaveReservePrice,0) == 1):
-         $strMessage = "Starting Price must be numeric and less than Reserve";
+         $strMessage = __('Auction end date/time cannot be in the past','WPAuctions').": (Specified: ".$strSaveEndDate." - Current: ".get_date_from_gmt(date('Y-m-d H:i:s')).")";
+      elseif(wpa_chkPrices($strSaveStartPrice,$strSaveReservePrice,$strSaveBINPrice) == 1):
+         $strMessage = __('Starting Price must be numeric and less than Reserve and BIN Prices','WPAuctions');
       endif;
 
       if ($strMessage == ""):
          // force reserve value (not implemented),BINPrice and Shipping Price to ensure value written in InnoDB (which doesn't like Null decimals)
          $strSaveReservePrice = 0;
-         $strSaveDuration = 0;
+         $strSaveDuration = 0;  // depracated
+         $strSaveBINPrice = $strSaveBINPrice + 0;
+         $strSaveShippingPrice = $strSaveShippingPrice + 0;
+
+         // convert date/time to GMT
          
-         // convert date/time to GMT         
          $strSaveEndDate = get_gmt_from_date($strSaveEndDate);
          $GMTTime = current_time('mysql',"1");
 
-         $strSQL = "INSERT INTO $table_name (date_create,date_end,name,description,image_url,start_price,reserve_price,BIN_price,duration,shipping_price,shipping_from,shipping_to,extraimage1,extraimage2,extraimage3,staticpage,paymentmethod) VALUES('".$GMTTime."','".$strSaveEndDate."','".$strSaveName."','".$strSaveDescription."','".$strSaveImageURL."','".$strSaveStartPrice."','".$strSaveReservePrice."','0','".$strSaveDuration."','0','','','".$strSaveImageURL1."','','','','".$strPaymentMethod."')";
+         $strSQL = "INSERT INTO $table_name (date_create,date_end,name,description,image_url,start_price,reserve_price,BIN_price,duration,shipping_price,shipping_from,shipping_to,extraimage1,extraimage2,extraimage3,staticpage,paymentmethod) VALUES('".$GMTTime."','".$strSaveEndDate."','".$strSaveName."','".$strSaveDescription."','".$strSaveImageURL."','".$strSaveStartPrice."','".$strSaveReservePrice."','".$strSaveBINPrice."','".$strSaveDuration."','".$strSaveShippingPrice."','".$strSaveShippingFrom."','".$strSaveShippingTo."','".$strSaveImageURL1."','".$strSaveImageURL2."','".$strSaveImageURL3."','".$strStaticPage."','".$strPaymentMethod."')";
          
          // defensive check to make sure noone's put "|" in any field (as this breaks AJAX)
          $strSQL = str_replace( "|" , "" , $strSQL );
          
          $wpdb->query($strSQL);
-         $strMessage = "Auction added";
+         $strMessage = __('Auction added','WPAuctions');
          $strSaveName = "";
          $strSaveDescription = "";
          $strSaveImageURL = "";
          $strSaveStartPrice = "";
          $strSaveReservePrice = "";
+         $strSaveBINPrice = "";
          $strSaveDuration = "";
          $strStaticPage = "";
          $strSaveEndDate = "";
+         $strSaveShippingPrice = "";
+         $strSaveShippingFrom = "";
+         $strSaveShippingTo = "";
          $strSaveImageURL1 = "";
+         $strSaveImageURL2 = "";
+         $strSaveImageURL3 = "";
          $strPaymentMethod = "";
          
       endif;
       wpa_resetgetvars();
    elseif($_POST["wpa_action"] == "Update Auction"):
       if(wpa_chkfields($strSaveName, $strSaveDescription,$strSaveStartPrice,$strSaveDuration)==1):
-         $strMessage = "Please fill out all fields.";
+         $strMessage = __('Please fill out all fields.','WPAuctions');
       elseif(strtotime($strSaveEndDate) < strtotime(get_date_from_gmt(date('Y-m-d H:i:s')))):      
-         $strMessage = "Auction end date/time cannot be in the past: (Specified: ".$strSaveEndDate." - Current: ".get_date_from_gmt(date('Y-m-d H:i:s')).")";
-      elseif(wpa_chkPrices($strSaveStartPrice,$strSaveReservePrice,0) == 1):
-         $strMessage = "Starting Price must be numeric and less than Reserve";
-      //elseif(($othercondition) == 0):
-      //   $strMessage = "Data is not valid";
+         $strMessage = __('Auction end date/time cannot be in the past','WPAuctions').": (Specified: ".$strSaveEndDate." - Current: ".get_date_from_gmt(date('Y-m-d H:i:s')).")";
+      elseif(wpa_chkPrices($strSaveStartPrice,$strSaveReservePrice,$strSaveBINPrice) == 1):
+         $strMessage = __('Starting Price must be numeric and less than Reserve and BIN Prices','WPAuctions');
       endif;
 
       if ($strMessage == ""):
          // force reserve value (not implemented),BINPrice and Shipping Price to ensure value written in InnoDB (which doesn't like Null decimals)
          $strSaveReservePrice = 0;
-         $strSaveDuration = 0;
+         $strSaveDuration = 0;  // depracated
+         $strSaveBINPrice = $strSaveBINPrice + 0;
+         $strSaveShippingPrice = $strSaveShippingPrice + 0;
 
          // convert date/time to machine
          $strSaveEndDate = get_gmt_from_date($strSaveEndDate);
 
-         $strSQL = "UPDATE $table_name SET name='$strSaveName', description = '$strSaveDescription', image_url = '$strSaveImageURL', start_price = '$strSaveStartPrice', reserve_price = '$strSaveReservePrice', duration = '$strSaveDuration', date_end = '$strSaveEndDate', extraimage1 = '$strSaveImageURL1', paymentmethod = '$strPaymentMethod' WHERE id=" . $_POST["wpa_id"];
+         $strSQL = "UPDATE $table_name SET name='$strSaveName', description = '$strSaveDescription', image_url = '$strSaveImageURL', start_price = '$strSaveStartPrice', reserve_price = '$strSaveReservePrice', BIN_price = '$strSaveBINPrice', duration = '$strSaveDuration', shipping_price = '$strSaveShippingPrice', shipping_from = '$strSaveShippingFrom', shipping_to = '$strSaveShippingTo', date_end = '$strSaveEndDate', extraimage1 = '$strSaveImageURL1', extraimage2 = '$strSaveImageURL2', extraimage3 = '$strSaveImageURL3', staticpage = '$strStaticPage', paymentmethod = '$strPaymentMethod' WHERE id=" . $_POST["wpa_id"];
 
          // defensive check to make sure noone's put "|" in any field (as this breaks AJAX)
          $strSQL = str_replace( "|" , "" , $strSQL );
 
+         //echo $strSQL;
+         
          $strMessage = "Auction updated";
          //$bolUpdate = false;
          
@@ -1485,39 +2042,76 @@ function wp_auctions_add() {
    ?>
    
    <link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
-
+   
 	<div class="wrap wp-auctions">
+		
+		<div class="update-nag" style="margin: 0 0 20px 0 !important; padding: 5px 13px !important;">
+			<p><span style="color: #D54E21;">WP Auctions Pro features:</span> Scramble bidder names &bull; Set custom payment details &bull; Auction templates <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click to purchase</a></button></p>
+		</div>
+	
 		<?php if($strMessage != ""):?>
 			<fieldset class="options">
-				<legend>Information</legend>
+				<legend><?php _e('Information','WPAuctions'); ?></legend>
 				<p><font color=red><strong><?php print $strMessage ?></strong></font></p>
 			</fieldset>
 		<?php endif; ?>
 		
-        <div class="clearfix">
-	    	<div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Get WP Auctions Pro: <a href="../wp-admin/admin.php?page=wp-auctions-upgrade">Upgrade Plugin</a></p></div>
-		</div>
-    
-		<h2 class="details"><em>Auction Details</em></h2>
+		<h2 class="details"><em><?php _e('Auction Details','WPAuctions'); ?></em></h2>
 
-<script language="Javascript">
-
-jQuery(document).ready(function() {
-  
-  // set up datepicker
-  jQuery("#wpa_EndDate").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: 'hh:mm:ss' });
-
-});
-
-</script>
-<?php
-wp_tiny_mce( false , // true makes the editor "teeny"
-	array(
-		"editor_selector" => "wpa_description"
-	)
-);
-?>
-
+		<script language="Javascript">
+		
+		function showhide(){
+		   var dropdown = jQuery("#popup").val();   
+		   
+		   if (dropdown == "No") {
+			  jQuery("#optional_static_page").hide();
+		   } else {
+			  jQuery("#optional_static_page").show();
+		   }      
+		}
+		
+		// show/hide optional element
+		jQuery(document).ready(function() {
+		  showhide();
+		  
+		  // set up datepicker
+		  jQuery("#wpa_EndDate").datetimepicker({ dateFormat: 'yy-mm-dd', timeFormat: ' hh:mm:ss' });        
+		  
+		});
+		
+		//image handler
+		jQuery(document).ready(function($){
+		  var _custom_media = true,
+		      _orig_send_attachment = wp.media.editor.send.attachment;
+		
+		  $('.uploader_button').click(function(e) {
+		    var send_attachment_bkp = wp.media.editor.send.attachment;
+		    var button = $(this);
+		   
+		    var id = button.attr('id').replace('_button', '');
+		    _custom_media = true;
+		    wp.media.editor.send.attachment = function(props, attachment){
+		      if ( _custom_media ) {
+		      
+		       $("#"+id+"_image").html('<img src="' + attachment.url + '"  height=125 />');
+		      
+		        $("#"+id).val(attachment.id);
+		      } else {
+		        return _orig_send_attachment.apply( this, [props, attachment] );
+		      };
+		    }
+		
+		    wp.media.editor.open(button);
+		    return false;
+		  });
+		
+		  $('.add_media').on('click', function(){
+		    _custom_media = false;
+		  });
+		});
+		
+		
+		</script>
 
 		<form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=wp-auctions-add" id="editform" enctype="multipart/form-data">
 
@@ -1525,144 +2119,151 @@ wp_tiny_mce( false , // true makes the editor "teeny"
 
     <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
       <tr valign="top" class="alternate"> 
-        <th scope="row"><?php _e('Title:') ?></th> 
+        <th scope="row"><?php _e('Title:','WPAuctions') ?></th> 
         <td><input type="text" name="wpa_name" value="<?php print $strSaveName ?>" maxlength="255" size="50" /><br>
-        <?php _e('Specify the title for your auction.') ?></td> 
+        <?php _e('Specify the title for your auction.','WPAuctions') ?></td> 
       </tr>
       <tr valign="top"> 
-        <th scope="row"><?php _e('Description:') ?></th> 
-        <td><textarea rows="5" cols="50" id="wpa_description" name="wpa_description" class="wpa_description"><?php print $strSaveDescription ?></textarea>
-        <br>
-        <p><?php _e('Specify the description for your auction.') ?></p>
-		</td> 
+        <th scope="row"><?php _e('Description:','WPAuctions') ?></th> 
+        <td>
+        
+        <?php
+
+		$content = $strSaveDescription;
+		$id = 'wpa_description';
+		$settings = array(
+			'quicktags' => array(
+				'buttons' => 'em,strong,link',
+			),
+			'quicktags' => true,
+			'media_buttons' => false,
+			'tinymce' => true,
+			'height' => 100
+		);
+
+		wp_editor($content, $id, $settings);
+?>        
+        
+         <br>
+        <p><?php _e('Specify the description for your auction.','WPAuctions') ?></p>
+		<p><?php _e('You can even include a video!') ?><strong> <?php _e('Important: Video width and height MUST be width="324" height="254"','WPAuctions') ?></strong></p></td> 
       </tr>
       <tr valign="top" class="alternate"> 
-        <th scope="row"><?php _e('Image URL:','wpauctions') ?></th> 
+        <th scope="row"><?php _e('Primary Image:','WPAuctions') ?></th> 
         <td>
-        <div class="preview0" style="float:right;">
-           <img src="<?php echo wpa_resize ( $strSaveImageURL, 125 ) ?>" width="125px" height="125px" id="thumb_0">
-        </div>
-        <?php if (intval($strSaveImageURL) > 0) echo "<p>".__('Image ID:','wpauctions')." ".$strSaveImageURL."</p>"; ?>
-        <label for="upload_0"><?php _e('Choose an image from your computer:','wpauctions'); ?></label><br /><input type="file" id="upload_0" name="upload_0" /><br />
-        <input type="hidden" name="wpa_ImageURL" value="<?php echo $strSaveImageURL; ?>">
+
+		  Select an image: 			 
+		  <div id="wpa_ImageURL_image" style="float:right;">
+		  	<img src="<?php echo wpa_resize ( $strSaveImageURL, 125 ) ?>" width="125px" height="125px">
+		  </div>
+		
+		  <input type="hidden" name="wpa_ImageURL" id="wpa_ImageURL" value="<?php echo $strSaveImageURL ?>"/>
+		  <input class="uploader_button button" type="button" name="wpa_ImageURL_button" id="wpa_ImageURL_button" value="Upload" />
+
         </td> 
       </tr>
-      <tr valign="top" class="alternate"> 
-        <th scope="row"><?php _e('Start Price:') ?></th> 
+      <tr valign="top"> 
+        <th scope="row"><?php _e('Start Price:','WPAuctions') ?></th> 
         <td><input type="text" name="wpa_StartPrice" value="<?php print $strSaveStartPrice ?>" maxlength="255" size="10" /><br>
-        <?php _e('Specify the starting price for your auction.') ?>
-        <?php if (!empty($customincrement)) { echo '<br>'; _e('Remember that you have configured bidding in increments of '); echo $customincrement; } ?>
+        <?php _e('Specify the starting price for your auction. Leave empty (or 0) for Fixed Price BIN','WPAuctions') ?>
+        <?php if (!empty($customincrement)) { echo '<br>'; _e('Remember that you have configured bidding in increments of ','WPAuctions'); echo $customincrement; } ?>
         </td> 
       </tr>
-      <tr valign="top"> 
-        <th scope="row"><?php _e('End Date:') ?></th> 
+      <tr valign="top" class="alternate"> 
+        <th scope="row"><?php _e('End Date:','WPAuctions') ?></th> 
         <td><input type="text" name="wpa_EndDate" id="wpa_EndDate" value="<?php print $strSaveEndDate ?>" maxlength="20" size="20" /><br>
-        <?php _e('When would you like this auction to end? Note that blog time is: '); echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></td> 
+        <?php _e('When would you like this auction to end? Note that blog time is: ','WPAuctions'); echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></td> 
       </tr>
-      <tr valign="top" class="alternate" style="border-bottom: 0;"> 
-        <th scope="row" style="border-bottom: 0;"><?php _e('Payment Method:') ?></th> 
-        <td>
-           <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="paypal" <?php if ($strPaymentMethod=="paypal") echo "CHECKED";?> <?php if ($paypal=="") echo "DISABLED";?>><label for="wpa_PaymentMethod">PayPal<br>
+      <tr valign="top"> 
+        <th scope="row" style="border-bottom: 0;"><?php _e('Payment Method:','WPAuctions') ?></th> 
+        <td style="border-bottom: 0;">
+           <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="paypal" <?php if ($strPaymentMethod=="paypal") echo "CHECKED";?> <?php if ($paypal=="") echo "DISABLED";?>>PayPal<br>
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="bankdetails" <?php if ($strPaymentMethod=="bankdetails") echo "CHECKED";?> <?php if ($bankdetails=="") echo "DISABLED";?>>Wire Transfer<br>        
            <input name="wpa_PaymentMethod" id="wpa-radio" type="radio" value="mailingaddress" <?php if ($strPaymentMethod=="mailingaddress") echo "CHECKED";?> <?php if ($mailingaddress=="") echo "DISABLED";?>>Cheque or Money Order<br>        
-        <?php _e('Specify the payment method from this auction. You can only select one. (Only options you filled on the Configuration screen are available)') ?></td> 
+        <?php _e('Specify the payment method from this auction (Only options you filled on the Configuration screen are available)','WPAuctions') ?></td> 
       </tr>
      </table>
 
-		<?php if($bolUpdate == true): ?>
-			<div class="buttons add-auction"><input type="hidden" name="wpa_id" value="<?php echo $strUpdateID ?>"><input type="hidden" name="wpa_action" value="Update Auction">
-			<input type="submit" name="wpa_doit" value="Update Auction" class="button"></div>
-		<?php else: ?>
-			<div class="buttons add-auction"><input type="hidden" name="wpa_action" value="Add Auction"><input type="submit" name="wpa_doit" value="Add Auction &raquo;" class="button" ></div>
-		<?php endif; ?>
-
-
-			</form>
-			<br />
-		<table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="border-top: 1px solid #ccc"> 
-		<tr valign="top"> 
-        <th scope="row" class='row-title' style="border-bottom: 0; background: #fbfbfb;"><?php _e('Pro features') ?></th> 
-        <td class='desc' style="border-bottom: 0; padding: 0;">
-			<div class="wpa-upgrade-part">
-			<p><?php _e('Get the following features by upgrading to Pro:') ?></p>
-			<ul>
-				<li><?php _e('Create auction templates') ?></li>
-				<li><?php _e('WYSIWYG editor') ?></li>
-				<li><?php _e('Auction category') ?></li>
-				<li><?php _e('Assign Post/Page to auction (to embed auctions in a Post/Page)') ?></li>
-				<li><?php _e('Shipping options') ?></li>
-				<li><?php _e('Set a Buy it Now price') ?></li>
-				<li><?php _e('Set a reserve price') ?></li>
-				<li><?php _e('Start auctions at a later date') ?></li>
-				<li><?php _e('Custom bid increment') ?></li>
-				<li><?php _e('Add more images per auction') ?></li>
-				<li><?php _e('Manage bidders') ?></li>
-				<li><?php _e('Widget color settings') ?></li>
-				<li><?php _e('Email settings') ?></li>
-				<li><?php _e('...and more!') ?></li>
-			</ul>
-			<p class="downloadupgrade upgrade-part"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle" title="Pay securley via PayPal using your balance or credit card">Go Pro*<br />Download Instantly, Only $39!</a></p>
-			<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
-			</div>
-		</td> 
+  <!-- W5 - Test Shipping before releasing
+   <h2 class="shipping"><em><?php _e('Shipping Information','WPAuctions') ?></em></h2>
+    <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
+      <tr valign="top" class="alternate"> 
+        <th scope="row"><?php _e('Shipping Price:','WPAuctions') ?></th> 
+        <td><input type="text" name="wpa_ShippingPrice" value="<?php print $strSaveShippingPrice ?>" maxlength="255" size="10" /><br>
+        <?php _e('How much would you like to charge for shipping?','WPAuctions') ?></td> 
       </tr>
-     </table>
-	 
-	   <br />
-  <br />
-  <br />
-  <p>*NOTE: Forum support is not included with the Lite, $39 or $49 Instant Download option. However, you can upgrade to the Pro Subscription package anytime (for a discounted price) and get access to forum support and free plugin updates for 1 year.</p>
+      <tr valign="top"> 
+        <th scope="row"><?php _e('Shipping To:','WPAuctions') ?></th> 
+        <td><input type="text" name="wpa_ShippingTo" value="<?php print $strSaveShippingTo ?>" maxlength="255" size="50" /><br>
+        <?php _e('Where are you prepared to ship this item to?','WPAuctions') ?></td> 
+      </tr>
+      <tr valign="top" class="alternate"> 
+        <th scope="row" style="border-bottom: 0;"><?php _e('Shipping From:','WPAuctions') ?></th> 
+        <td style="border-bottom: 0;"><input type="text" name="wpa_ShippingFrom" value="<?php print $strSaveShippingFrom ?>" maxlength="255" size="50" /><br>
+        <?php _e('Where are you shipping this item from?','WPAuctions') ?></td> 
+      </tr>
+   </table>
+   -->
+   
+  <!-- <h2 class="other-settings"><em><?php _e('Optional Settings','WPAuctions') ?></em></h2>
+    <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
+        W6 - Test BIN pricing before releasing
+       <tr valign="top" class="alternate"> 
+        <th scope="row"><?php _e('Buy It Now Price:','WPAuctions') ?></th> 
+        <td><input type="text" name="wpa_BINPrice" value="<?php print $strSaveBINPrice ?>" maxlength="255" size="10" />
+        <?php _e('Specify the "Buy It Now" price for your auction.','WPAuctions') ?></td> 
+      </tr>
+      -->
+      <!-- W7 - Test Extra image before releasing
+      <tr valign="top"> 
+        <th scope="row"><?php _e('Extra Image:','WPAuctions') ?></th> 
+        <td>
+
+		  Select an image: 			 
+		  <div id="wpa_ImageURL1_image" style="float:right;">
+		  	<img src="<?php echo wpa_resize ( $strSaveImageURL1, 125 ) ?>" width="125px" height="125px">
+		  </div>
+		
+		  <input type="hidden" name="wpa_ImageURL1" id="wpa_ImageURL1"  value="<?php echo $strSaveImageURL1 ?>" />
+		  <input class="uploader_button button" type="button" name="wpa_ImageURL1_button" id="wpa_ImageURL1_button" value="Upload" />
+
+        </td>
+      </tr>
+      -->
+      <!-- W8 - Test in-post auctions before releasing
+      <tr valign="top" class="alternate"> 
+        <th scope="row" style="border-bottom: 0;">
+        <?php _e('Show auction in AJAX Popup?:','WPAuctions') ?></th> 
+        <td style="border-bottom: 0;">        
+         <select id="popup" name="popup" onchange="showhide()">
+                <option value="No" <?php if ($strStaticPage=='') echo 'selected'; ?>><?php _e('Yes','WPAuctions') ?></option>
+                <option value="Yes" <?php if ($strStaticPage!='') echo 'selected'; ?>><?php _e('No, show auction in a post','WPAuctions') ?></option>
+         </select>
+        <br>
+        <?php _e('If you don\'t want to use the popup, you can direct the auction to a <a href="edit.php">Post</a> or <a href="edit.php?post_type=page">Page</a> (you\'ll need to add the Auction shortcode to the page)','WPAuctions') ?></td> 
+      </tr>
+      <tr valign="top" id="optional_static_page"> 
+        <th scope="row" style="border-bottom: 0;">
+        <?php _e('URL for Static Post/Page:','WPAuctions') ?> </th> 
+        <td style="border-bottom: 0;"><input type="text" name="wpa_StaticPage" value="<?php print $strStaticPage ?>" maxlength="255" size="50" /><br>
+        <?php _e('Please specify the Post or Page URL where this auction will be inserted (you will need to insert the auction on the Post or Page manually).','WPAuctions') ?></td> 
+      </tr>
+      -->
+   	</table>
+		
+	<?php if($bolUpdate == true): ?>
+		<div class="buttons add-auction"><input type="hidden" name="wpa_id" value="<?php echo $strUpdateID ?>"><input type="hidden" name="wpa_action" value="Update Auction">
+		<input type="submit" name="wpa_doit" value="Update Auction" class="button"></div>
+	<?php else: ?>
+		<div class="buttons add-auction"><input type="hidden" name="wpa_action" value="Add Auction"><input type="submit" name="wpa_doit" value="Add Auction &raquo;" class="button" ></div>
+	<?php endif; ?>
+
+	</form>
 		
 	</div>
 <?php
 }
 
-
-function wp_auctions_upgrade() {
-?>
-
-<link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
-
-<div class="wrap wp-auctions wp-auctions-upgrade"> 
-	
-    <div class="clearfix">
-		<h2>Get many more features, upgrade to Pro today!</h2>
-		
-			<div class="wpa-intro wpa-plugins">
-				<p>You are using the Lite version</p>
-				
-				<div class="downloadplugin">
-					<h3>Pro, Latest Version Instant Download</h3>
-					<p class="download-lead">After you buy, please follow these steps.</p>
-						<ul>
-							<li>Pay and download latest Pro version instantly.</li>
-							<li>De-activate and delete the Lite version.</li>
-							<li>Upload the wp-auctions ZIP file.</li>
-							<li>Add Auctions!</li>
-							<li>Make Money!</li>
-						</ul>
-						<p class="downloadupgrade"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle"><big>Only <del style="color: yellow;">$49</del> <span style="font-size: 26px;">$39</span></big><br />Click for Instant Download</a></p>
-						<p><strong style="color: #D54E21; text-decoration: underline;">BONUS:</strong> Free premium WordPress theme with purchase, worth $37! <a href="http://test.weborithm.com/stylus/" target="_blank">Preview Theme</a></p>
-				</div>
-				
-				<div class="downloadthemes">
-					<h3>ThemeSpace - WordPress Themes, HTML Templates</h3>
-					<p class="download-lead">For only $35, get instant access to a growing library of all our WordPress themes, HTML templates and more!</p>
-						<ul>
-							<li>Access to ALL current and future themes for 1 year.</li>
-							<li>Professional design and code.</li>
-							<li>Unlimited domain use.</li>
-							<li>Easily customizable.</li>
-							<li>Free updates.</li>
-						</ul>
-						<p class="downloadupgrade"><a href="http://www.weborithm.com/products/signup.php?hide_paysys=free">Join ThemeSpace</a></p>
-				</div>
-				<div style="clear:both"></div>
-			</div>
-	</div>
-</div>    
-<?php
-}
 
 function wp_auctions_manage() {
 
@@ -1685,6 +2286,9 @@ function wp_auctions_manage() {
          // Step 1 - Delete Last bid
          $strSQL = "DELETE FROM $bid_table_name WHERE id=" . $intBidID;
          $wpdb->query($strSQL);
+
+         // flush cache .. otherwise we'll just pick up an empty record on the next pass
+         $wpdb->flush();
 
          // Step 2 - Assess highest bid
 		     $strSQL = "SELECT * FROM $bid_table_name WHERE auction_id=".$intAuctionID." ORDER BY current_bid_price DESC LIMIT 1";
@@ -1722,20 +2326,16 @@ function wp_auctions_manage() {
    $nonce = wp_create_nonce ('WPA-nonce')
 
 ?>
+	<link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
 
-<link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
-
-<div class="wrap wp-auctions"> 
+	<div class="wrap wp-auctions">
+  		
+	<div class="wpa-time"><?php _e('Your WordPress Time:','WPAuctions'); ?> <?php echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></div>
 	
-    <div class="clearfix">
-    <div class="wpa-upgrade"><p class="wpa-notice" style="margin: 0 !important;">Get WP Auctions Pro: <a href="../wp-admin/admin.php?page=wp-auctions-upgrade">Upgrade Plugin</a></p></div>
-	<div class="wpa-time"><p>Wordpress Time: <?php echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></p></div>
-	</div>
-    
-	<h2 class="manage"><em><?php _e('Manage Auctions') ?></em></h2>
+	<h2 class="manage"><em><?php _e('Manage Auctions','WPAuctions'); ?></em></h2>
 	
 	<fieldset class="options">
-	<legend>Current Auctions</legend>
+	<legend><?php _e('Current Auctions','WPAuctions'); ?></legend>
 	<?php
 		$table_name = $wpdb->prefix . "wpa_auctions";
 		$strSQL = "SELECT id, date_create, date_end, name, BIN_price, image_url, current_price FROM $table_name WHERE '".current_time('mysql',"1")."' < date_end ORDER BY date_end DESC";
@@ -1746,13 +2346,13 @@ function wp_auctions_manage() {
 	<table class="widefat">
        <thead>
 		<tr>
-			<th>ID</th>
-			<th>Name</th>
-			<th>Created/Ending</th>
-			<th>Bids</th>
-			<th>Current Price</th>
-			<th>Thumbnail</th>
-			<th>Actions</th>
+			<th><?php _e('ID','WPAuctions'); ?></th>
+			<th><?php _e('Name','WPAuctions'); ?></th>
+			<th><?php _e('Created/Ending','WPAuctions'); ?></th>
+			<th><?php _e('Bids','WPAuctions'); ?></th>
+			<th><?php _e('Current Price','WPAuctions'); ?></th>
+			<th><?php _e('Thumbnail','WPAuctions'); ?></th>
+			<th><?php _e('Actions','WPAuctions'); ?></th>
 		</tr>
        </thead>
 	<?php if (is_array($rows)): ?>
@@ -1765,20 +2365,21 @@ function wp_auctions_manage() {
 			<tr<?php if($style!=" "): ?> class="<?php echo $style ?>"<?php endif; ?>>
 				<td><?php print $row->id; ?></td>
 				<td><?php print $row->name; ?> </td>
-				<td><b>Created:</b><br><?php print get_date_from_gmt($row->date_create); ?> <br>
-				    <b>Ending:</b><br><?php print get_date_from_gmt($row->date_end); ?></td>
+				<td><b><?php _e('Created:','WPAuctions'); ?></b><br><?php print get_date_from_gmt($row->date_create); ?> <br>
+				    <b><?php _e('Ending:','WPAuctions'); ?></b><br><?php print get_date_from_gmt($row->date_end); ?></td>
 				<td align="center">
 <?php
 
   $bids=0;
 					// prepare result
-	$strSQL = "SELECT id, bidder_name, bidder_email , bidder_url, date,current_bid_price FROM $bid_table_name WHERE auction_id=".$row->id." ORDER BY current_bid_price";
+	$strSQL = "SELECT id, bidder_name, bidder_email , bidder_url, date,current_bid_price, bid_type FROM $bid_table_name WHERE auction_id=".$row->id." ORDER BY current_bid_price, bid_type DESC";
 	$bid_rows = $wpdb->get_results ($strSQL);
 			
 	foreach ($bid_rows as $bid_row) {
 	   echo ('<a href="mailto:'.$bid_row->bidder_email.'">');
 	   echo ($bid_row->bidder_name);
 	   echo ('</a> ('.$bid_row->bidder_url.') - '.$currencysymbol.$bid_row->current_bid_price);
+	   echo ('['.$bid_row->bid_type.']');
 	   echo ('<br>');
 	   $bids++;
 	}		
@@ -1793,11 +2394,11 @@ function wp_auctions_manage() {
 ?>			
           </td>
 				<td><?php if ( $row->current_price > 0 ) { echo $currencysymbol.$row->current_price; } else { echo "No bids"; }?><?php if ($row->BIN_price>0) print "<br>BIN Price: ".$row->BIN_price ?></td>
-				<td style="vertical-align: middle"><img src="<?php if ($row->image_url != "") { print wpa_resize($row->image_url,150); } ?>" width="150" height="150"></td>
+				<td style="text-align: center;"><img src="<?php if ($row->image_url != "") { print wpa_resize($row->image_url,150); } ?>" width="100" height="100"></td>
 				<td>
-            <a href="javascript:if(confirm('Are you sure you want to end auction \'<?php print addslashes(str_replace ( '"' , "'" , $row->name)); ?>\'?')==true) location.href='admin.php?page=wp-auctions-manage&amp;wpa_action=terminate&amp;wpa_id=<?php echo $row->id ?>&amp;_wpnonce=<?php echo $nonce ?>'" class="edit">End Auction</a><br/><br/>
-				    <a href="admin.php?page=wp-auctions-add&amp;wpa_action=edit&amp;wpa_id=<?php print $row->id ?>&amp;_wpnonce=<?php echo $nonce ?>" class="edit">Edit</a><br/><br/>
-            <a href="javascript:if(confirm('Delete auction \'<?php print addslashes(str_replace ( '"' , "'" , $row->name)); ?>\'? (This will erase all details on bids, winners and the auction)')==true) location.href='admin.php?page=wp-auctions-manage&amp;wpa_action=delete&amp;wpa_id=<?php echo $row->id ?>&amp;_wpnonce=<?php echo $nonce; ?>'" class="edit">Delete</a>
+            <a href="javascript:if(confirm('<?php _e('Are you sure you want to end auction','WPAuctions'); ?> \'<?php print addslashes(str_replace ( '"' , "'" , $row->name)); ?>\'?')==true) location.href='admin.php?page=wp-auctions-manage&amp;wpa_action=terminate&amp;wpa_id=<?php echo $row->id ?>&amp;_wpnonce=<?php echo $nonce ?>'" class="edit"><?php _e('End Auction','WPAuctions'); ?></a><br/><br/>
+				    <a href="admin.php?page=wp-auctions-add&amp;wpa_action=edit&amp;wpa_id=<?php print $row->id ?>&amp;_wpnonce=<?php echo $nonce ?>" class="edit"><?php _e('Edit','WPAuctions'); ?></a><br/><br/>
+            <a href="javascript:if(confirm('<?php _e('Delete auction','WPAuctions'); ?> \'<?php print addslashes(str_replace ( '"' , "'" , $row->name)); ?>\'? (This will erase all details on bids, winners and the auction)')==true) location.href='admin.php?page=wp-auctions-manage&amp;wpa_action=delete&amp;wpa_id=<?php echo $row->id ?>&amp;_wpnonce=<?php echo $nonce; ?>'" class="edit"><?php _e('Delete','WPAuctions'); ?></a>
         </td>
 			</tr>
 			<?php
@@ -1809,29 +2410,29 @@ function wp_auctions_manage() {
 			?>
 		<?php } ?>
 	<?php else: ?>
-		<tr><td colspan="5">No auctions defined</td></tr>
+		<tr><td colspan="5"><?php _e('No auctions defined','WPAuctions'); ?></td></tr>
 	<?php endif; ?>
 	</table>
 	</fieldset>
 
 	<fieldset class="options">
-	<legend>Closed Auctions</legend>
+	<legend><?php _e('Closed Auctions','WPAuctions'); ?></legend>
 	<?php
 		$table_name = $wpdb->prefix . "wpa_auctions";
 		$strSQL = "SELECT id, date_create, date_end, name, image_url, current_price FROM $table_name WHERE '".current_time('mysql',"1")."' >= date_end ORDER BY date_end";
 		$rows = $wpdb->get_results ($strSQL);
 
 	?>
-	<table class="widefat">
+	<table class="widefat" style="margin: 0 0 10px;">
        <thead>
 		<tr>
-			<th>ID</th>
-			<th>Name</th>
-			<th>Created/Ended</th>
-			<th>Bids</th>
-			<th>Final Price</th>
-			<th>Thumbnail</th>
-			<th>Actions</th>
+			<th><?php _e('ID','WPAuctions'); ?></th>
+			<th><?php _e('Name','WPAuctions'); ?></th>
+			<th><?php _e('Created/Ending','WPAuctions'); ?></th>
+			<th><?php _e('Bids','WPAuctions'); ?></th>
+			<th><?php _e('Final Price','WPAuctions'); ?></th>
+			<th><?php _e('Thumbnail','WPAuctions'); ?></th>
+			<th><?php _e('Actions','WPAuctions'); ?></th>
 		</tr>
        </thead>
 	<?php if (is_array($rows)): ?>
@@ -1844,29 +2445,30 @@ function wp_auctions_manage() {
 			<tr<?php if($style!=" "): ?> class="<?php echo $style ?>"<?php endif; ?>>
 				<td><?php print $row->id; ?></td>
 				<td><?php print $row->name; ?> </td>
-				<td><b>Started:</b><br> <?php print get_date_from_gmt($row->date_create); ?> <br>
-				    <b>Ended:</b><br> <?php print get_date_from_gmt($row->date_end); ?></td>
+				<td><b><?php _e('Started:','WPAuctions'); ?></b><br> <?php print get_date_from_gmt($row->date_create); ?> <br>
+				    <b><?php _e('Ended:','WPAuctions'); ?></b><br> <?php print get_date_from_gmt($row->date_end); ?></td>
 				<td>
 				
 <?php
 					// prepare result
-	$strSQL = "SELECT bidder_name, bidder_email ,date,current_bid_price FROM $bid_table_name WHERE auction_id=".$row->id." ORDER BY current_bid_price DESC";
+	$strSQL = "SELECT bidder_name, bidder_email ,date,current_bid_price, bid_type FROM $bid_table_name WHERE auction_id=".$row->id." ORDER BY current_bid_price DESC";
 	$bid_rows = $wpdb->get_results ($strSQL);
 			
 	foreach ($bid_rows as $bid_row) {
 	   echo ('<a href="mailto:'.$bid_row->bidder_email.'">');
 	   echo ($bid_row->bidder_name);
 	   echo ('</a> - '.$currencysymbol.$bid_row->current_bid_price);
+	   echo ('['.$bid_row->bid_type.']');	   
 	   echo ('<br>');
 	}		
 			
 ?>
 				</td>
 				<td><?php print $currencysymbol.$row->current_price; ?> </td>
-				<td><img src="<?php if ($row->image_url != "") { print wpa_resize($row->image_url,150); } ?>" width="150" height="1fM50"></td>
+				<td style="text-align: center;"><img src="<?php if ($row->image_url != "") { print wpa_resize($row->image_url,100); } ?>" width="100" height="100"></td>
 				<td>
-				    <a href="admin.php?page=wp-auctions-add&amp;wpa_action=relist&amp;wpa_id=<?php print $row->id ?>&amp;_wpnonce=<?php echo $nonce ?>" class="edit">Relist</a><br/><br/>
-            <a href="javascript:if(confirm('Delete auction \'<?php print addslashes(str_replace ( '"' , "'" , $row->name)); ?>\'? (This will erase all details on bids, winners and the auction)')==true) location.href='admin.php?page=wp-auctions-manage&amp;wpa_action=delete&amp;wpa_id=<?php echo $row->id; ?>&amp;_wpnonce=<?php echo $nonce ?>'" class="edit">Delete</a>
+				    <a href="admin.php?page=wp-auctions-add&amp;wpa_action=relist&amp;wpa_id=<?php print $row->id ?>&amp;_wpnonce=<?php echo $nonce ?>" class="edit"><?php _e('Relist','WPAuctions'); ?></a><br/><br/>
+            <a href="javascript:if(confirm('Delete auction \'<?php print addslashes(str_replace ( '"' , "'" , $row->name)); ?>\'? (This will erase all details on bids, winners and the auction)')==true) location.href='admin.php?page=wp-auctions-manage&amp;wpa_action=delete&amp;wpa_id=<?php echo $row->id; ?>&amp;_wpnonce=<?php echo $nonce ?>'" class="edit"><?php _e('Delete','WPAuctions'); ?></a>
         </td>
 			</tr>
 			<?php
@@ -1878,7 +2480,7 @@ function wp_auctions_manage() {
 			?>
 		<?php } ?>
 	<?php else: ?>
-		<tr><td colspan="5">No auctions defined</td></tr>
+		<tr><td colspan="5"><?php _e('No auctions defined','WPAuctions'); ?></td></tr>
 	<?php endif; ?>
 	</table>
 	</fieldset>
@@ -1888,6 +2490,136 @@ function wp_auctions_manage() {
 <?php   
 }
 
+function wp_auctions_email() {
+
+   // Note: Options for this plugin include a "Title" setting which is only used by the widget
+   $options = get_option('wp_auctions_email');
+	
+   //set initial values if none exist
+   if ( !is_array($options) ) {
+      $options = array( 'windowsmail'=>'', 'outbid'=>'', 'win'=>'' );
+   }
+
+   if ( $_POST['wp_auctions-submit'] ) {
+
+      // security check
+      check_admin_referer( 'WPA-nonce');
+
+      $options['windowsmail'] = strip_tags(stripslashes($_POST['wpa-windowsmail']));
+      $options['outbid'] = strip_tags(stripslashes($_POST['wpa-outbid']));
+      $options['win'] = strip_tags(stripslashes($_POST['wpa-win']));
+
+      update_option('wp_auctions_email', $options);
+   }
+
+   $txtWindowsMail = $options['windowsmail'];
+   $txtOutBid = htmlspecialchars($options['outbid'], ENT_QUOTES);
+   $txtWin = htmlspecialchars($options['win'], ENT_QUOTES);
+	
+?>
+
+<link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
+
+<div class="wrap wp-auctions">
+    
+  <form name="form1" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>?page=wp-auctions-email">
+  
+  <?php wp_nonce_field('WPA-nonce'); ?>
+
+  <h2 class="settings emailsettings"><em><?php _e('Email Settings','WPAuctions') ?></em></h2>
+
+    <table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="margin-top: 1em;"> 
+      <tr valign="top" class="alternate"> 
+        <th scope="row" class='row-title' style="border-bottom: 0;"><?php _e('Mail Server:','WPAuctions'); ?></th> 
+        <td style="border-bottom: 0;">
+         <select id="wpa-windowsmail" name="wpa-windowsmail">
+                <option value="" <?php if ($txtWindowsMail=='') echo 'selected'; ?>><?php _e('Standard','WPAuctions'); ?></option>
+                <option value="Windows" <?php if ($txtWindowsMail !='') echo 'selected'; ?>><?php _e('Implement Windows Fix','WPAuctions'); ?></option>
+         </select>
+        <br />
+        <p><?php _e('If you are using the plugin on a Windows Server, you may need to change this setting to implement a change for Windows. <a href="http://www.u-g-h.com/2007/04/27/phpmailer-issue-on-iis/">More info</a>','WPAuctions') ?></p></td> 
+      </tr> 
+    </table>
+
+  <h2 class="settings"><em><?php _e('Custom Message Settings','WPAuctions') ?></em></h2>
+
+    <table width="100%" cellspacing="2" cellpadding="5" class="widefat" style="margin-top: 1em;"> 
+     <tr valign="top" class="alternate">
+     <th scope="row" class='row-title'><?php _e('Message Options:','WPAuctions'); ?></th> 
+     <td>
+     <p><strong>{site_name}</strong> - <?php _e('The name of your auction site','WPAuctions'); ?></p>
+     <p><strong>{auction_name}</strong> - <?php _e('The name of the auction this message relates to','WPAuctions'); ?></p>
+     <p><strong>{auction_link}</strong> - <?php _e('Link back to the auction about which the email is being sent','WPAuctions'); ?></p>
+     <p><strong>{current_price}</strong> - <?php _e('Current price of the auction about which the email is being sent','WPAuctions'); ?></p>
+     <p><strong>{payment_details}</strong> - <?php _e('Details of how the payment is to be made','WPAuctions'); ?></p>
+     <p><strong>{contact_email}</strong> - <?php _e('Your contact email address','WPAuctions'); ?></p>
+     </td>
+	</tr>
+      <tr valign="top" class="alternate"> 
+        <th scope="row" class='row-title'><?php _e('Auction outbid notice:','WPAuctions') ?></th> 
+        <td>
+        
+        <?php
+
+		$content = $txtOutBid;
+		$id = 'wpa-outbid';
+		$settings = array(
+			'quicktags' => array(
+				'buttons' => 'em,strong,link',
+			),
+			'quicktags' => true,
+			'media_buttons' => false,
+			'tinymce' => true,
+			'height' => 100
+		);
+
+		wp_editor($content, $id, $settings);
+		
+		?>        
+ 
+        <br />
+        <p><?php _e('If you want a custom message to use when a bidder is outbid, please enter it here. You can use the keywords:<br><strong>{site_name}, {auction_name}, {auction_link}, {current_price}','WPAuctions') ?></p></td> 
+      </tr> 
+      <tr valign="top"> 
+        <th scope="row" class='row-title' style="border-bottom: 0;"><?php _e('Auction win notice:','WPAuctions') ?></th> 
+        <td style="border-bottom: 0;">
+        
+        <?php
+
+		$content = $txtWin;
+		$id = 'wpa-win';
+		$settings = array(
+			'quicktags' => array(
+				'buttons' => 'em,strong,link',
+			),
+			'quicktags' => true,
+			'media_buttons' => false,
+			'tinymce' => true,
+			'height' => 100
+		);
+
+		wp_editor($content, $id, $settings);
+		
+		?>        
+ 
+        <br />
+        <p><?php _e('If you want a custom message to use when a bidder wins an auction, please enter it here. You can use the keywords:<br><strong>{site_name}, {auction_name}, {auction_link}, {current_price} {payment_details} {contact_email}','WPAuctions') ?></p></td> 
+      </tr> 
+    </table>
+
+
+	<input type="hidden" id="wp_auctions-submit" name="wp_auctions-submit" value="1" />
+
+    <p>
+      <input type="submit" name="Submit" class="button add-auction" value="<?php _e('Update Options','WPAuctions'); ?> &raquo;" />
+    </p>
+  </form> 
+</div>
+
+<?php
+
+
+}
 
 
 // style header - Load CSS and LightBox Javascript
@@ -1899,11 +2631,11 @@ function wp_auctions_header() {
 
    echo "\n" . '<!-- wp_auction start -->' . "\n";
    echo '<link type="text/css" rel="stylesheet" href="' . get_bloginfo('wpurl') . '/wp-includes/js/thickbox/thickbox.css" />' . "\n\n";
-   echo '<link type="text/css" rel="stylesheet" href="' . get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'styles/'.$style.'/color.css" />' . "\n";  
+   echo '<link type="text/css" rel="stylesheet" href="' . WPA_PLUGIN_STYLE . '/'.$style.'/color.css" />' . "\n\n";
    if (function_exists('wp_enqueue_script')) {
       wp_enqueue_script('jquery');
       wp_enqueue_script('thickbox');
-      wp_enqueue_script('wp_auction_AJAX', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . JSCRIPT_NAME );
+      wp_enqueue_script('wp_auction_AJAX', WPA_PLUGIN_URL . '/wp_auctionsjs.php' );
 
       wp_print_scripts();
       
@@ -1919,15 +2651,72 @@ function wp_auctions_header() {
 
 }
 
+// add shortcode support to allow user to insert auctions in posts or pages
+add_shortcode('wpauction', 'insertAuction');
+
+function insertAuction ( $attr) {
+   extract(shortcode_atts(array(
+      'id' => 1
+   ), $attr));
+
+   $content = dopost_wp_auctions($id);
+   
+   return $content;
+}
+
+function insertAuctionSelector() {
+
+   global $wpdb;
+	 $table_name = $wpdb->prefix . "wpa_auctions";
+	 $strSQL = "SELECT id, name, image_url FROM $table_name WHERE '".current_time('mysql',"1")."' < date_end ORDER BY date_end DESC";
+	 $rows = $wpdb->get_results ($strSQL);
+
+?>
+   <table class="form-table">
+      <tr valign="top">
+         <th scope="row"><label for="WPA_Admin_id"><?php _e('Select an auction','WPAuctions'); ?></label></th>
+         <td>
+            
+	<?php if (is_array($rows)): ?>
+        <select name="WPA_Admin[id]" id="WPA_Admin_id" style="width:95%;">
+		       <?php foreach ($rows as $row) { 
+		          echo '<option value="'.$row->id.'">'.$row->name.'</option>';
+           } ?>
+         </select> 
+         <br>(<?php _e('You should only have a single auction on each page or post','WPAuctions'); ?>)    
+  <?php else:
+          echo _e('Please create some auctions first','WPAuctions'); 
+         endif; 
+  ?>          
+            
+         </td>
+      </tr>
+   </table>
+   <p style="text-align: right;">
+      <input type="button" class="button" onclick="return WPA_Setup.sendToEditor(this.form);" value="Insert Auction" />
+   </p>
+<?php
+}
+
+function wpa_adminWPHead() {
+   if ($GLOBALS['editing']) {
+      wp_enqueue_script('WPA_Admin', WPA_PLUGIN_URL . '/wp_aAdminjs.php', array('jquery'), '1.0.0' );
+   }
+}
 
 function wpa_admin_scripts() {
-   wp_enqueue_script( 'jquery-ui-datetimepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker','jquery-ui-slider') , 0.1, true );
+
+	wp_enqueue_script( 'jquery-ui-datetimepicker', WPA_PLUGIN_URL . '/js/jquery-ui-timepicker-addon.js', array('jquery-ui-datepicker','jquery-ui-slider') , 0.1, true );
+   wp_enqueue_media();
+   wp_enqueue_script( 'custom-header' );
+   
 }
 
 function wpa_admin_styles() {
-   wp_enqueue_style( 'jquery-ui-datetimepicker', get_bloginfo('wpurl') . PLUGIN_EXTERNAL_PATH . 'js/timepicker.custom.css' );
-   wp_enqueue_style( 'jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css');
-   
+
+	wp_enqueue_style('jquery-style', 'http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/smoothness/jquery-ui.css');
+	wp_enqueue_style( 'jquery-ui-datetimepicker', WPA_PLUGIN_URL . '/js/timepicker.custom.css' );
+
 }
 
 if (isset($_GET['page']) && $_GET['page'] == 'wp-auctions-add') {
@@ -1939,22 +2728,32 @@ if (isset($_GET['page']) && $_GET['page'] == 'wp-auctions-add') {
 function wp_auctions_adminmenu(){
 
    // add new top level menu page
-   add_menu_page ('WP Auctions', 'WP Auctions' , 'manage_options' , PLUGIN_PATH , 'wp_auctions_welcome' );
+   add_menu_page ('WP Auctions', 'WP Auctions' , 7 , WPA_PLUGIN_NAME , 'wp_auctions_welcome', WPA_PLUGIN_REQUISITES."/wpa.png" );
 
    // add submenus
-   add_submenu_page (PLUGIN_PATH, 'Manage', 'Manage', 'manage_options' , 'wp-auctions-manage', 'wp_auctions_manage' );
-   add_submenu_page (PLUGIN_PATH, 'Add', 'Add', 'manage_options' , 'wp-auctions-add', 'wp_auctions_add' );
-   add_submenu_page (PLUGIN_PATH, 'Upgrade', 'Upgrade Instructions', 'manage_options' , 'wp-auctions-upgrade', 'wp_auctions_upgrade' );
+   add_submenu_page (WPA_PLUGIN_NAME, __('Manage','WPAuctions'), __('Manage','WPAuctions'), 7 , 'wp-auctions-manage', 'wp_auctions_manage' );
+   add_submenu_page (WPA_PLUGIN_NAME, __('Add','WPAuctions'), __('Add','WPAuctions'), 7 , 'wp-auctions-add', 'wp_auctions_add' );
+   add_submenu_page (WPA_PLUGIN_NAME, __('Email Settings','WPAuctions'), __('Email Settings','WPAuctions'), 7 , 'wp-auctions-email', 'wp_auctions_email' );
+
+   // W8 - this still needs to be tested
+   //add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'post', 'normal', 'high');
+   //add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'page', 'normal', 'high');   
+
 }
 
-function wpa_init() 
+function wpa_init()
 {
-  // define thumbnail sizes
-  add_image_size( 'WPA_thumbnail', 50, 50, true );
-  add_image_size( 'WPA_widget', 125, 125, true );
-  add_image_size( 'WPA_page', 150, 150, true );
-  add_image_size( 'WPA_popup', 250, 250, true );
+
+	// define thumbnail sizes
+	add_image_size( 'WPA_thumbnail', 50, 50, true );
+	add_image_size( 'WPA_widget', 125, 125, true );
+	add_image_size( 'WPA_page', 100, 100, true );
+	add_image_size( 'WPA_popup', 250, 250, true );
+
 }
+
+
+add_filter('admin_print_scripts', 'wpa_adminWPHead');
 
 add_action('wp_head', 'wp_auctions_header');
 add_action('widgets_init', 'widget_wp_auctions_init');
@@ -1963,4 +2762,5 @@ add_action('activate_'.plugin_basename(__FILE__), 'wp_auctions_install');
 add_action('deactivate_'.plugin_basename(__FILE__), 'wp_auctions_uninstall');
 add_action('wpa_daily_check', 'close_expired_auctions');
 add_action('init', 'wpa_init', 0 );
+
 ?>

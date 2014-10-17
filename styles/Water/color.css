@@ -178,8 +178,8 @@ ul.wpatabs li.current, ul.wpatabs li.current:hover, ul.wpatabs li.current { back
 ul#wp-othercontainer-p { }
 ul#wp-othercontainer-p li { background: #fff; }
 ul#wp-othercontainer-p li p { }
-ul#wp-othercontainer-p li p.wpa-other-title { margin: 0; padding: 0; }
-ul#wp-othercontainer-p li img { background: #fff; border: 1px solid #6ca9e6 !important; margin: 0 10px 0 0 !important; }
+ul#wp-othercontainer-p li p.wpa-other-title { }
+ul#wp-othercontainer-p li img { background: #fff; border: 1px solid #6ca9e6; }
 ul#wp-othercontainer-p li:hover { background: #f9f9f9; }
 
 #wp-powered-p { color: #6ca9e6; }
@@ -245,5 +245,3 @@ p.current-bid:hover, p.refresh:hover { cursor: default !important; }
 .wpa-tables td img { background: #A4CEF0; display: block; margin: auto; padding: 5px; }
 .wpa-tables td a { background: #A4CEF0; border: 1px solid #6ba8e6; color: #0066ff; font-weight: bold; padding: 2px 8px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 .wpa-tables td a:hover { color: #0033cc; }
-
-header { z-index: 0 !important; }

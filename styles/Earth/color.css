@@ -178,8 +178,8 @@ ul.wpatabs li.current, ul.wpatabs li.current:hover, ul.wpatabs li.current { back
 ul#wp-othercontainer-p { }
 ul#wp-othercontainer-p li { background: #fff; }
 ul#wp-othercontainer-p li p { }
-ul#wp-othercontainer-p li p.wpa-other-title { margin: 0; padding: 0;  }
-ul#wp-othercontainer-p li img { background: #fff; border: 1px solid #bab076 !important; margin: 0 10px 0 0 !important; }
+ul#wp-othercontainer-p li p.wpa-other-title { }
+ul#wp-othercontainer-p li img { background: #fff; border: 1px solid #bab076; }
 ul#wp-othercontainer-p li:hover { background: #f9f9f9; }
 
 #wp-powered-p { color: #bab076; }
@@ -241,10 +241,8 @@ p.current-bid:hover, p.refresh:hover { cursor: default !important; }
 /* Post/Page Tables */
 
 .wpa-tables { border: 1px solid #463425; font-size: 12px !important; width: 100%; }
-.wpa-tables th { background: #D3CCA3 url(gradient.png) repeat-x left bottom; border: 1px solid #463425; color: #660000 !important; font-size: 13px; padding: 5px !important; }
-.wpa-tables td { border: 0; border-bottom: 1px solid #463425; padding: 5px !important; vertical-align: middle; }
+.wpa-tables th { background: #D3CCA3 url(gradient.png) repeat-x left bottom; border: 1px solid #463425; color: #660000; font-size: 13px; padding: 5px !important; }
+.wpa-tables td { border: 0; border-bottom: 1px solid #463425; padding: 5px !important; }
 .wpa-tables td img { background: #D3CCA3 url(gradient.png) repeat-x left bottom; display: block; margin: auto; padding: 5px; }
-.wpa-tables td a { background: #D3CCA3 url(gradient.png) repeat-x left bottom; border: 1px solid #463425; color: #660000; font-weight: bold; padding: 2px 8px; text-decoration: none; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+.wpa-tables td a { background: #D3CCA3 url(gradient.png) repeat-x left bottom; border: 1px solid #463425; color: #660000; font-weight: bold; padding: 2px 8px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 .wpa-tables td a:hover { color: #463425; }
-
-header { z-index: 0 !important; }

@@ -91,6 +91,14 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 2.1 = 
+* New Feature: Bid increment
+* New Feature: WYSIWYG description editor
+* New Feature: Default WordPress media uploader support
+* New Feature: New date selector
+* New Feature: Customize auction outbid notice and auction winner notice emails
+* A lot of text updates
+
 = 2.04 = 
 * Bug and text fixes
 * Tested with WordPress v3.6+
