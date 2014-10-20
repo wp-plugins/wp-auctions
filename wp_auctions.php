@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 2.10
+Version: 3.0
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -11,7 +11,7 @@ Author URI: http://www.wpauctions.com/profile
   /* History:
   v0.1 Beta  - OwenC - 29/01/08 - Initial beta release
   v1.0 Free  - OwenC - 21/02/08 - Free public release  
-  v2.1 Free  - OwenC - 14/10/14 - Refreshed with premium features - Added Bid Increment - Added TinyMCE and WP Media
+  v3.0 Free  - OwenC - 14/10/14 - Refreshed with premium features - Added Bid Increment - Added TinyMCE and WP Media
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -20,7 +20,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "2.10 Lite";
+$wpa_version = "3.0";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
