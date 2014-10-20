@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 2.1
+Version: 2.10
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -20,7 +20,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "2.1";
+$wpa_version = "2.10 Lite";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -1783,7 +1783,7 @@ $rss = @fetch_rss( $rss_feed );
 	</div>
 	<div class="wpa-intro">
 	
-  	<p><?php _e('Version:','WPAuctions') ?> <?php echo $wpa_version ?> Lite</p>
+  	<p><?php _e('Version:','WPAuctions') ?> <?php echo $wpa_version ?></p>
   
 	<div class="latestnews">
         <h3><?php _e('WP Auctions Pro News','WPAuctions') ?></h3>
@@ -2735,9 +2735,8 @@ function wp_auctions_adminmenu(){
    add_submenu_page (WPA_PLUGIN_NAME, __('Add','WPAuctions'), __('Add','WPAuctions'), 7 , 'wp-auctions-add', 'wp_auctions_add' );
    add_submenu_page (WPA_PLUGIN_NAME, __('Email Settings','WPAuctions'), __('Email Settings','WPAuctions'), 7 , 'wp-auctions-email', 'wp_auctions_email' );
 
-   // W8 - this still needs to be tested
-   //add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'post', 'normal', 'high');
-   //add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'page', 'normal', 'high');   
+   add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'post', 'normal', 'high');
+   add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'page', 'normal', 'high');   
 
 }
 
