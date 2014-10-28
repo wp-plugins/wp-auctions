@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 3.0
+Version: 3.1
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -12,6 +12,7 @@ Author URI: http://www.wpauctions.com/profile
   v0.1 Beta  - OwenC - 29/01/08 - Initial beta release
   v1.0 Free  - OwenC - 21/02/08 - Free public release  
   v3.0 Free  - OwenC - 14/10/14 - Refreshed with premium features - Added Bid Increment - Added TinyMCE and WP Media
+  v3.1 Free  - OwenC - 27/10/14 - Refreshed with premium features - Registered users only options
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -20,7 +21,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "3.0";
+$wpa_version = "3.1";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -1069,7 +1070,8 @@ function dopost_wp_auctions($auction_id) {
     
     if ($needreg) {
        $printstring .= '<tr>';
-       $printstring .= '<td colspan="2">'.__('Only registered users can bid on this auction.','WPAuctions').' <a href="'.wp_login_url().'">'.__('Please login or register an account','WPAuctions').'</a></td>';
+       $printstring .= '<td colspan="2">'.__('Bidding allowed for registered users only','wpauctions').'. <a href="'.wp_login_url( $_SERVER['REQUEST_URI'] ).'">'.__('Register or Log in','wpauctions').'</a></td>';
+	   
        $printstring .= '</tr>';
 
     } else {
@@ -1647,7 +1649,7 @@ function CheckIncrementOptions() {
         <br />
         <p><?php _e('How many other auctions would you like to display in the widget?','WPAuctions') ?></p></td> 
       </tr> 
-      <!-- - W2 - Test Registered Users Only before releasing
+
       <tr valign="top" class="alternate"> 
         <th scope="row" class='row-title' style="border-bottom: 0;"><?php _e('Registered Users Only?','WPAuctions') ?></th> 
         <td class='desc' style="border-bottom: 0;">
@@ -1656,9 +1658,9 @@ function CheckIncrementOptions() {
                 <option value="Yes" <?php if ($regonly=='Yes') echo 'selected'; ?>><?php _e('Yes, only registered users can bid','WPAuctions') ?></option>
          </select>
         <br />
-        <p><?php _e('Do bidders have to have a registered WordPress account to bid?','WPAuctions') ?></p></td> 
+        <p><?php _e('If you select Yes, please visit your Settings > General panel you must check the "Anyone can register" box and set the new user role as a subscriber.','WPAuctions') ?></p></td> 
       </tr>
-      --> 
+
     </table>
 
   <h2 class="payment"><em><?php _e('Payment Settings - Please supply at least one of the following','WPAuctions') ?></em></h2>
@@ -1703,7 +1705,7 @@ function CheckIncrementOptions() {
 		       } ?>
             </select>
         <br />
-        <p><?php _e('Choose a graphical style for your widget. Get new styles from our <a href="http://www.wpauctions.com/styles">style store</a>.','WPAuctions') ?></p></td> 
+        <p><?php _e('Choose a graphical style for your widget.','WPAuctions') ?></p></td> 
       </tr> 
       <!-- W3 - Test List Format before releasing
       <tr valign="top"> 
@@ -2046,7 +2048,7 @@ function wp_auctions_add() {
 	<div class="wrap wp-auctions">
 		
 		<div class="update-nag" style="margin: 0 0 20px 0 !important; padding: 5px 13px !important;">
-			<p><span style="color: #D54E21;">WP Auctions Pro features:</span> Scramble bidder names &bull; Set custom payment details &bull; Auction templates <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click to purchase</a></button></p>
+			<p><span style="color: #D54E21;">WP Auctions Pro features:</span> Scramble bidder names &bull; Set custom payment details &bull; Auction templates &bull; <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click to purchase</a></button></p>
 		</div>
 	
 		<?php if($strMessage != ""):?>
@@ -2329,6 +2331,10 @@ function wp_auctions_manage() {
 	<link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
 
 	<div class="wrap wp-auctions">
+	
+	<div class="update-nag" style="margin: 0 0 20px 0 !important; padding: 5px 13px !important;">
+		<p><span style="color: #D54E21;">Exciting new Pro features:</span> Subscriber auctions &bull; PayPal payment page &bull; Set terms and conditions &bull; <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Go Pro today <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, save $10!</a></button></p>
+	</div>
   		
 	<div class="wpa-time"><?php _e('Your WordPress Time:','WPAuctions'); ?> <?php echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></div>
 	

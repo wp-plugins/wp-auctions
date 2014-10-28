@@ -198,8 +198,8 @@ ul#wp-othercontainer-p li:hover { }
 				<h3><?php _e('Enter Your Details To Bid','WPAuctions'); ?> <p class="spinner">*<?php _e('required','WPAuctions'); ?></p></h3>
 				
 				<?php if (($regonly=="Yes") && !is_user_logged_in()) {  ?>
-				
-					<p class="registered"><?php _e('Only registered users can bid on auctions. Please','WPAuctions'); ?> <?php wp_loginout(); ?> <?php _e('or','WPAuctions'); ?> <?php wp_register('', ''); ?> <?php _e('for an account','WPAuctions'); ?>.</p>
+					
+					<p class="registered"><?php _e('Bidding allowed for registered users only.','wpauctions'); ?> <a href="<?php echo wp_login_url(); ?>?action=register"><?php _e('Register','wpauctions'); ?></a> <?php _e('or','wpauctions'); ?> <a href="<?php echo wp_login_url( get_home_url() ); ?>"><?php _e('Log in','wpauctions'); ?></a>.</p>
 								
 				<?php 
 					$hidebid = "Yes";

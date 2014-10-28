@@ -6,6 +6,10 @@ Requires at least: 3.2
 Tested up to: 4.0
 Stable tag: /trunk/
 
+**Official Site**
+
+For more information and to take a look at the Pro version, visit our website - [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress").
+
 WP Auctions is a revolutionary plugin which allows you to host auctions on your blog or website and to sell anything, completely fee free!
 
 == Description ==
@@ -16,7 +20,14 @@ Stop paying listing fees, seller fees, final value fees, gallery fees or any oth
 
 Installation and activation takes less than 30 seconds and you could be hosting your first auction on your website in under 2 minutes.
 
-**Features include:**
+**New Features:**
+
+* Set a globale Bid increment value for all auctions.
+* Allow only registered users to bid.
+* ...more to come.
+
+
+**Other Features include:**
 
 * Host as many auctions as you like.
 * Upload an image for your auction.
@@ -27,16 +38,16 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 * Sleek AJAX popup to show your auctions.
 * Easy to use backend admin area to manage your auctions.
 
+**Looking for the Pro plugin?**
+
+Visit our website - [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress") - for more information and to see the features that come with the Pro version of WP Auctions.
+
 **Example uses include:**
 
 * Auction off advertising space!
 * Sell physical goods from iPods to Cars!
 * Sell your artwork
 * Use it for charity auctions, etc...
-
-**Official Site**
-
-For more information and to take a look at the Pro version, visit our website - [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress").
 
 == Installation ==
 
@@ -86,10 +97,14 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 1. Settings
 2. Manage
 3. Add
-4. Sidebar Widget
-5. AJAX Popup
+4. Email settings
+5. Sidebar Widget
+6. AJAX Popup
 
 == Changelog ==
+
+= 3.1 = 
+* New Feature: Registered users only
 
 = 3.0 = 
 * New Feature: Bid increment
