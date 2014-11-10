@@ -13,6 +13,7 @@ Author URI: http://www.wpauctions.com/profile
   v1.0 Free  - OwenC - 21/02/08 - Free public release  
   v3.0 Free  - OwenC - 14/10/14 - Refreshed with premium features - Added Bid Increment - Added TinyMCE and WP Media
   v3.1 Free  - OwenC - 27/10/14 - Refreshed with premium features - Registered users only options
+  v3.2 Free  - OwenC -  9/11/14 - Refreshed with premium features - List Format
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -21,7 +22,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "3.1";
+$wpa_version = "3.2";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -1707,7 +1708,6 @@ function CheckIncrementOptions() {
         <br />
         <p><?php _e('Choose a graphical style for your widget.','WPAuctions') ?></p></td> 
       </tr> 
-      <!-- W3 - Test List Format before releasing
       <tr valign="top"> 
         <th scope="row" class='row-title'><?php _e('List Format:','WPAuctions') ?></th> 
         <td class='desc'>
@@ -1718,7 +1718,6 @@ function CheckIncrementOptions() {
         <br />
         <p><?php _e('Select whether you prefer the sidebar widget to show a graphical or list format','WPAuctions') ?></p></td> 
       </tr>
-      -->
        
       <tr valign="top" class="alternate"> 
         <th scope="row" class='row-title'><?php _e('"No Auction" Alternative:','WPAuctions') ?></th> 
