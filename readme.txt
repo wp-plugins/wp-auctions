@@ -22,6 +22,7 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 **New Features:**
 
+* Show auctions in a List or Graphic format.
 * Set a global Bid increment value for all auctions.
 * Allow only registered users to bid.
 * ...more to come.
@@ -102,6 +103,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 6. AJAX Popup
 
 == Changelog ==
+
+= 3.2 = 
+* New Feature: Show auctions in sidebar widget in list or graphic format
 
 = 3.1 = 
 * New Feature: Registered users only
