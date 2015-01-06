@@ -22,6 +22,7 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 **New Features:**
 
+* Custom contact field. Request phone numbers, addresses etc...
 * Show auctions in a List or Graphic format.
 * Set a global Bid increment value for all auctions.
 * Allow only registered users to bid.
@@ -103,6 +104,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 6. AJAX Popup
 
 == Changelog ==
+
+= 3.3 = 
+* New Feature: Customize the Contact field. You can request other data like phone number, address, date of birth etc...
 
 = 3.2 = 
 * New Feature: Show auctions in sidebar widget in list or graphic format

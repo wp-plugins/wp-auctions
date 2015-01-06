@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 3.2
+Version: 3.3
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -14,6 +14,7 @@ Author URI: http://www.wpauctions.com/profile
   v3.0 Free  - OwenC - 14/10/14 - Refreshed with premium features - Added Bid Increment - Added TinyMCE and WP Media
   v3.1 Free  - OwenC - 27/10/14 - Refreshed with premium features - Registered users only options
   v3.2 Free  - OwenC -  9/11/14 - Refreshed with premium features - List Format
+  v3.3 Free  - OwenC -  6/1/15 - Refreshed with premium features - Custom Contact Field
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -22,7 +23,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "3.2";
+$wpa_version = "3.3";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -1726,14 +1727,13 @@ function CheckIncrementOptions() {
         <br />
         <p><?php _e('Specify the HTML you would like to display if there are no active auctions. Leave blank for standard "No Auctions" display<br>To rotate ads, separate with &lt;!--more--&gt;','WPAuctions') ?></p></td> 
       </tr> 
-      <!-- W4 - Test Custom Contact before releasing
+
       <tr valign="top"> 
         <th scope="row" class='row-title'><?php _e('Custom Contact Field:','WPAuctions') ?></th> 
         <td class='desc'><input name="wpa-customcontact" type="text" id="wpa-customcontact" value="<?php echo $customcontact; ?>" size="10" />
         <br />
         <p><?php _e('Enter your custom contact field caption (leave blank for URL <- this is the default setting)','WPAuctions') ?></p></td> 
       </tr>
-      --> 
       <tr valign="top"> 
         <th scope="row" class='row-title'><?php _e('RSS Feed link:','WPAuctions') ?></th> 
         <td class='desc'>
