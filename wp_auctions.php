@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 3.3
+Version: 3.4
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -15,6 +15,7 @@ Author URI: http://www.wpauctions.com/profile
   v3.1 Free  - OwenC - 27/10/14 - Refreshed with premium features - Registered users only options
   v3.2 Free  - OwenC -  9/11/14 - Refreshed with premium features - List Format
   v3.3 Free  - OwenC -  6/1/15 - Refreshed with premium features - Custom Contact Field
+  v3.4 Free  - OwenC - 22/1/15 - Refreshed with premium features - Added Shipping
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -23,7 +24,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "3.3";
+$wpa_version = "3.4";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -1779,9 +1780,6 @@ $rss = @fetch_rss( $rss_feed );
 
 <div class="wrap wp-auctions">
 		
-	<div class="update-nag" style="margin: 0 0 20px 0 !important; padding: 5px 13px !important;">
-		<p>Upgrade to WP Auctions Pro <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click for Instant Download</a></button>&nbsp;&nbsp;<strong style="color: #D54E21;">Features:</strong> 3 Bidding Engines &bull; Reserve Prices &bull; Buy it Now &bull; Responsive design</p>
-	</div>
 	<div class="wpa-intro">
 	
   	<p><?php _e('Version:','WPAuctions') ?> <?php echo $wpa_version ?></p>
@@ -1814,8 +1812,13 @@ $rss = @fetch_rss( $rss_feed );
     </div>
 
     <div style="clear:both"></div>
+	
 </div>
 
+<div class="update-nag" style="margin: 20px 0 0 !important; padding: 5px 13px !important;">
+	<p>Upgrade to WP Auctions Pro <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click for Instant Download</a></button>&nbsp;&nbsp;<strong style="color: #D54E21;">Features:</strong> 3 Bidding Engines &bull; Reserve Prices &bull; Buy it Now &bull; Responsive design</p>
+</div>
+	
 <h2><?php _e('Get Started:','WPAuctions'); ?></h2>
 
 <ul class="wpa-start">
@@ -2185,7 +2188,7 @@ function wp_auctions_add() {
       </tr>
      </table>
 
-  <!-- W5 - Test Shipping before releasing
+
    <h2 class="shipping"><em><?php _e('Shipping Information','WPAuctions') ?></em></h2>
     <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
       <tr valign="top" class="alternate"> 
@@ -2204,7 +2207,7 @@ function wp_auctions_add() {
         <?php _e('Where are you shipping this item from?','WPAuctions') ?></td> 
       </tr>
    </table>
-   -->
+
    
   <!-- <h2 class="other-settings"><em><?php _e('Optional Settings','WPAuctions') ?></em></h2>
     <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 

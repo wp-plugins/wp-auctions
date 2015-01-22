@@ -3,7 +3,7 @@ Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions,auction,wp auction,auction plugin,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.2
-Tested up to: 4.0
+Tested up to: 4.1
 Stable tag: /trunk/
 
 WP Auctions allows you to host auctions on your blog or website completely fee free!
@@ -14,6 +14,8 @@ WP Auctions allows you to host auctions on your blog or website completely fee f
 
 For more information and to take a look at the Pro version, visit our website - [WP Auctions](http://www.wpauctions.com "Auction Plugin for WordPress").
 
+**About the Plugin**
+
 WP Auctions is a revolutionary plugin which allows you to host auctions on your WordPress powered blog or website completely fee free! Show your auctions in an attractive AJAX powered popup for optimum user experience.
 
 Stop paying listing fees, seller fees, final value fees, gallery fees or any other type of fee for your auctions on other 3rd party sites. Run your own auctions and sell to your site visitors!
@@ -22,6 +24,7 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 **New Features:**
 
+* Added Shipping price
 * Custom contact field. Request phone numbers, addresses etc...
 * Show auctions in a List or Graphic format.
 * Set a global Bid increment value for all auctions.
@@ -104,6 +107,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 6. AJAX Popup
 
 == Changelog ==
+
+= 3.4 = 
+* New Feature: Added shipping price. Now you can add a shipping price to your auctions and PayPal will automatically add it to the final bid price. Also specify the Shipping From and To locations.
 
 = 3.3 = 
 * New Feature: Customize the Contact field. You can request other data like phone number, address, date of birth etc...
