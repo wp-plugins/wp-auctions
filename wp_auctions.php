@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 3.4
+Version: 3.5
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -16,6 +16,7 @@ Author URI: http://www.wpauctions.com/profile
   v3.2 Free  - OwenC -  9/11/14 - Refreshed with premium features - List Format
   v3.3 Free  - OwenC -  6/1/15 - Refreshed with premium features - Custom Contact Field
   v3.4 Free  - OwenC - 22/1/15 - Refreshed with premium features - Added Shipping
+  v3.5 Free  - OwenC - 30/03/15 - Added extra image
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -24,7 +25,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "3.4";
+$wpa_version = "3.5";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -2209,16 +2210,16 @@ function wp_auctions_add() {
    </table>
 
    
-  <!-- <h2 class="other-settings"><em><?php _e('Optional Settings','WPAuctions') ?></em></h2>
+  <h2 class="other-settings"><em><?php _e('Optional Settings','WPAuctions') ?></em></h2>
     <table width="100%" cellspacing="2" cellpadding="5" class="widefat"> 
-        W6 - Test BIN pricing before releasing
+    <!--    W6 - Test BIN pricing before releasing
+	
        <tr valign="top" class="alternate"> 
         <th scope="row"><?php _e('Buy It Now Price:','WPAuctions') ?></th> 
         <td><input type="text" name="wpa_BINPrice" value="<?php print $strSaveBINPrice ?>" maxlength="255" size="10" />
         <?php _e('Specify the "Buy It Now" price for your auction.','WPAuctions') ?></td> 
       </tr>
       -->
-      <!-- W7 - Test Extra image before releasing
       <tr valign="top"> 
         <th scope="row"><?php _e('Extra Image:','WPAuctions') ?></th> 
         <td>
@@ -2233,7 +2234,6 @@ function wp_auctions_add() {
 
         </td>
       </tr>
-      -->
       <!-- W8 - Test in-post auctions before releasing
       <tr valign="top" class="alternate"> 
         <th scope="row" style="border-bottom: 0;">
