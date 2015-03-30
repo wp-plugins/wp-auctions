@@ -3,7 +3,7 @@ Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions,auction,wp auction,auction plugin,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.2
-Tested up to: 4.1
+Tested up to: 4.1.1
 Stable tag: /trunk/
 
 WP Auctions allows you to host auctions on your blog or website completely fee free!
@@ -24,6 +24,7 @@ Installation and activation takes less than 30 seconds and you could be hosting 
 
 **New Features:**
 
+* Upload an extra image
 * Added Shipping price
 * Custom contact field. Request phone numbers, addresses etc...
 * Show auctions in a List or Graphic format.
@@ -108,24 +109,27 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 3.5 = 
+* New Feature: Upload an extra image to your auctions!
+
 = 3.4 = 
-* New Feature: Added shipping price. Now you can add a shipping price to your auctions and PayPal will automatically add it to the final bid price. Also specify the Shipping From and To locations.
+* Added shipping price. Now you can add a shipping price to your auctions and PayPal will automatically add it to the final bid price. Also specify the Shipping From and To locations.
 
 = 3.3 = 
-* New Feature: Customize the Contact field. You can request other data like phone number, address, date of birth etc...
+* Customize the Contact field. You can request other data like phone number, address, date of birth etc...
 
 = 3.2 = 
-* New Feature: Show auctions in sidebar widget in list or graphic format
+* Show auctions in sidebar widget in list or graphic format
 
 = 3.1 = 
-* New Feature: Registered users only
+* Registered users only
 
 = 3.0 = 
-* New Feature: Bid increment
-* New Feature: WYSIWYG description editor
-* New Feature: Default WordPress media uploader support
-* New Feature: New date selector
-* New Feature: Customize auction outbid notice and auction winner notice emails
+* Bid increment
+* WYSIWYG description editor
+* Default WordPress media uploader support
+* New date selector
+* Customize auction outbid notice and auction winner notice emails
 * A lot of text updates
 
 = 2.04 = 
