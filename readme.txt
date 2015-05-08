@@ -3,7 +3,7 @@ Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions,auction,wp auction,auction plugin,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
 Requires at least: 3.2
-Tested up to: 4.1.1
+Tested up to: 4.2.2
 Stable tag: /trunk/
 
 WP Auctions allows you to host auctions on your blog or website completely fee free!
@@ -109,8 +109,11 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 
 == Changelog ==
 
+= 3.5.1 = 
+* Fixed CSS issues brought to our notice
+
 = 3.5 = 
-* New Feature: Upload an extra image to your auctions!
+* New Feat1ure: Upload an extra image to your auctions!
 
 = 3.4 = 
 * Added shipping price. Now you can add a shipping price to your auctions and PayPal will automatically add it to the final bid price. Also specify the Shipping From and To locations.
