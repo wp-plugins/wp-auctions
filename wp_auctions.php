@@ -3,7 +3,7 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 3.5
+Version: 3.5.1
 Author: Owen Cutajar & Hyder Jaffari
 Author URI: http://www.wpauctions.com/profile
 */
@@ -17,6 +17,7 @@ Author URI: http://www.wpauctions.com/profile
   v3.3 Free  - OwenC -  6/1/15 - Refreshed with premium features - Custom Contact Field
   v3.4 Free  - OwenC - 22/1/15 - Refreshed with premium features - Added Shipping
   v3.5 Free  - OwenC - 30/03/15 - Added extra image
+  v3.5.1 Free - HyderJ - 07/05/2015 - Fixed CSS issues
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -25,7 +26,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "3.5";
+$wpa_version = "3.5.1";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -2645,7 +2646,7 @@ function wp_auctions_header() {
       wp_enqueue_script('thickbox');
       wp_enqueue_script('wp_auction_AJAX', WPA_PLUGIN_URL . '/wp_auctionsjs.php' );
 
-      wp_print_scripts();
+// this loads scripts in the header instead of the footer, apparently it loads other scripts too -- wp_print_scripts();
       
 ?>      
   

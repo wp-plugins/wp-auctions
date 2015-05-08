@@ -251,3 +251,8 @@ p.current-bid:hover, p.refresh:hover { cursor: default !important; }
 .wpa-tables td img { background: url(bg.png); display: block; margin: auto; padding: 5px; }
 .wpa-tables td a { background: url(bg.png); border: 1px solid #000; color: #0090ff; font-weight: bold; padding: 2px 8px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 .wpa-tables td a:hover { color: #fff; }
+
+
+/* Theme Specific */
+form#auction_form, form#auction_form div, #wp-container-p p  { margin: 0; }
+#wp-container-p th, #wp-container-p td, #wp-container-p table { border: 0; }
