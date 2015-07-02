@@ -4,6 +4,7 @@
 	#picker { float: left; }
 	
 /* Main Container */
+	
 	.wp-auctions { margin: 15px 15px 0 5px; padding: 0 0 40px 0; }
 	.wp-auctions .wrap { margin: 0; }
 	.wp-auctions p { margin: 5px 0 !important; }
@@ -177,3 +178,8 @@
 
 	.wpa-manage-left { float: left; }
 	.wpa-manage-right { float: right; }
+
+	.wpa-update-screen { padding: 0 0 10px; }
+	.wpa-update-screen h3 { background: none; border-bottom: 2px solid #BCAA97; display: inline-block; font-size: 16px; padding: 10px 0px; margin: 0; }
+	.wpa-update-screen p { font-size: 16px; padding: 10px 0 0; }
+	.wpa-update-screen a.button { font-size: 14px; padding: 3px 15px; height: auto; }

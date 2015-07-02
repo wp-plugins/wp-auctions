@@ -3,9 +3,9 @@
 Plugin Name: WP_Auctions
 Plugin URI: http://www.wpauctions.com/download/
 Description: Implements the ability to run auctions on your own blog. Once activated, add the widget to your sidebar or add <code>&lt;?php wp_auctions(); ?&gt;</code> to your sidebar.
-Version: 3.5.1
+Version: 3.6
 Author: Owen Cutajar & Hyder Jaffari
-Author URI: http://www.wpauctions.com/profile
+Author URI: http://www.wpauctions.com/download/
 */
 
   /* History:
@@ -18,6 +18,8 @@ Author URI: http://www.wpauctions.com/profile
   v3.4 Free  - OwenC - 22/1/15 - Refreshed with premium features - Added Shipping
   v3.5 Free  - OwenC - 30/03/15 - Added extra image
   v3.5.1 Free - HyderJ - 07/05/2015 - Fixed CSS issues
+  v3.6 Free  - OwenC - 1/6/2015 - Refreshed with premium features - Embeded auctions
+			- OwenC - 15/6/2015 - Rectified a number of warnings - Traced down old bug where notifications not always sent
 */
 
 //error_reporting (E_ALL ^ E_NOTICE);
@@ -26,7 +28,7 @@ Author URI: http://www.wpauctions.com/profile
 if (!function_exists('get_option'))
 	require_once('../../../wp-config.php');
  
-$wpa_version = "3.5.1";
+$wpa_version = "3.6";
 
 // Consts
 if (!defined('WPA_PLUGIN_NAME')) {
@@ -44,7 +46,7 @@ if (!defined('WPA_PLUGIN_NAME')) {
 
 // ensure localisation support
 if (function_exists('load_plugin_textdomain')) {
-		load_plugin_textdomain('WPAuctions', WPA_PLUGIN_URL . '/locales/' );
+		load_plugin_textdomain('WPAuctions', false, WPA_PLUGIN_URL . '/locales/' );
 }
 
 define('BID_WIN', __('Congratulations, you are the highest bidder on this item.','WPAuctions') );
@@ -730,6 +732,7 @@ function check_auction_end($auction_id) {
    $bankdetails = $options['bankdetails'];
    $currencysymbol = $options['currencysymbol'];
    $currencycode = $options['currencycode'];
+   $notify = $options['notify'];
    $title = $options['title'];
 
    // Setup email fields.         
@@ -788,8 +791,8 @@ function check_auction_end($auction_id) {
 				    $body = str_replace("\r\n", "\n", $body);
 				 }				
          // prepare link
-         if (strlen($staticpage) > 0) {
-           $link 	= $staticpage."?auction_id=".$auction_id;         
+         if (strlen($rows->staticpage) > 0) {
+           $link 	= $rows->staticpage."?auction_id=".$auction_id;         
          } else {
            $link 	= get_option('siteurl')."?auction_to_show=".$auction_id;
          } 
@@ -822,7 +825,7 @@ function check_auction_end($auction_id) {
 			
 				 // Send the email.
 	       mail($to, $subject, $body, $headers);
-     }
+     
 
       // notify site owner if notification requested
 	  if ($notify != '') {
@@ -858,12 +861,11 @@ function check_auction_end($auction_id) {
 		 mail($to, $subject, $body, $headers);
       }   
    }
+   }
 }
 
 function widget_wp_auctions_init() {
 
-	if ( !function_exists('register_sidebar_widget') )
-		return;
 
 	function widget_wp_auctions($args) {
 
@@ -878,9 +880,12 @@ function widget_wp_auctions_init() {
 				
 		echo 'Please configure the widget from the Auctions Configuration Screen';
 	}
+	
+	wp_register_sidebar_widget('wp_auctions','WP Auctions', 'widget_wp_auctions', null, 'WP Auctions');
+	wp_register_widget_control('wp_auctions','WP Auctions', 'widget_wp_auctions_control', null, 75, 'akismet');
 
-	register_sidebar_widget(array('WP Auctions', 'widgets'), 'widget_wp_auctions');
-	register_widget_control(array('WP Auctions', 'widgets'), 'widget_wp_auctions_control', 300, 130);
+//	register_sidebar_widget(array('WP Auctions', 'widgets'), 'widget_wp_auctions');
+//	register_widget_control(array('WP Auctions', 'widgets'), 'widget_wp_auctions_control', 300, 130);
 ;
 }
 
@@ -1433,7 +1438,7 @@ function wp_auctions_options() {
       $options = array( 'title'=>'WP Auctions', 'otherauctions'=>'3', 'currency'=>'1', 'style'=>'default', 'notify'=>'', 'paypal'=>'', 'mailingaddress'=>'', 'bankdetails'=>'', 'currencysymbol'=>'$', 'currencycode'=>'USD','noauction'=>'','customcontact'=>'','customincrement'=>'');
    }
 
-   if ( $_POST['wp_auctions-submit'] ) {
+   if ( isset($_POST['wp_auctions-submit'] )) {
 
       // security check
       check_admin_referer( 'WPA-nonce');
@@ -1772,37 +1777,57 @@ global $wp_version;
 // first let's check if database is update date
 wp_auctions_install();
 
-// Use WordPress built-in RSS handling
-require_once (ABSPATH . WPINC . '/rss.php');
-$rss_feed = "http://www.wpauctions.com/feed/";
-$rss = @fetch_rss( $rss_feed );
+include_once( ABSPATH . WPINC . '/feed.php' );
 
+// Get a SimplePie feed object from the specified feed source.
+$rss = fetch_feed( 'http://www.wpauctions.com/feed/' );
+
+$maxitems = 0;
+
+if ( ! is_wp_error( $rss ) ) : // Checks that the object is created correctly
+
+    // Figure out how many total items there are, but limit it to 5. 
+    $maxitems = $rss->get_item_quantity( 5 ); 
+
+    // Build an array of all the items, starting with element 0 (first element).
+    $rss_items = $rss->get_items( 0, $maxitems );
+
+endif;
 ?>
+
 <link href="../wp-content/plugins/wp-auctions/requisites/style.css" rel="stylesheet" type="text/css" />
 
 <div class="wrap wp-auctions">
-		
+			
+	<div class="wpa-update-screen">
+		<h3><span style="color: #D54E21;">Upgrade to WP Auctions Pro</span></h3> 
+		<p><strong>Features:</strong> <em>3 Bidding Engines</em> &mdash; <em>Add Auction Fees</em> &mdash; <em>Responsive Design</em> &mdash; ...and much more!</p>
+		<p><a href="http://www.wpauctions.com/download" class="button button-primary">Only <del>$49</del> <strong style="text-decoration: underline;">$39</strong>, click for Instant Download</a></p>
+	</div>
+
 	<div class="wpa-intro">
-	
-  	<p><?php _e('Version:','WPAuctions') ?> <?php echo $wpa_version ?></p>
-  
+
+ 	<p><?php _e('Version:','WPAuctions') ?> <?php echo $wpa_version ?></p>
+
 	<div class="latestnews">
         <h3><?php _e('WP Auctions Pro News','WPAuctions') ?></h3>
-        <ul>
-        <?php
-        if ( isset($rss->items) && 1 < count($rss->items) ) {
-        $rss->items = array_slice($rss->items, 0, 4);
-        foreach ($rss->items as $item ) {
-        ?>
-          <li><a href="<?php echo wp_filter_kses($item['link']); ?>"><?php echo wptexturize(wp_specialchars($item['title'])); ?></a></li>
-        <?php } ?>
-        </ul>
-        <?php
-        }
-        else {
-          _e('No news found ..','WPAuctions');
-        }
-        ?>
+
+<ul>
+    <?php if ( $maxitems == 0 ) : ?>
+        <li><?php _e( 'No news found', 'my-text-domain' ); ?></li>
+    <?php else : ?>
+        <?php // Loop through each feed item and display each item as a hyperlink. ?>
+        <?php foreach ( $rss_items as $item ) : ?>
+            <li>
+                <a href="<?php echo esc_url( $item->get_permalink() ); ?>"
+                    title="<?php printf( __( 'Posted %s', 'my-text-domain' ), $item->get_date('j F Y | g:i a') ); ?>">
+                    <?php echo esc_html( $item->get_title() ); ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</ul>
+
     </div>
 
     <div class="wpa-info">
@@ -1815,10 +1840,6 @@ $rss = @fetch_rss( $rss_feed );
 
     <div style="clear:both"></div>
 	
-</div>
-
-<div class="update-nag" style="margin: 20px 0 0 !important; padding: 5px 13px !important;">
-	<p>Upgrade to WP Auctions Pro <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click for Instant Download</a></button>&nbsp;&nbsp;<strong style="color: #D54E21;">Features:</strong> 3 Bidding Engines &bull; Reserve Prices &bull; Buy it Now &bull; Responsive design</p>
 </div>
 	
 <h2><?php _e('Get Started:','WPAuctions'); ?></h2>
@@ -2051,8 +2072,10 @@ function wp_auctions_add() {
    
 	<div class="wrap wp-auctions">
 		
-		<div class="update-nag" style="margin: 0 0 20px 0 !important; padding: 5px 13px !important;">
-			<p><span style="color: #D54E21;">WP Auctions Pro features:</span> Scramble bidder names &bull; Set custom payment details &bull; Auction templates &bull; <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Only <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, click to purchase</a></button></p>
+		<div class="wpa-update-screen">
+			<h3><span style="color: #D54E21;">Upgrade to WP Auctions Pro:</span></h3> 
+			<p><strong>Features:</strong> <em>Set a Buy it Now price</em> &mdash; <em>Set a reserve price</em> &mdash; <em>Set a custom bid increment amount</em></p>
+			<p><a href="http://www.wpauctions.com/download" class="button button-primary">Only <del >$49</del> <strong style="text-decoration: underline;">$39</strong>, click to purchase</a></p>
 		</div>
 	
 		<?php if($strMessage != ""):?>
@@ -2235,7 +2258,7 @@ function wp_auctions_add() {
 
         </td>
       </tr>
-      <!-- W8 - Test in-post auctions before releasing
+
       <tr valign="top" class="alternate"> 
         <th scope="row" style="border-bottom: 0;">
         <?php _e('Show auction in AJAX Popup?:','WPAuctions') ?></th> 
@@ -2251,9 +2274,13 @@ function wp_auctions_add() {
         <th scope="row" style="border-bottom: 0;">
         <?php _e('URL for Static Post/Page:','WPAuctions') ?> </th> 
         <td style="border-bottom: 0;"><input type="text" name="wpa_StaticPage" value="<?php print $strStaticPage ?>" maxlength="255" size="50" /><br>
-        <?php _e('Please specify the Post or Page URL where this auction will be inserted (you will need to insert the auction on the Post or Page manually).','WPAuctions') ?></td> 
+        <ol>
+			<li><?php _e('Select a published <a href="edit.php" target="_blank">Post</a> or <a href="edit.php?post_type=page" target="_blank">Page</a> URL where this auction will be inserted.','WPAuctions') ?></li>
+			<li><?php _e('Go to that Post/Page and use the "Insert Auction" panel to embed the auction shortcode.','WPAuctions') ?></li></li>
+		</ol>	
+			</td> 
       </tr>
-      -->
+
    	</table>
 		
 	<?php if($bolUpdate == true): ?>
@@ -2273,6 +2300,7 @@ function wp_auctions_add() {
 function wp_auctions_manage() {
 
    global $wpdb;
+   $intAlternate = 0;
 
    // Primary action
    if(isset($_REQUEST["wpa_action"])):
@@ -2335,8 +2363,10 @@ function wp_auctions_manage() {
 
 	<div class="wrap wp-auctions">
 	
-	<div class="update-nag" style="margin: 0 0 20px 0 !important; padding: 5px 13px !important;">
-		<p><span style="color: #D54E21;">Exciting new Pro features:</span> Subscriber auctions &bull; PayPal payment page &bull; Set terms and conditions &bull; <button class="button"><a href="https://www.e-junkie.com/ecom/gb.php?i=WPAPLUS&c=single&cl=16004" target="ejejcsingle">Go Pro today <del style="color:#999;">$49</del> <strong style="text-decoration: underline;">$39</strong>, save $10!</a></button></p>
+	<div class="wpa-update-screen">
+		<h3><span style="color: #D54E21;">Exciting new Pro features</span></h3> 
+		<p><strong>Features:</strong> <em>Subscriber auctions</em> &mdash; <em>PayPal payment page</em> &mdash; <em>Set terms and conditions</em></p>
+		<p><a href="http://www.wpauctions.com/download" class="button button-primary">Go Pro today <del>$49</del> <strong style="text-decoration: underline;">$39</strong>, save $10!</a></p>
 	</div>
   		
 	<div class="wpa-time"><?php _e('Your WordPress Time:','WPAuctions'); ?> <?php echo get_date_from_gmt(date('Y-m-d H:i:s')); ?></div>
@@ -2737,12 +2767,12 @@ if (isset($_GET['page']) && $_GET['page'] == 'wp-auctions-add') {
 function wp_auctions_adminmenu(){
 
    // add new top level menu page
-   add_menu_page ('WP Auctions', 'WP Auctions' , 7 , WPA_PLUGIN_NAME , 'wp_auctions_welcome', WPA_PLUGIN_REQUISITES."/wpa.png" );
+   add_menu_page ('WP Auctions', 'WP Auctions' , 'edit_pages' , WPA_PLUGIN_NAME , 'wp_auctions_welcome', WPA_PLUGIN_REQUISITES."/wpa.png" );
 
    // add submenus
-   add_submenu_page (WPA_PLUGIN_NAME, __('Manage','WPAuctions'), __('Manage','WPAuctions'), 7 , 'wp-auctions-manage', 'wp_auctions_manage' );
-   add_submenu_page (WPA_PLUGIN_NAME, __('Add','WPAuctions'), __('Add','WPAuctions'), 7 , 'wp-auctions-add', 'wp_auctions_add' );
-   add_submenu_page (WPA_PLUGIN_NAME, __('Email Settings','WPAuctions'), __('Email Settings','WPAuctions'), 7 , 'wp-auctions-email', 'wp_auctions_email' );
+   add_submenu_page (WPA_PLUGIN_NAME, __('Manage','WPAuctions'), __('Manage','WPAuctions'), 'edit_pages' , 'wp-auctions-manage', 'wp_auctions_manage' );
+   add_submenu_page (WPA_PLUGIN_NAME, __('Add','WPAuctions'), __('Add','WPAuctions'), 'edit_pages' , 'wp-auctions-add', 'wp_auctions_add' );
+   add_submenu_page (WPA_PLUGIN_NAME, __('Email Settings','WPAuctions'), __('Email Settings','WPAuctions'), 'edit_pages' , 'wp-auctions-email', 'wp_auctions_email' );
 
    add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'post', 'normal', 'high');
    add_meta_box('WPA_Admin', __('Insert Auction','WPAuctions'), 'insertAuctionSelector', 'page', 'normal', 'high');   
