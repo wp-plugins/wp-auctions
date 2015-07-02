@@ -22,8 +22,9 @@ Stop paying listing fees, seller fees, final value fees, gallery fees or any oth
 
 Installation and activation takes less than 30 seconds and you could be hosting your first auction on your website in under 2 minutes.
 
-**New Features:**
+**Popular Features:**
 
+* Assign an auction to a Post/Page
 * Upload an extra image
 * Added Shipping price
 * Custom contact field. Request phone numbers, addresses etc...
@@ -108,6 +109,9 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 6. AJAX Popup
 
 == Changelog ==
+
+= 3.6 = 
+* Assign an auction to a Post/Page. This redirects all users to that specific Post/Page to interact with that auction
 
 = 3.5.1 = 
 * Fixed CSS issues brought to our notice
