@@ -2,8 +2,8 @@
 Contributors: Owen Cutajar & Hyder Jaffari
 Donate link: http://www.wpauctions.com
 Tags: auctions,auction,wp auction,auction plugin,wordpress auction,wp auctions,auction script,ebay,ebay auction,bidding
-Requires at least: 3.2
-Tested up to: 4.2.2
+Requires at least: 3.8
+Tested up to: 4.2.3
 Stable tag: /trunk/
 
 WP Auctions allows you to host auctions on your blog or website completely fee free!
@@ -55,6 +55,11 @@ Visit our website - [WP Auctions](http://www.wpauctions.com "Auction Plugin for 
 * Sell physical goods from iPods to Cars!
 * Sell your artwork
 * Use it for charity auctions, etc...
+
+**Translations:**
+
+* Included Polish translation (99% translated)
+
 
 == Installation ==
 
@@ -109,6 +114,13 @@ More information at: [WP Auctions](http://www.wpauctions.com "Auction Plugin for
 6. AJAX Popup
 
 == Changelog ==
+
+= 3.6.1 = 
+* Fixed languages/ textdomain issue
+* Improved some CSS
+* Updated text strings
+* Implemented a workaround for a date/time bug
+* Fixed starting bid reset when bids get cancelled
 
 = 3.6 = 
 * Assign an auction to a Post/Page. This redirects all users to that specific Post/Page to interact with that auction

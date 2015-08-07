@@ -4,11 +4,31 @@ Style URL: http://www.wpauctions.com/styles
 Style Author: Hyder Jaffari
 Author URL: http://www.weborithm.com
 Get more styles at http://www.wpauctions.com/styles
-Last Update: June 21st, 2009
+Last Update: August 3rd, 2015
 */
 
-/* Container */
+	#TB_window *,
+	#TB_window *:before,
+	#TB_window *:after {
+	-webkit-box-sizing: initial;
+	-moz-box-sizing: initial;
+	box-sizing: initial;
+	line-height: inherit; }
 
+	#TB_window,
+	#TB_window #wpa-description-p,
+	#TB_window p,
+	#TB_window button,
+	#TB_window input,
+	#TB_window select,
+	#TB_window textarea { font-size: 12px !important; line-height: initial; }
+
+	#TB_window table { table-layout: auto; }
+	
+	.auctionimages a.thickbox { border: 0; }
+
+/* Container */
+.clearfix:after { content: " "; clear: both; display: table; }
 #wp-container {	font: normal 11px Verdana, Arial, Helvetica, sans-serif; color: #000; }
 
 /* Main Body */
@@ -50,7 +70,7 @@ Last Update: June 21st, 2009
 
 /* Bids Container */
 
-#wp-bidcontainer { padding: 10px 7px 10px 0; height: 31px; background: #fff url(../../requisites/gradient.gif) repeat-x left bottom; border: 1px solid #333; }
+#wp-bidcontainer { padding: 10px 7px 10px 0; background: #fff url(../../requisites/gradient.gif) repeat-x left bottom; border: 1px solid #333; }
 #wp-bidcontainerleft { float:left; width: 47%; text-align:center; color: #333; font-size: 11px;	padding: 2px 0 0 2px; }
 #wp-bidcontainerright { float:right; width: 45%; text-align:center; margin-right: 5px; font-size: 13px; }
 #wp-bidcontainerright a { color: #000 !important; text-decoration: none !important; }
@@ -122,7 +142,7 @@ a.wpa-bin-price { background: #fff url(../../requisites/gradient.gif) repeat-x l
 #wp-bottom-p h3 { background: #e9e9e9; }
 #wp-bottom-p h3 p { color: #777; }
 #wp-bottom-p table { border-top: 1px solid #ccc; }
-#wp-bottom-p table td { }
+#wp-bottom-p table td { padding: 8px 10px 9px !important; }
 #wp-bottom-p table td p { }
 #wp-bottom-p input { border: 1px solid #ccc; }
 #wp-bottom-p input:focus { border-color: #aaa; background: #fefdd9; }
@@ -199,7 +219,7 @@ AUCTION IN A POST
 /* Images */
 	
 .auctionimages { padding: 5px !important; margin-bottom: 5px !important; text-align: center !important; }
-.auctionimages img { background: #fff !important; border: 1px solid #ccc !important; display: inline !important; margin: 0 10px !important; padding: 0.059em !important; }
+.auctionimages img { background: #fff !important; border: 1px solid #ccc !important; display: inline !important; margin: 0 10px !important; padding: 1px !important; }
 
 /* Description */
 

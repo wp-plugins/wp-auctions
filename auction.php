@@ -12,9 +12,11 @@ $customcontact = $options['customcontact'];
 $filepath = get_bloginfo('wpurl').'/wp-content/plugins/wp-auctions/styles/'.$style.'/';
 
 // ensure localisation support
-if (function_exists('load_plugin_textdomain')) {
-		load_plugin_textdomain('WPAuctions', PLUGIN_EXTERNAL_PATH . 'locales/' );
-}
+//if (function_exists('load_plugin_textdomain')) {
+	//	load_plugin_textdomain('wpauctions', PLUGIN_EXTERNAL_PATH . '/languages/' );
+//}
+
+load_plugin_textdomain( 'wpauctions', false, 'wp-auctions/languages' );
 
 // Get auction to show
 
@@ -162,7 +164,7 @@ ul#wp-othercontainer-p li:hover { }
 			<h2><?php echo $title ?></h2>
 		</div><!-- Title Ends -->
 		<div id="wp-close-p">
-			<a href="Javascript:get_rss();"><?php _e('Auctions RSS feed','WPAuctions'); ?> <img src="<?php echo $filepath ?>rss.png" alt="Auctions RSS" border="0" /></a> [<a href="#" onclick="tb_remove()" title="close window"><?php _e('Close Window','WPAuctions'); ?></a>]
+			<a href="Javascript:get_rss();"><?php _e('Auctions RSS feed','wpauctions'); ?> <img src="<?php echo $filepath ?>rss.png" alt="Auctions RSS" border="0" /></a> [<a href="#" onclick="tb_remove()" title="close window"><?php _e('Close Window','wpauctions'); ?></a>]
 		</div><!-- RSS/Close Ends -->
 	</div><!-- Header Ends -->
 
@@ -171,22 +173,22 @@ ul#wp-othercontainer-p li:hover { }
 			<div id="wp-image-p">
 				<img src="<?php echo $filepath ?>test_image.gif" alt="Loading Image..." width="250" height="250" />
 			</div><!-- Auction Image Ends -->
-			<div id="wp-currentbid-p"><div id="wp_price"><?php _e('Current Bid:','WPAuctions'); ?></div></div><!-- Current Bid Ends -->
-			<p id="wp-refreshbid-p">[ <a href="#" onclick="ajax_auction_request();"><?php _e('Refresh','WPAuctions'); ?></a> ]</p>
+			<div id="wp-currentbid-p"><div id="wp_price"><?php _e('Current Bid:','wpauctions'); ?></div></div><!-- Current Bid Ends -->
+			<p id="wp-refreshbid-p">[ <a href="#" onclick="ajax_auction_request();"><?php _e('Refresh','wpauctions'); ?></a> ]</p>
 		</div><!-- Image Ends -->
 		
 		<div id="wp-content-p" class="clearfix">
 			<div class="wpa-description">
-				<h3 id="tc-heading-p"><?php _e('Loading Auction','WPAuctions'); ?>...</h3>
+				<h3 id="tc-heading-p"><?php _e('Loading Auction','wpauctions'); ?>...</h3>
 			
 				<div id="wp-description-p"> </div><!-- Description Ends -->
 			</div>
 			<ul class="wpa-details">
-				<li><div id="wp_endd"><strong><?php _e('Ending Date','WPAuctions'); ?>:</strong></div></li>
-				<li><div id="wp_startb"><strong><?php _e('Starting Bid','WPAuctions'); ?>:</strong></div></li>
-				<li><div id="wp_winningb"><strong><?php _e('Winning Bid','WPAuctions'); ?>:</strong></div></li>
-				<li><div id="wp_shipping"><strong><?php _e('Shipping Cost','WPAuctions'); ?>:</strong></div></li>
-				<li><div id="wp_willshipto"><strong><?php _e('Will Ship To','WPAuctions'); ?>:</strong></div></li>
+				<li><div id="wp_endd"><strong><?php _e('Ending Date','wpauctions'); ?>:</strong></div></li>
+				<li><div id="wp_startb"><strong><?php _e('Starting Bid','wpauctions'); ?>:</strong></div></li>
+				<li><div id="wp_winningb"><strong><?php _e('Winning Bid','wpauctions'); ?>:</strong></div></li>
+				<li><div id="wp_shipping"><strong><?php _e('Shipping Cost','wpauctions'); ?>:</strong></div></li>
+				<li><div id="wp_willshipto"><strong><?php _e('Will Ship To','wpauctions'); ?>:</strong></div></li>
 			</ul>
 		</div><!-- Content Ends -->
 	</div><!-- Top Ends -->
@@ -195,7 +197,7 @@ ul#wp-othercontainer-p li:hover { }
 
 		<div id="wp-left-p">	
 			<div id="wp-details-p">
-				<h3><?php _e('Enter Your Details To Bid','WPAuctions'); ?> <p class="spinner">*<?php _e('required','WPAuctions'); ?></p></h3>
+				<h3><?php _e('Enter Your Details To Bid','wpauctions'); ?> <p class="spinner">*<?php _e('required','wpauctions'); ?></p></h3>
 				
 				<?php if (($regonly=="Yes") && !is_user_logged_in()) {  ?>
 					
@@ -227,15 +229,15 @@ ul#wp-othercontainer-p li:hover { }
 				
 				<table border="0" cellpadding="0">
 				<tr class="bidder-name">
-					<td><p><?php _e('Name','WPAuctions'); ?>*</p></td>
+					<td><p><?php _e('Name','wpauctions'); ?>*</p></td>
 					<td><input name="Name" type="text" class="forminput" id="Name" value="<?php echo $defaultname; ?>" /></td>
 				</tr>
 				<tr class="bidder-email">
-					<td><p><?php _e('Email','WPAuctions'); ?>*</p></td>
+					<td><p><?php _e('Email','wpauctions'); ?>*</p></td>
 					<td><input name="Email" type="text" class="forminput" id="Email" value="<?php echo $defaultemail; ?>" /></td>
 				</tr>
 				<tr class="bidder-url">
-					<td><p><?php if ($customcontact != "") { echo $customcontact; } else { _e('URL','WPAuctions'); } ?></p></td>
+					<td><p><?php if ($customcontact != "") { echo $customcontact; } else { _e('URL','wpauctions'); } ?></p></td>
 					<td><input name="URL" type="text" class="forminput" id="URL" value="<?php echo $defaulturl; ?>" /></td>
 				</tr>
 				</table>
@@ -246,13 +248,13 @@ ul#wp-othercontainer-p li:hover { }
 
         <div id="wp-bid-p">
 			<?php if ($hidebid == "Yes") echo '<div style="display:none;">'; ?>
-				<h3><?php _e('Enter Your Maximum Bid','WPAuctions'); ?> <span id="wp-extrainfo"></span></h3>
+				<h3><?php _e('Enter Your Maximum Bid','wpauctions'); ?> <span id="wp-extrainfo"></span></h3>
 				  
 					<table border="0" cellpadding="0">
 				  	<tr>
 					<td align="left" valign="middle"><input type="hidden" id="formauctionid" name="formauctionid" value="<?php echo $auction ?>"><input type="hidden" id="currencysymbol" name="currencysymbol" value="<?php echo $currencysymbol ?>"> <p class="currency"><?php echo $currencysymbol ?></p></td>
 					<td align="left" valign="middle"><div id="wp-bin-manip"><input name="BidAmount" type="text" class="formbid" id="BidAmount" value="" maxlength="8" align="right"/><input name="BINAmount" type="hidden" id="BINAmount" value="0"/></div></td>
-					<td align="center" valign="middle"><p class="bidnow" id="bidnow"><a href="#" onclick="ajax_submit_bid();">Bid Now</a></p></td>
+					<td align="center" valign="middle"><p class="bidnow" id="bidnow"><a href="#" onclick="ajax_submit_bid();"><?php _e('Bid Now','wpauctions'); ?></a></p></td>
 				  	</tr>
 				  	</table>
 			<?php if ($hidebid == "Yes") echo "</div>"; ?>
@@ -266,14 +268,14 @@ ul#wp-othercontainer-p li:hover { }
 		<div class="wpa-tabs">
 		
 			<ul class="wpatabs">
-				<li><?php _e('Current Bids','WPAuctions'); ?></li>
-				<li><?php _e('Other Auctions','WPAuctions'); ?></li>
+				<li><?php _e('Current Bids','wpauctions'); ?></li>
+				<li><?php _e('Other Auctions','wpauctions'); ?></li>
 			</ul>
 				
 			<div id="wp-right-p" class="wpa-pane pane-bids">	
 				<div id="wp-bids-p">  
 					<ol class="wp-detailsbidders-p">
-						<li><?php _e('Loading bids','WPAuctions'); ?> ...</li>
+						<li><?php _e('Loading bids','wpauctions'); ?> ...</li>
 					</ol>
 				</div>	  
 			</div><!-- Right Ends -->

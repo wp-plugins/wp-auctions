@@ -156,7 +156,7 @@ function ajax_auction_request() {
                 
              }
              //thumbnails = '<p><img src="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH?>/requisites/more-images.png" alt="More Images" /></p>' + thumbnails;   
-             thumbnails = '<p><strong>More Images:</strong></p>' + thumbnails;   
+             thumbnails = '<p><strong><?php _e('More Images','wpauctions'); ?>:</strong></p>' + thumbnails;   
          }
          
       }
@@ -184,7 +184,7 @@ function ajax_auction_request() {
 	    if (auction_details[7] == "") { auction_details[7]='<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH?>/requisites/wp-popup-def.gif'   }
 
       jQuery('#wp-image-p').fadeOut("slow",function() { 
-         jQuery('#wp-image-p').html('<img src="'+auction_details[7]+'" alt="Loading image ..." width="250" height="250" />');
+         jQuery('#wp-image-p').html('<img src="'+auction_details[7]+'" alt=" <?php _e('Loading image','wpauctions'); ?> ..." width="250" height="250" />');
       } );  
       jQuery('#wp-image-p').fadeIn();
 
@@ -194,14 +194,14 @@ function ajax_auction_request() {
          jQuery('#wp_endd').html("Auction Ended");
          jQuery("#BidAmount").attr("disabled",true);
          jQuery('#wp-bidnow-p').html('');
-         jQuery('#wp_winningb').html('<strong>Winning Bid:</strong> ' + currencysymbol + auction_details[10] + ' by ' + auction_details[9]);
+         jQuery('#wp_winningb').html('<strong><?php _e('Winning Bid','wpauctions'); ?>:</strong> ' + currencysymbol + auction_details[10] + ' <?php _e('by','wpauctions'); ?> ' + auction_details[9]);
       } else {
          // auction is open
-         jQuery('#wp_endd').html("<strong>Ending Date:</strong> "+auction_details[5]);
+         jQuery('#wp_endd').html("<strong><?php _e('Ending Date','wpauctions'); ?>:</strong> "+auction_details[5]);
          jQuery("#BidAmount").attr("disabled",false);
          jQuery('#bidnow').html('<a href="#" onclick="ajax_submit_bid();">' + buttoncaption + '</a>');
          if (extraimages + extraBIN == '') {
-            jQuery('#wp_winningb').html('<strong>Winning Bid:</strong> Bid to win');
+            jQuery('#wp_winningb').html('<strong><?php _e('Winning Bid','wpauctions'); ?>:</strong> <?php _e('Bid to win','wpauctions'); ?>');
          } else {
             //jQuery('#wp_winningb').html(extraBIN + "  " + extraimages);
             jQuery('#wp_winningb').html(extraBIN + "  " + thumbnails);
@@ -261,7 +261,7 @@ function ajax_bids_request(auction_id) {
 	    
 	    // update bids on screen
         if (request == '') {
-           var bid_output = 'No bids found';
+           var bid_output = '<?php _e('No bids found','wpauctions'); ?>';
         } else {
            bids_details = request.split('|');
 
@@ -331,7 +331,7 @@ function ajax_other_request(auction_id) {
                 if (other_details[i*6+3] == '') {
                    odetdiv = odetdiv + '<li><a href="#" title="' + other_details[i*6+2] + '">';  
                    odetdiv = odetdiv + '<img src="<?=get_settings('siteurl').PLUGIN_EXTERNAL_PATH?>/requisites/wp-thumb-def.gif" border="0" alt="' + other_details[i*6+2] + '" width="50" height="50" onclick="document.getElementById(\'formauctionid\').value=' + other_details[i*6+1] + ';ajax_auction_request()"/>'; 
-                   odetdiv = odetdiv + '</a><p>'+other_details[i*6+2]+'</p><p>Current Bid: '+other_details[i*6+5]+'</p></li>';  
+                   odetdiv = odetdiv + '</a><p>'+other_details[i*6+2]+'</p><p><?php _e('Current Bid','wpauctions'); ?>: '+other_details[i*6+5]+'</p></li>';  
                 }
                 else {
                    odetdiv = odetdiv + '<li><a href="#" title="' + other_details[i*6+2] + '">';  

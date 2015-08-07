@@ -7,8 +7,28 @@ Get more styles at http://www.wpauctions.com/styles
 Last Update: June 12th, 2010
 */
 
-/* Container */
+	#TB_window *,
+	#TB_window *:before,
+	#TB_window *:after {
+	-webkit-box-sizing: initial;
+	-moz-box-sizing: initial;
+	box-sizing: initial;
+	line-height: inherit; }
 
+	#TB_window,
+	#TB_window #wpa-description-p,
+	#TB_window p,
+	#TB_window button,
+	#TB_window input,
+	#TB_window select,
+	#TB_window textarea { font-size: 12px !important; line-height: initial; }
+
+	#TB_window table { table-layout: auto; }
+	
+	.auctionimages a.thickbox { border: 0; }
+
+/* Container */
+.clearfix:after { content: " "; clear: both; display: table; }
 #wp-container { font: normal 11px Verdana, Arial, Helvetica, sans-serif; color: #000; }
 
 /* Main Body */
@@ -50,7 +70,7 @@ Last Update: June 12th, 2010
 
 /* Bids Container */
 
-#wp-bidcontainer { padding: 10px 7px 10px 0; height: 31px; background: url(bg.png) repeat left bottom; border: 1px solid #000; }
+#wp-bidcontainer { padding: 10px 7px 10px 0; background: url(bg.png) repeat left bottom; border: 1px solid #000; }
 #wp-bidcontainerleft { float:left; width: 47%; text-align:center; color: #fff; font-size: 11px;	padding: 2px 0 0 2px; }
 #wp-bidcontainerright { float:right; width: 45%; text-align:center; margin-right: 5px; font-size: 13px; }
 #wp-bidcontainerright a { color: #fff !important; text-decoration: none !important; }
@@ -129,7 +149,7 @@ a.wpa-bin-price { background: url(bg.png) repeat; border: 1px solid #212121; }
 #wp-bottom-p h3 { background: url(bg.png); }
 #wp-bottom-p h3 p { color: #999; }
 #wp-bottom-p table { border-top: 1px solid #212121; }
-#wp-bottom-p table td { color: #fff; }
+#wp-bottom-p table td { color: #fff; padding: 8px 10px 9px !important; }
 #wp-bottom-p table td p { color: #fff; }
 #wp-bottom-p input { background: #ccc; border: 1px solid #000; }
 #wp-bottom-p input:focus { border-color: #000; background: #fefdd9; }
